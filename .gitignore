@@ -1,0 +1,16 @@
+.idea
+target
+node_modules
+.target
+*.log
+*.lock
+yamllint-*
+
+.vagrant
+/.vagrant/
+
+# secrets
+*.token
+*.pass
+*.user
+*.secret

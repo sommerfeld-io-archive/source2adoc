@@ -1,0 +1,33 @@
+= About source2adoc
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
+:github-org: sommerfeld-io
+:project-name: source2adoc
+:url-project: https://github.com/{github-org}/{project-name}
+:github-actions-url: {url-project}/actions/workflows
+:job: pipeline.yml
+:badge: badge.svg
+
+The `source2adoc` project aims to streamline the process of generating AsciiDoc documentation from inline comments within source code files. With a focus on simplicity and efficiency, this tool converts inline documentation into AsciiDoc files, tailored for seamless integration with link:https://antora.org[Antora], a powerful documentation site generator.
+
+image:{github-actions-url}/{job}/{badge}[Github Badge, link={github-actions-url}/{job}]
+
+* Documentation Website -> https://source2adoc.sommerfeld.io
+* Github Repository -> {url-project}
+* SonarCloud Summary -> https://sonarcloud.io/project/overview?id={github-org}_{project-name}
+* Where to file issues -> {url-project}/issues
+
+The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to Javadoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
+
+== Key Features
+* The `source2adoc` project is shipped as a Docker image for simple use from the command line.
+* Supporting source code languages Bash, YAML, Vagrantfile, Dockerfile, Makefile, and Ruby, the tool accommodates diverse development environments and project requirements. The common ground of all these languages is that they all mark their commented lines with the hash-symbol (`#`).
+* The tool preserves the file structure of the source code, ensuring that the generated AsciiDoc files maintain their organizational hierarchy within the Antora module.
+
+== How to use
+CAUTION: todo ... put the `docker run ...` command here
+
+== Risks and Technical Debts
+link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.
+
+== Contact
+Feel free to contact me via sebastian@sommerfeld.io.

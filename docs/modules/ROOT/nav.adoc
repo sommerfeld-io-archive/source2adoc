@@ -1,0 +1,3 @@
+* xref:index.adoc[]
+* xref:global-requirements-and-solution-strategy.adoc[]
+* xref:license.adoc[]
