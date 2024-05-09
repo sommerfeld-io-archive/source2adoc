@@ -7,12 +7,13 @@ Sebastian Sommerfeld <sebastian@sommerfeld.io>
 :job: pipeline.yml
 :badge: badge.svg
 
-The `source2adoc` project aims to streamline the process of generating AsciiDoc documentation from inline comments within source code files. With a focus on simplicity and efficiency, this tool converts inline documentation into AsciiDoc files, tailored for seamless integration with link:https://antora.org[Antora], a powerful documentation site generator.
+The link:https://github.com/sommerfeld-io/source2adoc[source2adoc] project aims to streamline the process of generating AsciiDoc documentation from inline comments within source code files. With a focus on simplicity and efficiency, this tool converts inline documentation into AsciiDoc files, tailored for seamless integration with link:https://antora.org[Antora], a powerful documentation site generator.
 
 image:{github-actions-url}/{job}/{badge}[Github Badge, link={github-actions-url}/{job}]
 
 * Documentation Website -> https://source2adoc.sommerfeld.io
 * Github Repository -> {url-project}
+* DockerHub -> https://hub.docker.com/r/sommerfeldio/{project-name}
 * SonarCloud Summary -> https://sonarcloud.io/project/overview?id={github-org}_{project-name}
 * Where to file issues -> {url-project}/issues
 
