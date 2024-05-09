@@ -1,6 +1,6 @@
 # folders
 .devcontainer
-# .git # do NOT ignore because antora needs the git-repo-tree
+.git
 .github
 .vscode
 
