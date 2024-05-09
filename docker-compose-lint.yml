@@ -2,7 +2,7 @@
 # @file docker-compose-lint.yml
 # @brief Linter definitions and static validations for this project.
 #
-# @description ThisDocker Compose file serves as a centralized config for linter definitions,
+# @description This Docker Compose file serves as a centralized config for linter definitions,
 # static analysis tools, and validators crucial for verifying the validity of the repository setup.
 # Leveraged by both the pre-commit hooks and the deployment pipeline, this file orchestrates the
 # execution of various linting processes, static analysis scans, and validation routines essential
