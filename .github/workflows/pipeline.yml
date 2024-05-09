@@ -106,7 +106,10 @@ jobs:
     name: ${{ matrix.yml-file }}
     if: ${{ (github.actor != 'dependabot[bot]') }}
     needs: [
-      'sonarcloud'
+      'lint-yaml',
+      'lint-folders',
+      'lint-filenames',
+      'shellcheck',
     ]
     strategy:
       matrix:
