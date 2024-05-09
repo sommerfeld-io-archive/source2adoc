@@ -1,0 +1,89 @@
+= Unsorted Notes
+
+== Conversation on Structuring a Kotlin App for Generating AsciiDoc
+=== Introduction
+In this conversation, we discuss the structuring of a Kotlin application for generating AsciiDoc from inline docs, while interacting with a Git repository.
+
+=== Proposed Code Structure
+Below is the proposed structure for the Kotlin app:
+
+[options="header"]
+|===
+|Layer | Description | Example
+
+| User Interface Layer (Controller)
+| Handles user interactions and delegates tasks to the service layer.
+| AppController
+
+| Service Layer
+| Intermediary between the user interface and implementation details. Encapsulates business logic.
+| DocumentationService
+
+| Implementation Details
+| Responsible for specific tasks like reading code files and generating AsciiDoc.
+| CodeReader, AsciidocWriter
+
+| Model
+| Data models for representing inline docs, code files, etc.
+| InlineDoc, CodeFile
+
+| Main Function
+| Entry point of the application.
+| main()
+
+|===
+
+=== Code Examples
+[source,kotlin]
+----
+class AppController(private val documentationService: DocumentationService) {
+    fun generateAsciiDoc(repoPath: String) {
+        // Collect user input, handle errors if necessary
+        val inlineDocs == documentationService.extractInlineDocsFromRepo(repoPath)
+        // Display output or errors
+    }
+}
+
+class DocumentationService(private val codeReader: CodeReader, private val asciidocWriter: AsciidocWriter) {
+    fun extractInlineDocsFromRepo(repoPath: String): List<InlineDoc> {
+        // Use codeReader to read code files from the repository
+        // Extract inline docs from code files
+        // Return inline docs
+    }
+
+    fun generateAsciiDoc(inlineDocs: List<InlineDoc>): String {
+        // Use asciidocWriter to generate AsciiDoc from inline docs
+        // Return generated AsciiDoc
+    }
+}
+
+class CodeReader {
+    fun readCodeFiles(repoPath: String): List<CodeFile> {
+        // Use Git library or command-line tools to read code files from the repository
+        // Return a list of code files
+    }
+}
+
+class AsciidocWriter {
+    fun generateAsciiDoc(inlineDocs: List<InlineDoc>): String {
+        // Generate AsciiDoc from inline docs
+        // Return generated AsciiDoc
+    }
+}
+
+data class InlineDoc(val content: String)
+
+data class CodeFile(val name: String, val content: String)
+
+fun main() {
+    val codeReader == CodeReader()
+    val asciidocWriter == AsciidocWriter()
+    val documentationService == DocumentationService(codeReader, asciidocWriter)
+    val appController == AppController(documentationService)
+
+    appController.generateAsciiDoc("/path/to/your/git/repo")
+}
+----
+
+=== Conclusion
+This structure ensures separation of concerns and modularity, making the code easier to understand, maintain, and test.
