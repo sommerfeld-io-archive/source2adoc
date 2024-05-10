@@ -22,6 +22,9 @@ By incorporating these suggestions, you can enhance the functionality, usability
 === MY IDEA
 Think about how to design/assemble the index page with links to the docs pages … don’t write too much explaining text. No one needs this and reads this. Take a look at the ansible docs for ideas.
 
+== UI Bundle
+* https://uideck.com/templates/nextjs-tailwind-template
+
 == Conversation on Structuring a Kotlin App for Generating AsciiDoc
 === Introduction
 In this conversation, we discuss the structuring of a Kotlin application for generating AsciiDoc from inline docs, while interacting with a Git repository.
