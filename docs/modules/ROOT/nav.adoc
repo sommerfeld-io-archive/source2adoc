@@ -1,4 +1,5 @@
 * xref:index.adoc[]
 * xref:global-requirements-and-solution-strategy.adoc[]
 * xref:license.adoc[]
+* xref:contribute.adoc[]
 * xref:notes.adoc[]
