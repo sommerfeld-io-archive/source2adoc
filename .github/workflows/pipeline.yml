@@ -134,11 +134,12 @@ jobs:
         with:
           file_or_dir: ${{ matrix.yml-file }}
       - name: Commit and push
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
           message: "[Actions Bot] update antora yml"
+          tag_push: --force
 
   generate-docs:
     runs-on: ubuntu-latest
@@ -156,14 +157,16 @@ jobs:
         run: docker run --rm --volume "$(pwd):/project" --workdir "/project" sommerfeldio/source2docs:rc docs
         shell: bash
       - name: Commit and push
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
           message: "[Actions Bot] generate source code docs"
+          tag_push: --force
 
   copy-docs:
     runs-on: ubuntu-latest
+    name: ${{ matrix.dest }}
     if: ${{ (github.actor != 'dependabot[bot]') }}
     needs: ['update-versions']
     permissions:
@@ -199,11 +202,12 @@ jobs:
           } >> "${{ matrix.dest }}"
         shell: bash
       - name: Commit and push
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
           message: "[Actions Bot] copy docs to project root"
+          tag_push: --force
 
   # ----- Commit stage (build) ------------------
 
