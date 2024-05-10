@@ -1,5 +1,27 @@
 = Unsorted Notes
 
+== Additional Suggestions for "source2adoc" Project
+
+. Template Customization
+.. Provide options for users to customize the template used for generating AsciiDoc files. This could include defining headers, footers, and other styling elements to align with the project's branding or documentation standards.
+. Interactive Documentation
+.. Explore the possibility of integrating interactive elements into the generated AsciiDoc files. This could include embedded code snippets with runnable examples or interactive diagrams to enhance understanding and engagement.
+. Versioning Support
+.. Implement support for versioning within the generated documentation. This could involve automatically extracting version information from source code repositories or allowing users to specify version numbers manually.
+. Integration with Documentation Platforms
+.. Consider integrating "source2adoc" with popular documentation platforms other than Antora. This could include platforms like Read the Docs, GitBook, or Sphinx, providing flexibility for users with different documentation preferences.
+. Continuous Improvement
+.. Continuously gather feedback from users and iterate on the tool based on their needs and suggestions. Regular updates and improvements will help ensure that "source2adoc" remains relevant and useful in evolving development environments.
+. Error Handling and Logging
+.. Implement robust error handling and logging mechanisms to provide users with meaningful feedback in case of errors or issues during the generation process. This will help users diagnose and troubleshoot problems more effectively.
+. Documentation and Examples
+.. Provide comprehensive documentation and examples to guide users in understanding how to use the tool effectively. Include usage examples, best practices, and troubleshooting tips to support users at all levels of experience.
+
+By incorporating these suggestions, you can enhance the functionality, usability, and reliability of the "source2adoc" project, making it a valuable tool for developers seeking to streamline their documentation workflows.
+
+=== MY IDEA
+Think about how to design/assemble the index page with links to the docs pages … don’t write too much explaining text. No one needs this and reads this. Take a look at the ansible docs for ideas.
+
 == Conversation on Structuring a Kotlin App for Generating AsciiDoc
 === Introduction
 In this conversation, we discuss the structuring of a Kotlin application for generating AsciiDoc from inline docs, while interacting with a Git repository.
