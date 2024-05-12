@@ -1,24 +1,20 @@
 ---
-# @file docker-compose-lint.yml
-# @brief Linter definitions and static validations for this project.
-#
-# @description This Docker Compose file serves as a centralized config for linter definitions,
-# static analysis tools, and validators crucial for verifying the validity of the repository setup.
-# Leveraged by both the pre-commit hooks and the deployment pipeline, this file orchestrates the
-# execution of various linting processes, static analysis scans, and validation routines essential
-# for ensuring code quality and adherence to established standards. By referencing this file within
-# the pre-commit configuration and deployment pipeline, the repository enforces consistent code
-# quality checks and adherence to best practices throughout the software development lifecycle.
+# This Docker Compose file serves as a config for linter definitions, static analysis tools, and
+# validators crucial for verifying the validity of the repository setup. Leveraged by both the
+# pre-commit hooks and the deployment pipeline, this file orchestrates the execution of various
+# linting processes, static analysis scans, and validation routines essential for ensuring code
+# quality and adherence to established standards. By referencing this file within the pre-commit
+# configuration and deployment pipeline, the repository enforces consistent code quality checks
+# and adherence to best practices throughout the software development lifecycle.
 #
 # == How to use this compose configuration
-#
 # [source, bash]
-# ```
+# ``
 # docker compose --file docker-compose-lint.yml up
 #
 # # Stop and remove images
 # docker compose --file docker-compose-lint.yml down --rmi all --volumes --remove-orphans
-# ```
+# ``
 
 
 version: "3.3"
