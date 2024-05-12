@@ -1,4 +1,4 @@
-FROM eclipse-temurin:22.0.1_8-jdk-jammy AS builder
+FROM eclipse-temurin:22.0.1_8-jdk-jammy AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY /components/app /components/app
@@ -10,12 +10,15 @@ RUN ./mvnw "$MVN_OPTS" dependency:go-offline \
 
 FROM eclipse-temurin:22.0.1_8-jre-jammy
 LABEL maintainer="sebastian@sommerfeld.io"
+LABEL org.opencontainers.image.title="source2adoc"
 LABEL org.opencontainers.image.source="https://github.com/sommerfeld-io/source2adoc"
+LABEL org.opencontainers.image.url="https://source2adoc.sommerfeld.io"
 LABEL org.opencontainers.image.description "Streamline the process of generating AsciiDoc documentation from inline comments within source code files."
+# LABEL org.opencontainers.image.licenses="tbd..."
 
 ARG USER=source2adoc
 RUN addgroup ${USER} && adduser --ingroup ${USER} --disabled-password ${USER}
 USER ${USER}
 
-COPY --from=builder /components/app/target/source2adoc.jar /opt/source2adoc/source2adoc.jar
+COPY --from=build /components/app/target/source2adoc.jar /opt/source2adoc/source2adoc.jar
 ENTRYPOINT ["java", "-jar", "/opt/source2adoc/source2adoc.jar"]
