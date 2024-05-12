@@ -1,8 +1,16 @@
 ---
-# This Docker Compose file ... lint and build app ...
-# build is for local, workflows use other ways
-# lint is for local and actions workflow
-
+# This Docker Compose file handles three responsibilities:
+#
+# . Linting the project files to ensure they adhere to coding standards.
+# . Building the source2adoc application.
+# . Testing the application.
+#
+# When running docker-compose up,all  services are orchestrated to execute sequentially, ensuring
+# the project is linted, built, and tested efficiently within the Docker environment.
+#
+# NOTE: Building the application is used for local development only. For CI/CD workflows, the
+# Github Actions workflow is used to build the application. Linting and testing is used from
+# GitHub Actions as well
 
 version: "3.3"
 services:
