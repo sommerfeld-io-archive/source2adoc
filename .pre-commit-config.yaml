@@ -27,5 +27,5 @@ repos:
     hooks:
       - id: lint
         name: lint
-        entry: bash -c 'docker compose --file docker-compose-lint.yml up'
+        entry: bash -c 'docker compose up'
         language: system

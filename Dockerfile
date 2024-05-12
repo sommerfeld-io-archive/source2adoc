@@ -4,9 +4,8 @@ LABEL maintainer="sebastian@sommerfeld.io"
 COPY /components/app /components/app
 WORKDIR /components/app
 ARG MVN_OPTS=--no-transfer-progress -Dstyle.color=always
-RUN ./mvnw "$MVN_OPTS" dependency:go-offline
-RUN ls -alF
-RUN ./mvnw "$MVN_OPTS" clean verify
+RUN ./mvnw "$MVN_OPTS" dependency:go-offline \
+    && ./mvnw "$MVN_OPTS" clean verify
 
 
 FROM eclipse-temurin:22.0.1_8-jre-jammy
