@@ -14,6 +14,7 @@ ls:
   .feature: kebab-case
 
   .sh: kebab-case
+  .kt: PascalCase
 
   .css: kebab-case
   .html: kebab-case

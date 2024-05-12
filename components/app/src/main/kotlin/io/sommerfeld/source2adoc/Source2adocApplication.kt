@@ -1,11 +1,17 @@
 package io.sommerfeld.source2adoc
 
+/**
+ * @see https://docs.spring.io/spring-shell/reference/getting-started.html
+ */
+
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import org.springframework.shell.standard.ShellComponent
+import org.springframework.shell.standard.ShellMethod
 
 @SpringBootApplication
-class Source2adocApplication
+open class Application
 
 fun main(args: Array<String>) {
-	runApplication<Source2adocApplication>(*args)
+    SpringApplication.run(Application::class.java, *args)
 }
