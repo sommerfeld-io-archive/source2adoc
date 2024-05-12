@@ -3,6 +3,7 @@
 .git
 .github
 .vscode
+components/app/target
 
 # files
 .dockerignore
@@ -20,3 +21,4 @@ Dockerfile
 # adoc file based on docs
 LICENSE.adoc
 README.adoc
+CONTRIBUTING.adoc

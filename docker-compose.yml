@@ -10,7 +10,8 @@
 # == How to use this compose configuration
 # [source, bash]
 # ``
-# docker compose --file docker-compose-lint.yml up
+# docker compose up
+# docker compose up app
 #
 # # Stop and remove images
 # docker compose --file docker-compose-lint.yml down --rmi all --volumes --remove-orphans
@@ -20,34 +21,7 @@
 version: "3.3"
 services:
 
-  dockerfile:
-    container_name: ${COMPOSE_PROJECT_NAME}-dockerfile
-    image: hadolint/hadolint:latest
-    volumes:
-      - .:/data
-    working_dir: /data
-    entrypoint: hadolint Dockerfile
-
-  filenames:
-    container_name: ${COMPOSE_PROJECT_NAME}-filenames
-    image: lslintorg/ls-lint:1.11.2
-    volumes:
-      - .:/data
-    working_dir: /data
-
-  folders:
-    container_name: ${COMPOSE_PROJECT_NAME}-folders
-    image: sommerfeldio/folderslint:latest
-    volumes:
-      - .:/data
-    working_dir: /data
-    command: folderslint
-
-  yaml:
-    container_name: ${COMPOSE_PROJECT_NAME}-yaml
-    image: cytopia/yamllint:latest
-    volumes:
-      - .:/data
-    working_dir: /data
-    command: .
-    tty: true
+  app:
+    container_name: ${COMPOSE_PROJECT_NAME}
+    build: components/app
+    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}

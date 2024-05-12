@@ -20,6 +20,7 @@
 		<java.version>21</java.version>
 		<kotlin.version>1.9.23</kotlin.version>
 		<spring-shell.version>3.2.4</spring-shell.version>
+		<finalName>source2adoc</finalName>
 	</properties>
 
 	<dependencies>
@@ -71,6 +72,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>${finalName}</finalName>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<plugins>
