@@ -1,5 +1,4 @@
 * xref:index.adoc[]
 * xref:license.adoc[]
-* xref:contribute.adoc[]
 * xref:unsorted-notes.adoc[]
 * xref:global-requirements.adoc[]
