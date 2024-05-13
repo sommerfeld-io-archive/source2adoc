@@ -1,0 +1,15 @@
+---
+##
+# This Docker Compose file is a file for testing purposes and considers only the testdata
+# Dockerfile.
+#
+# Nothing else is done here.
+##
+
+version: "3.3"
+services:
+
+  testdata:
+    container_name: ${COMPOSE_PROJECT_NAME}
+    build: .
+    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}

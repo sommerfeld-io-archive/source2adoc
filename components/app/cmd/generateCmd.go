@@ -17,7 +17,7 @@ var generateCmd = &cobra.Command{
 			return
 		}
 		fmt.Println("Generating AsciiDoc for language:", lang)
-		// Add your AsciiDoc generation code here
+		// Add service call here
 	},
 }
 

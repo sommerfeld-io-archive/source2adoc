@@ -22,7 +22,7 @@ func AddLangFlag(cmd *cobra.Command) {
 // This flag allows specifying the directory for Antora, which is optional.
 // The default value for the flag is "docs".
 func AddAntoraDirFlag(cmd *cobra.Command) {
-	cmd.Flags().String("antora-dir", "docs", "Directory for Antora - optional")
+	cmd.Flags().String("antora-dir", "docs", "Directory for Antora (optional)")
 }
 
 // IsValidLanguage checks if the given language is valid.

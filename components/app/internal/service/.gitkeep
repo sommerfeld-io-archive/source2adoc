@@ -1,0 +1,2 @@
+service layer to bridge commands to real implementations
+Maybe Interfaces too? Or will they be places somewhere else?

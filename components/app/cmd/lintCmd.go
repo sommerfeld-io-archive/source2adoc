@@ -17,7 +17,7 @@ var lintCmd = &cobra.Command{
 			return
 		}
 		fmt.Println("Linting source files for language:", lang)
-		// Add your linting code here
+		// Add service call here
 	},
 }
 
