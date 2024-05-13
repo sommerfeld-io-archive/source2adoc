@@ -4,11 +4,8 @@ LABEL maintainer="sebastian@sommerfeld.io"
 COPY /components/app /components/app
 WORKDIR /components/app
 
-ARG USER=source2adoc
-RUN adduser -D $USER
-USER $USER
-
-RUN go mod download \
+RUN ls -alF \
+    && go mod download \
     && go mod tidy \
     && go test ./... \
     && go build .
