@@ -338,6 +338,36 @@ jobs:
       #     exit-code: false
       #     write-comment: ${{ github.event_name == 'pull_request' }}
 
+  # ----- Cleanup -------------------------------
+
+  cleanup:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.image-name }}
+    needs: ['publish-rc']
+    # if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+    if: always()
+    permissions: # see build-image (duplicated because github actions does not support anchors)
+      contents: read
+    strategy: # see build-image (duplicated because github actions does not support anchors)
+      matrix:
+        include:
+          - registry: docker.io
+            image-name: source2adoc
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Login to Container Registry ${{ matrix.registry }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ matrix.registry }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Remove (:${{ github.sha }}) from ${{ matrix.registry }}
+        run: |
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
+        shell: bash
+
   # ----- Notifications -------------------------
 
   # on-failure:
@@ -352,6 +382,8 @@ jobs:
   #     'lint-filenames',
   #     'shellcheck',
   #     'build-image',
+  #     'publish-rc',
+  #     'cleanup',
   #   ]
   #   if: failure()
   #   steps:
