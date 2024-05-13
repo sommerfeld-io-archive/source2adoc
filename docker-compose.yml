@@ -51,9 +51,30 @@ services:
       - folders
       - yaml
 
-  build-app:
-    container_name: ${COMPOSE_PROJECT_NAME}
-    build: components/app
-    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+  test-app:
+    image: golang:1.22.3-alpine3.19
+    container_name: ${COMPOSE_PROJECT_NAME}-test
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./components/app:/components/app:rw
+    working_dir: /components/app
+    command:
+      - /bin/sh
+      - -c
+      - |
+        go mod download
+        go mod tidy
+        go fmt ./...
+        go vet ./...
+        go test -coverprofile=go-code-coverage.out ./...
     depends_on:
       - dockerfile
+
+  build-app:
+    container_name: ${COMPOSE_PROJECT_NAME}
+    build: .
+    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+    depends_on:
+      test-app:
+        condition: service_completed_successfully

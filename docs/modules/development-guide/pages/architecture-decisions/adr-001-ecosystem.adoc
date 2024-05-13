@@ -1,0 +1,31 @@
+= Choosing a Development Ecosystem for Source2adoc CLI
+
+[cols="1,6"]
+|===
+|Status |Done
+|Decision Date |2024-05-13
+|===
+
+== Context:
+In order to develop the Source2adoc CLI, a decision needs to be made regarding the choice of development ecosystem. Two main options are under consideration: Kotlin with Spring Shell and Go with Cobra.
+
+== Decision:
+After evaluating the pros and cons of each ecosystem, it is recommended to proceed with Go with Cobra for developing the Source2adoc CLI. While both ecosystems offer advantages such as modern language features and strong typing, Go's simplicity, ease of learning, and excellent support for command-line interface development through Cobra align well with the requirements of this project. Additionally, considering the intention to ship the CLI as a Docker image and utilize VSCode with the devcontainer feature, the deployment and distribution experience would be similar for both ecosystems.
+
+[cols="2,3,5", options="header"]
+|===
+| | Kotlin with Spring Shell | Go with Cobra
+| *Pros* | |
+| Modern Language | Kotlin offers modern features like null safety and coroutines. | Go provides simplicity and ease of learning.
+| Strong Typing | Kotlin's static typing helps catch errors at compile time. | Go's static typing ensures code reliability and performance.
+| Integration with Spring | Spring Shell integrates seamlessly with Spring ecosystem. | Cobra provides a comprehensive CLI framework for Go.
+| JVM Ecosystem | Access to vast Java ecosystem for libraries and tools. | Go's standard library is extensive and well-documented.
+| Developer Experience | IntelliJ IDEA offers excellent support for Kotlin development. | VSCode with Go extension provides a solid development experience.
+| *Cons* | |
+| JVM Overhead | Kotlin runs on the JVM, which can lead to increased memory usage. | Go compiles to native binaries, avoiding JVM overhead.
+| Learning Curve | Spring ecosystem and Kotlin syntax might have a steeper learning curve. | Go's simplicity might limit flexibility in complex scenarios.
+| Performance | JVM-based applications may have slightly higher startup time. | Go's compiled binaries generally have faster startup times.
+|===
+
+== Consequences:
+By selecting Go with Cobra as the development ecosystem for the Source2adoc CLI, the project will benefit from a straightforward and efficient development process, well-suited for command-line interface development. This decision also aligns with the intention to leverage Docker for deployment and VSCode with devcontainer for development, ensuring a seamless workflow. However, it's essential to provide adequate training and support for team members transitioning to the Go ecosystem, especially if they are more familiar with Kotlin or the Spring ecosystem.

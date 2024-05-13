@@ -1,24 +1,26 @@
-FROM eclipse-temurin:22.0.1_8-jdk-jammy AS build
+FROM golang:1.22.3-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY /components/app /components/app
 WORKDIR /components/app
-ARG MVN_OPTS=--no-transfer-progress -Dstyle.color=always
-RUN ./mvnw "$MVN_OPTS" dependency:go-offline \
-    && ./mvnw "$MVN_OPTS" clean verify
-
-
-FROM eclipse-temurin:22.0.1_8-jre-jammy
-LABEL maintainer="sebastian@sommerfeld.io"
-LABEL org.opencontainers.image.title="source2adoc"
-LABEL org.opencontainers.image.source="https://github.com/sommerfeld-io/source2adoc"
-LABEL org.opencontainers.image.url="https://source2adoc.sommerfeld.io"
-LABEL org.opencontainers.image.description "Streamline the process of generating AsciiDoc documentation from inline comments within source code files."
-# LABEL org.opencontainers.image.licenses="tbd..."
 
 ARG USER=source2adoc
-RUN addgroup ${USER} && adduser --ingroup ${USER} --disabled-password ${USER}
-USER ${USER}
+RUN adduser -D $USER
+USER $USER
 
-COPY --from=build /components/app/target/source2adoc.jar /opt/source2adoc/source2adoc.jar
-ENTRYPOINT ["java", "-jar", "/opt/source2adoc/source2adoc.jar"]
+RUN go mod download \
+    && go mod tidy \
+    && go test ./... \
+    && go build .
+
+
+FROM alpine:3.19.1 AS run
+LABEL maintainer="sebastian@sommerfeld.io"
+
+ARG USER=source2adoc
+RUN adduser -D $USER
+
+COPY --from=build /components/app/source2adoc /usr/bin/source2adoc
+
+USER $USER
+ENTRYPOINT ["/usr/bin/source2adoc"]
