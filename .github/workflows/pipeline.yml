@@ -361,8 +361,7 @@ jobs:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
     needs: ['publish-rc']
-    # if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
-    if: always()
+    # if: always()
     permissions:
       contents: read
     strategy: # see build-image (duplicated because github actions does not support anchors)
