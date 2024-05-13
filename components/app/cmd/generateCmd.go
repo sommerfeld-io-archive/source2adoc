@@ -9,7 +9,7 @@ import (
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate AsciiDoc from inline documentation into an Antora component",
-	Long:  `This command allows you to generate AsciiDoc files from your inline documentation into an Antora component.`,
+	Long:  `This command allows you to generate AsciiDoc files from your inline documentation into an Antora component. The command scans the directory and all subdirectories.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		lang, _ := cmd.Flags().GetString("lang")
 		if !IsValidLanguage(lang) {

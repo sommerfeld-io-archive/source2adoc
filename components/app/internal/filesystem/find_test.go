@@ -35,19 +35,22 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 			"bash.sh",
 			"path/to/some/code/bash-with-functions.sh",
 		}},
-		{"Dockerfile", []string{
+		{"Dockerfile*", []string{
 			"Dockerfile",
 			"path/to/some/more/code/Dockerfile",
+			"path/to/some/more/code/Dockerfile.test",
 		}},
-		{"Makefile", []string{
+		{"Makefile*", []string{
 			"Makefile",
 			"path/to/some/more/code/Makefile",
 		}},
 		{"*.rb", []string{
 			"some/inspec/profile/controls/basic.rb",
 		}},
-		{"Vagrantfile", []string{
+		{"Vagrantfile*", []string{
 			"Vagrantfile",
+			"Vagrantfile.master",
+			"Vagrantfile.slave",
 			"path/to/some/more/code/Vagrantfile",
 		}},
 		{"*.yml", []string{

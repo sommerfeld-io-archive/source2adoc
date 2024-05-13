@@ -6,6 +6,7 @@ FROM golang:1.22.3-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY /components/app /components/app
+COPY /components/testdata /components/testdata
 WORKDIR /components/app
 
 RUN ls -alF \

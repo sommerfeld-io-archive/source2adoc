@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var searchCmd = &cobra.Command{
-	Use:   "search",
-	Short: "Search for source code files that match a given pattern",
-	Long:  `This command allows you to search for all source files that match a given pattern in the current directory.`,
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List for source code files that match a given pattern",
+	Long:  `This command allows you to list all source files that match a given pattern in the current directory and all subdirectories.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		lang, _ := cmd.Flags().GetString("lang")
 		if !IsValidLanguage(lang) {
@@ -22,7 +22,7 @@ var searchCmd = &cobra.Command{
 }
 
 func init() {
-	AddLangFlag(searchCmd)
-	AddAntoraDirFlag(searchCmd)
-	rootCmd.AddCommand(searchCmd)
+	AddLangFlag(listCmd)
+	AddAntoraDirFlag(listCmd)
+	rootCmd.AddCommand(listCmd)
 }

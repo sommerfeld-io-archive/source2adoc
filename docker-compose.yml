@@ -60,6 +60,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - ./components/app:/components/app:rw
+      - ./components/testdata:/components/testdata:rw
     working_dir: /components/app
     command:
       - /bin/sh
