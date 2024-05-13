@@ -27,4 +27,4 @@ Here are a few things you can do that will increase the likelihood of your pull 
 // |        Contents are based on Antora docs.         |
 // |                                                   |
 // +---------------------------------------------------+
-// copied from docs/modules/ROOT/pages/contribute.adoc
+// copied from docs/modules/development-guide/pages/contribute.adoc
