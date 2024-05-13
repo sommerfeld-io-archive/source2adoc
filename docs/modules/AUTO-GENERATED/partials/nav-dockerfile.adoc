@@ -1,2 +1,4 @@
 * xref:AUTO-GENERATED:Dockerfile.adoc[Dockerfile]
+* xref:AUTO-GENERATED:components/testdata/Dockerfile.adoc[components/testdata/Dockerfile]
+* xref:AUTO-GENERATED:components/testdata/path/to/some/more/code/Dockerfile.adoc[components/testdata/path/to/some/more/code/Dockerfile]
 * xref:AUTO-GENERATED:-devcontainer/Dockerfile.adoc[.devcontainer/Dockerfile]
