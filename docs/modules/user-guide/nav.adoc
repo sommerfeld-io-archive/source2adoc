@@ -1,4 +1,4 @@
-* How-To
+* How To
 ** xref:howto/run-as-docker-container.adoc[]
 ** xref:howto/use-with-github-actions.adoc[]
 ** xref:howto/write-inline-docs.adoc[]
