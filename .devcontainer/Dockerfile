@@ -1,3 +1,4 @@
+##
 # This Dockerfile sets up an environment for Go development within a devcontainer.
 # It is based on the link:https://hub.docker.com/r/sommerfeldio/devcontainer-go[sommerfeldio/devcontainer-go:rc] image.
 #
@@ -7,6 +8,7 @@
 #
 # Having Visual Studio Code (VSCode) and the Dev Container plugin installed are
 # essential prerequisites for this development environment.
+##
 
 FROM sommerfeldio/devcontainer-go:rc
 LABEL maintainer="sebastian@sommerfeld.io"

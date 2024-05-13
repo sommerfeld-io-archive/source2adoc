@@ -1,3 +1,7 @@
+##
+# TODO ... Write header docs
+##
+
 FROM golang:1.22.3-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
@@ -20,4 +24,5 @@ RUN adduser -D $USER
 COPY --from=build /components/app/source2adoc /usr/bin/source2adoc
 
 USER $USER
+# TODO make sure params are passed to the binary
 ENTRYPOINT ["/usr/bin/source2adoc"]

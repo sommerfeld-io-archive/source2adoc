@@ -1,4 +1,5 @@
 ---
+##
 # This Docker Compose file handles three responsibilities:
 #
 # . Linting the project files to ensure they adhere to coding standards.
@@ -11,6 +12,7 @@
 # NOTE: Building the application is used for local development only. For CI/CD workflows, the
 # Github Actions workflow is used to build the application. Linting and testing is used from
 # GitHub Actions as well
+##
 
 version: "3.3"
 services:

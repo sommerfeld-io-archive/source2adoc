@@ -7,9 +7,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:     "semver",
+	Use:     "source2adoc",
 	Version: "... tbd ...",
-	Short:   "Geneate AsciiDoc from inline documentation",
+	Short:   "Generate AsciiDoc from inline documentation",
 	Long:    strings.Trim(`Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora.`, " "),
 
 	Args: cobra.ExactArgs(0),

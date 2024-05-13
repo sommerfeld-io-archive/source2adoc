@@ -1,4 +1,5 @@
 ---
+##
 # The deployment pipeline for the source2docs app is implemented using GitHub Actions. The primary
 # objective of this pipeline is to assess the releasability of the application for deployment with
 # every push to the `main` branch. This is achieved through a series of automated tests and
@@ -16,7 +17,7 @@
 # tests pass successfully (and the workflow is running on the `main` branch), indicating that the
 # Snapshot image is robust and reliable, it is then tagged as a release candidate. Notably, release
 # candidates are exclusively published from the `main` branch.
-
+##
 
 name: Deployment Pipeline
 
