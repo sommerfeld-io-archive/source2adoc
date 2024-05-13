@@ -5,7 +5,7 @@ ls:
   .md: kebab-case | SCREAMING_SNAKE_CASE
 
   .conf: kebab-case
-  .go: snake_case
+  .go: snake_case | PascalCase
   .json: kebab-case
   .rb: kebab-case
   .tf: kebab-case
