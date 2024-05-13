@@ -96,11 +96,11 @@ jobs:
       - name: Update coverage report
         run: |
           (
-            cd components/app || exit
-            readonly COVERAGE_REPORT="go-code-coverage.out"
+            docker-compose up test-app
 
-            old='github.com/sommerfeld-io/source2adoc'
-            new='components/app'
+            readonly COVERAGE_REPORT="components/app/go-code-coverage.out"
+            readonly old='github.com/sommerfeld-io/source2adoc'
+            readonly new='components/app'
             sed -i "s|$old|$new|g" "$COVERAGE_REPORT"
           )
         shell: bash
