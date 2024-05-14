@@ -1,17 +1,23 @@
 <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="90" fill="#02303A" />
+  <!-- Background -->
+  <rect width="200" height="200" fill="#02303A" />
 
-  <!-- Document icon -->
+  <!-- Code symbol -->
   <g transform="translate(50, 50)">
-    <!-- Outer document shape -->
-    <rect x="0" y="0" width="100" height="120" rx="15" ry="15" fill="#03404B"/>
-    <!-- Folded corner -->
-    <polygon points="70,0 100,30 70,30" fill="#04555C"/>
+    <!-- Code lines -->
+    <line x1="0" y1="0" x2="100" y2="0" stroke="#04555C" stroke-width="8"/>
+    <line x1="0" y1="20" x2="100" y2="20" stroke="#04555C" stroke-width="8"/>
+    <line x1="0" y1="40" x2="100" y2="40" stroke="#04555C" stroke-width="8"/>
 
-    <!-- Inner lines representing code -->
-    <line x1="20" y1="40" x2="80" y2="40" stroke="white" stroke-width="6"/>
-    <line x1="20" y1="60" x2="80" y2="60" stroke="white" stroke-width="6"/>
-    <line x1="20" y1="80" x2="60" y2="80" stroke="white" stroke-width="6"/>
+    <!-- Arrow indicating generation -->
+    <polygon points="110,20 130,10 130,30" fill="#03404B"/>
+
+    <!-- AsciiDoc symbol -->
+    <g transform="translate(140, 0)">
+      <!-- AsciiDoc lines -->
+      <line x1="0" y1="0" x2="80" y2="0" stroke="#04555C" stroke-width="8"/>
+      <line x1="0" y1="20" x2="80" y2="20" stroke="#04555C" stroke-width="8"/>
+      <line x1="0" y1="40" x2="80" y2="40" stroke="#04555C" stroke-width="8"/>
+    </g>
   </g>
 </svg>
