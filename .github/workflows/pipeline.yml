@@ -221,9 +221,9 @@ jobs:
           content=$(cat "${{ matrix.dest }}")
           content="${content//xref:development-guide:solution-strategy.adoc[]/link:https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/development-guide/pages/solution-strategy.adoc[Solution Strategy]}"
           echo "$content" > "${{ matrix.dest }}"
+
+
         shell: bash
-      # xref:development-guide:solution-strategy.adoc[]
-      # https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/development-guide/pages/solution-strategy.adoc
       - name: Commit and push
         uses: EndBug/add-and-commit@v9.1.4
         with:
