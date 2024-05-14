@@ -216,6 +216,13 @@ jobs:
             echo "// copied from ${{ matrix.src }}"
           } >> "${{ matrix.dest }}"
         shell: bash
+      - name: Replace xref with static links to files on GitHub
+        run: |
+          old="xref:development-guide:solution-strategy.adoc[]"
+          new="https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/development-guide/pages/solution-strategy.adoc"
+
+          sed -i "s|$old|$new|g" "${{ matrix.dest }}"
+        shell: bash
       - name: Commit and push
         uses: EndBug/add-and-commit@v9.1.4
         with:
