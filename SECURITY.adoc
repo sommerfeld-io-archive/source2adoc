@@ -25,4 +25,4 @@ We prioritize the security of our source2adoc project and take proactive measure
 // |        Contents are based on Antora docs.         |
 // |                                                   |
 // +---------------------------------------------------+
-// copied from docs/modules/development-guide/pages/security.adoc
+// copied from docs/modules/ROOT/pages/security.adoc
