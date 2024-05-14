@@ -193,6 +193,8 @@ jobs:
             dest: LICENSE.adoc
           - src: docs/modules/development-guide/pages/contribute.adoc
             dest: CONTRIBUTING.adoc
+          - src: docs/modules/development-guide/pages/security.adoc
+            dest: SECURITY.adoc
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

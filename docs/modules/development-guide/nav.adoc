@@ -1,5 +1,6 @@
 * Developer Guide
 ** xref:contribute.adoc[]
+** xref:security.adoc[]
 ** xref:solution-strategy.adoc[]
 ** Architecture Decisions
 *** xref:architecture-decisions/adr-001-ecosystem.adoc[]
