@@ -191,9 +191,9 @@ jobs:
             dest: README.adoc
           - src: docs/modules/ROOT/pages/license.adoc
             dest: LICENSE.adoc
-          - src: docs/modules/development-guide/pages/contribute.adoc
+          - src: docs/modules/ROOT/pages/contribute.adoc
             dest: CONTRIBUTING.adoc
-          - src: docs/modules/development-guide/pages/security.adoc
+          - src: docs/modules/ROOT/pages/security.adoc
             dest: SECURITY.adoc
     steps:
       - name: Checkout code

@@ -1,4 +1,4 @@
-= Global Solution Strategy
+= Solution Strategy
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 This section outlines the global solution strategy for the `source2adoc` project, focusing on development, tooling, deployment, and support considerations.
