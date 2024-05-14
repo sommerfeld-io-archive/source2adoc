@@ -3,7 +3,6 @@
 .git
 .github
 .vscode
-components/app/target
 
 # files
 .dockerignore
@@ -22,3 +21,4 @@ Dockerfile
 LICENSE.adoc
 README.adoc
 CONTRIBUTING.adoc
+SECURITY.adoc
