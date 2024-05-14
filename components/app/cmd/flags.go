@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/sommerfeld-io/source2adoc/internal"
 	"github.com/spf13/cobra"
 )
-
-var allowedLangs = []string{"bash", "Dockerfile", "Makefile", "ruby", "Vagrantfile", "yaml", "yml"}
 
 // AddLangFlag adds a language flag to the given command.
 // The language flag is used to specify the language of the source files.
 // It is a required flag.
 func AddLangFlag(cmd *cobra.Command) {
-	langs := strings.Join(allowedLangs, ", ")
+	langs := strings.Join(internal.SupportedLangs(), ", ")
 	cmd.Flags().String("lang", "", fmt.Sprintf("Source code language (required). Allowed languages are: %s.", langs))
 	cmd.MarkFlagRequired("lang")
 }
@@ -33,7 +32,7 @@ func AddAntoraDirFlag(cmd *cobra.Command) {
 // Returns:
 // - true if the language is valid, false otherwise.
 func IsValidLanguage(lang string) bool {
-	for _, b := range allowedLangs {
+	for _, b := range internal.SupportedLangs() {
 		if b == lang {
 			return true
 		}

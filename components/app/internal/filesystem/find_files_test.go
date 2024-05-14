@@ -1,21 +1,12 @@
 package filesystem
 
 import (
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/sommerfeld-io/source2adoc/internal"
 	"github.com/stretchr/testify/assert"
 )
-
-func testDataDir() string {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	return filepath.Join(currentDir, "../../../testdata")
-}
 
 func trimPaths(paths []string, testDataDir string) []string {
 	for i := range paths {
@@ -59,8 +50,8 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.pattern, func(t *testing.T) {
-			paths, err := FindFilesByPattern(testDataDir(), test.pattern)
-			paths = trimPaths(paths, testDataDir())
+			paths, err := FindFilesByPattern(internal.TestDataDir(), test.pattern)
+			paths = trimPaths(paths, internal.TestDataDir())
 
 			assert.NoError(err, "Should not return an error")
 			assert.Equal(test.expected, paths, "Should return correct files")

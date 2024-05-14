@@ -50,3 +50,11 @@ func TestShouldGetErrorForInvalidLanguage(t *testing.T) {
 		})
 	}
 }
+func TestSupportedLangs(t *testing.T) {
+	assert := assert.New(t)
+
+	expected := []string{"Dockerfile", "Makefile", "Vagrantfile", "bash", "ruby", "yaml", "yml"}
+	langs := SupportedLangs()
+
+	assert.ElementsMatch(expected, langs, "Should return supported languages")
+}
