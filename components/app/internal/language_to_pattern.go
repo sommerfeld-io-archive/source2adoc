@@ -15,6 +15,9 @@ var patterns = map[string]string{
 	"yml":         "*.yml",
 }
 
+// FileNamePatternForLanguage takes a language as input and returns the corresponding file name
+// pattern. If the language is not supported, it returns an error. Otherwise, it returns the
+// corresponding pattern.
 func FileNamePatternForLanguage(lang string) (string, error) {
 	pattern, ok := patterns[lang]
 	if !ok {
@@ -24,6 +27,7 @@ func FileNamePatternForLanguage(lang string) (string, error) {
 	return pattern, nil
 }
 
+// SupportedLangs returns all the supported languages to e.g. display in the command description.
 func SupportedLangs() []string {
 	keys := make([]string, 0, len(patterns))
 	for key := range patterns {
