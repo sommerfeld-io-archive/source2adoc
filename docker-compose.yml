@@ -6,8 +6,14 @@
 # . Building the source2adoc application.
 # . Testing the application.
 #
-# When running docker-compose up,all  services are orchestrated to execute sequentially, ensuring
+# When running docker-compose up, all services are orchestrated to execute sequentially, ensuring
 # the project is linted, built, and tested efficiently within the Docker environment.
+#
+# [source, bash]
+# ....
+# docker compose build
+# docker compose up
+# ....
 #
 # NOTE: Building the application is used for local development only. For CI/CD workflows, the
 # Github Actions workflow is used to build the application. Linting and testing is used from
