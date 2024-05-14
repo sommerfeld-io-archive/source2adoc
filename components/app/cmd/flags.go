@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var allowedLangs = []string{"bash", "Dockerfile", "Makefile", "Ruby", "Vagrantfile", "yml"}
+var allowedLangs = []string{"bash", "Dockerfile", "Makefile", "ruby", "Vagrantfile", "yaml", "yml"}
 
 // AddLangFlag adds a language flag to the given command.
 // The language flag is used to specify the language of the source files.

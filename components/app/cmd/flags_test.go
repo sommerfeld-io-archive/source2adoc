@@ -13,8 +13,9 @@ func TestIsValidLanguage(t *testing.T) {
 		assert.True(IsValidLanguage("bash"))
 		assert.True(IsValidLanguage("Dockerfile"))
 		assert.True(IsValidLanguage("Makefile"))
-		assert.True(IsValidLanguage("Ruby"))
+		assert.True(IsValidLanguage("ruby"))
 		assert.True(IsValidLanguage("Vagrantfile"))
+		assert.True(IsValidLanguage("yaml"))
 		assert.True(IsValidLanguage("yml"))
 	})
 

@@ -62,8 +62,8 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 			paths, err := FindFilesByPattern(testDataDir(), test.pattern)
 			paths = trimPaths(paths, testDataDir())
 
-			assert.NoError(err, "FindFilesByPattern should not return an error")
-			assert.Equal(test.expected, paths, "FindFilesByPattern should return correct files")
+			assert.NoError(err, "Should not return an error")
+			assert.Equal(test.expected, paths, "Should return correct files")
 		})
 	}
 }
