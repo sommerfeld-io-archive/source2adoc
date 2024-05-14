@@ -3,3 +3,6 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec viverra ultricies, nunc nunc ultricies nunc, nec nunc nunc nunc nunc nunc nunc.
 
 CAUTION: Todo ... something about docker compose and components/app/local-build.sh
+
+== Prerequisites
+Having Visual Studio Code (VSCode) and the Dev Container plugin installed are essential prerequisites for this development environment. The application is developed on Ubuntu 23.10 with Docker 26.1.2.
