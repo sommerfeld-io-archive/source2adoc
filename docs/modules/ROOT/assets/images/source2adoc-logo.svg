@@ -1,23 +1,28 @@
 <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="200" height="200" fill="#02303A" />
+  <!-- Transparent background -->
+  <rect width="100%" height="100%" fill="none"/>
 
-  <!-- Code symbol -->
+  <!-- Code icon -->
   <g transform="translate(50, 50)">
     <!-- Code lines -->
-    <line x1="0" y1="0" x2="100" y2="0" stroke="#04555C" stroke-width="8"/>
-    <line x1="0" y1="20" x2="100" y2="20" stroke="#04555C" stroke-width="8"/>
-    <line x1="0" y1="40" x2="100" y2="40" stroke="#04555C" stroke-width="8"/>
+    <rect x="0" y="0" width="40" height="120" fill="#02303A"/>
+    <rect x="60" y="0" width="40" height="120" fill="#02303A"/>
+    <rect x="30" y="40" width="40" height="40" fill="#02303A"/>
+    <rect x="90" y="40" width="40" height="40" fill="#02303A"/>
+    <rect x="0" y="120" width="40" height="40" fill="#02303A"/>
+    <rect x="60" y="120" width="40" height="40" fill="#02303A"/>
+  </g>
 
-    <!-- Arrow indicating generation -->
-    <polygon points="110,20 130,10 130,30" fill="#03404B"/>
-
-    <!-- AsciiDoc symbol -->
-    <g transform="translate(140, 0)">
-      <!-- AsciiDoc lines -->
-      <line x1="0" y1="0" x2="80" y2="0" stroke="#04555C" stroke-width="8"/>
-      <line x1="0" y1="20" x2="80" y2="20" stroke="#04555C" stroke-width="8"/>
-      <line x1="0" y1="40" x2="80" y2="40" stroke="#04555C" stroke-width="8"/>
-    </g>
+  <!-- Gear icon -->
+  <g transform="translate(110, 110)">
+    <!-- Gear outline -->
+    <circle cx="50" cy="50" r="40" stroke="#02303A" stroke-width="8" fill="none" />
+    <!-- Gear teeth -->
+    <line x1="50" y1="10" x2="50" y2="30" stroke="#02303A" stroke-width="8"/>
+    <line x1="50" y1="70" x2="50" y2="90" stroke="#02303A" stroke-width="8"/>
+    <line x1="20" y1="50" x2="40" y2="50" stroke="#02303A" stroke-width="8"/>
+    <line x1="60" y1="50" x2="80" y2="50" stroke="#02303A" stroke-width="8"/>
+    <!-- Inner gear -->
+    <circle cx="50" cy="50" r="20" fill="#02303A" />
   </g>
 </svg>
