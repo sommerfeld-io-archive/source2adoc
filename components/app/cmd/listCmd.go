@@ -23,6 +23,5 @@ var listCmd = &cobra.Command{
 
 func init() {
 	AddLangFlag(listCmd)
-	AddAntoraDirFlag(listCmd)
 	rootCmd.AddCommand(listCmd)
 }
