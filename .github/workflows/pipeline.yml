@@ -340,7 +340,7 @@ jobs:
     name: ${{ matrix.image-name }}
     # needs: ['test-rc']
     needs: ['publish-rc']
-    # if: always()
+    if: always()
     permissions:
       contents: read
     strategy: # see build-image (duplicated because github actions does not support anchors)
