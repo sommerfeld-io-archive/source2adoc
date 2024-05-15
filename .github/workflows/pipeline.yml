@@ -355,32 +355,3 @@ jobs:
           TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
         shell: bash
-
-  # ----- Notifications -------------------------
-
-  # on-failure:
-  #   runs-on: ubuntu-latest
-  #   needs: [
-  #     'update-versions',
-  #     'generate-docs',
-  #     'copy-docs',
-  #     'sonarcloud',
-  #     'lint-yaml',
-  #     'lint-folders',
-  #     'lint-filenames',
-  #     'shellcheck',
-  #     'build-image',
-  #     'test-image',
-  #     'publish-rc',
-  #     'test-rc',
-  #     'cleanup',
-  #   ]
-  #   if: failure()
-  #   steps:
-  #     - name: Send Pipeline Status to Google Chat
-  #       if: always()
-  #       uses: Co-qn/google-chat-notification@releases/v1
-  #       with:
-  #         name: ${{ github.workflow }}
-  #         url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
-  #         status: failure
