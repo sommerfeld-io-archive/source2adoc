@@ -314,31 +314,32 @@ jobs:
 
   # ----- Test :rc stage -------------------------
 
-  test-rc:
-    runs-on: ubuntu-latest
-    name: ${{ matrix.image-name }}
-    needs: ['publish-rc']
-    permissions:
-      contents: read
-    strategy: # see build-image (duplicated because github actions does not support anchors)
-      matrix:
-        include:
-          - registry: docker.io
-            image-name: source2adoc
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
-        run: |
-          echo "CHANGE ME"
-        shell: bash
+  # test-rc:
+  #   runs-on: ubuntu-latest
+  #   name: ${{ matrix.image-name }}
+  #   needs: ['publish-rc']
+  #   permissions:
+  #     contents: read
+  #   strategy: # see build-image (duplicated because github actions does not support anchors)
+  #     matrix:
+  #       include:
+  #         - registry: docker.io
+  #           image-name: source2adoc
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
+  #       run: |
+  #         echo "CHANGE ME"
+  #       shell: bash
 
   # ----- Cleanup -------------------------------
 
   cleanup:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
-    needs: ['test-rc']
+    # needs: ['test-rc']
+    needs: ['publish-rc']
     # if: always()
     permissions:
       contents: read
