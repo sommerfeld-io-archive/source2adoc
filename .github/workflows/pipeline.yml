@@ -156,6 +156,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
+          path: ${{ github.workspace }}/components/app
+      - name: ls -alF
+        run: ls -alF
+        shell: bash
       - name: ls -alF components/app
         run: ls -alF components/app
         shell: bash
@@ -185,6 +189,9 @@ jobs:
           name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
       - name: ls -alF
         run: ls -alF
+        shell: bash
+      - name: Make binary executable
+        run: chmod +x source2adoc
         shell: bash
       - name: Generate docs from source code
         run: ./source2adoc generate --lang=bash
