@@ -116,9 +116,8 @@ jobs:
 
   # ----- Commit stage (docs) -------------------
 
-  update-versions:
+  generate-docs:
     runs-on: ubuntu-latest
-    name: ${{ matrix.yml-file }}
     if: ${{ (github.actor != 'dependabot[bot]') }}
     needs: [
       'lint-yaml',
@@ -126,9 +125,6 @@ jobs:
       'lint-filenames',
       'shellcheck',
     ]
-    strategy:
-      matrix:
-        yml-file: ['docs/antora.yml']
     permissions:
       contents: write
     steps:
@@ -136,37 +132,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{github.ref}}
-      - name: Print Branchname
-        run: echo ${{github.ref}}
-        shell: bash
-      - name: Adjust version in ${{ matrix.yml-file }}
+      - name: Adjust version in docs/antora.yml
         uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
         with:
           git_ref: ${{github.ref}}
-          file: ${{ matrix.yml-file }}
-      - name: Run yamllint for ${{ matrix.yml-file }}
-        uses: ibiqlik/action-yamllint@v3
-        with:
-          file_or_dir: ${{ matrix.yml-file }}
-      - name: Commit and push
-        uses: EndBug/add-and-commit@v9.1.4
-        with:
-          author_name: sebastian
-          author_email: sebastian@sommerfeld.io
-          message: "[Actions Bot] update antora yml"
-          tag_push: --force
-
-  generate-docs:
-    runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') }}
-    needs: ['update-versions']
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{github.ref}}
+          file: docs/antora.yml
       - name: Generate docs from source code
         # TODO ... replace rather quickly !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         run: docker run --rm --volume "$(pwd):/project" --workdir "/project" sommerfeldio/source2docs:rc docs
