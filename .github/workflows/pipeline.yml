@@ -109,8 +109,8 @@ jobs:
         run: |
           (
             cd components/app || exit
-            go mod download
-            go mod tidy
+            # go mod download
+            # go mod tidy
             go build .
           )
         shell: bash
