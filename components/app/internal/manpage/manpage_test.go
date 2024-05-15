@@ -42,22 +42,20 @@ func TestAppendCommandDocsToAdoc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expectedContent := `
-== testCommand
-Test command synopsis
-
-[source, bash]
-....
-testCommand [options]
-....
-
-Test command description
-
-* option1, o, default = default1 +
-  Option 1 usage
-* option2, default = _none_ +
-  Option 2 usage
-`
+	expectedContent := "\n" +
+		"== testCommand\n" +
+		"Test command synopsis\n" +
+		"\n" +
+		"[source, bash]\n" +
+		"....\n" +
+		"testCommand [options]\n" +
+		"....\n" +
+		"\n" +
+		"Test command description\n\n" +
+		"* `option1`, `o`, default = default1 +\n" +
+		"  Option 1 usage\n" +
+		"* `option2`, default = _none_ +\n" +
+		"  Option 2 usage\n"
 
 	assert.Equal(t, expectedContent, string(fileContent))
 }

@@ -105,9 +105,9 @@ func appendCommandDocsToAdoc(commandDocs CommandDocs, manpageFile string) {
 		}
 
 		if option.Shorthand == "" {
-			appendStringToFile("* "+option.Name+", default = "+defaultValue+" +\n", manpageFile)
+			appendStringToFile("* `"+option.Name+"`, default = "+defaultValue+" +\n", manpageFile)
 		} else {
-			appendStringToFile("* "+option.Name+", "+option.Shorthand+", default = "+defaultValue+" +\n", manpageFile)
+			appendStringToFile("* `"+option.Name+"`, `"+option.Shorthand+"`, default = "+defaultValue+" +\n", manpageFile)
 
 		}
 
