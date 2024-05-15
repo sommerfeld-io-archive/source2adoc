@@ -3,4 +3,3 @@
 ** xref:security.adoc[]
 ** xref:license.adoc[]
 * xref:global-requirements.adoc[]
-* xref:GENERATED/manpage.adoc[]

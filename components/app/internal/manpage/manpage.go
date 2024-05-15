@@ -85,7 +85,6 @@ func appendCommandDocsToAdoc(commandDocs CommandDocs, manpageFile string) {
 
 	appendStringToFile("== "+commandDocs.Name+"\n", manpageFile)
 	appendStringToFile(commandDocs.Synopsis+"\n\n", manpageFile)
-	appendStringToFile(commandDocs.Description+"\n", manpageFile)
 
 	appendStringToFile("[source, bash]\n", manpageFile)
 	appendStringToFile("....\n", manpageFile)
@@ -97,16 +96,23 @@ func appendCommandDocsToAdoc(commandDocs CommandDocs, manpageFile string) {
 	appendStringToFile(usage+"\n", manpageFile)
 	appendStringToFile("....\n\n", manpageFile)
 
-	appendStringToFile("[options=\"header\"]\n", manpageFile)
-	appendStringToFile("|===\n", manpageFile)
-	appendStringToFile("|Flag Name |Shorthand |Desc |Default Value\n", manpageFile)
+	appendStringToFile(commandDocs.Description+"\n\n", manpageFile)
+
 	for _, option := range commandDocs.Options {
-		appendStringToFile("|"+option.Name+"\n", manpageFile)
-		appendStringToFile("|"+option.Shorthand+"\n", manpageFile)
-		appendStringToFile("|"+option.Usage+"\n", manpageFile)
-		appendStringToFile("|"+option.DefaultValue+"\n", manpageFile)
+		defaultValue := option.DefaultValue
+		if defaultValue == "" {
+			defaultValue = "_none_"
+		}
+
+		if option.Shorthand == "" {
+			appendStringToFile("* "+option.Name+", default = "+defaultValue+" +\n", manpageFile)
+		} else {
+			appendStringToFile("* "+option.Name+", "+option.Shorthand+", default = "+defaultValue+" +\n", manpageFile)
+
+		}
+
+		appendStringToFile("  "+option.Usage+"\n", manpageFile)
 	}
-	appendStringToFile("|===\n", manpageFile)
 }
 
 func appendStringToFile(content string, filename string) {

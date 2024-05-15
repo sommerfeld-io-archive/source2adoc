@@ -8,7 +8,6 @@ import (
 )
 
 func TestAppendCommandDocsToAdoc(t *testing.T) {
-	// Create a temporary file for testing
 	tempFile, err := os.Create("test_manpage.adoc")
 	if err != nil {
 		t.Fatal(err)
@@ -29,9 +28,9 @@ func TestAppendCommandDocsToAdoc(t *testing.T) {
 			},
 			{
 				Name:         "option2",
-				DefaultValue: "default2",
+				DefaultValue: "",
 				Usage:        "Option 2 usage",
-				Shorthand:    "t",
+				Shorthand:    "",
 			},
 		},
 	}
@@ -46,24 +45,17 @@ func TestAppendCommandDocsToAdoc(t *testing.T) {
 	expectedContent := `== testCommand
 Test command synopsis
 
-Test command description
 [source, bash]
 ....
 testCommand [options]
 ....
 
-[options="header"]
-|===
-|Flag Name |Shorthand |Desc |Default Value
-|option1
-|o
-|Option 1 usage
-|default1
-|option2
-|t
-|Option 2 usage
-|default2
-|===
+Test command description
+
+* option1, o, default = default1 +
+  Option 1 usage
+* option2, default = _none_ +
+  Option 2 usage
 `
 
 	assert.Equal(t, expectedContent, string(fileContent))
