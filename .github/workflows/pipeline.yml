@@ -34,6 +34,10 @@ on:
 env:
   IMAGE_TAG_RC: rc
   IMAGE_TAG_LATEST: latest
+  COVERAGE_REPORT: components/app/go-code-coverage.out
+  COVERAGE_REPORT_WORKFLOW_ARTIFACT: coverage-report
+  GO_BINARY: components/app/source2adoc
+  GO_BINARY_WORKFLOW_ARTIFACT: go-binary
 
 permissions:
   contents: read
@@ -81,7 +85,7 @@ jobs:
 
   # ----- Commit stage - 2 ----------------------
 
-  sonarcloud:
+  go-app:
     runs-on: ubuntu-latest
     needs: [
       'lint-yaml',
@@ -102,29 +106,46 @@ jobs:
           (
             docker-compose up test-app
 
-            readonly COVERAGE_REPORT="components/app/go-code-coverage.out"
             readonly old='github.com/sommerfeld-io/source2adoc'
             readonly new='components/app'
-            sed -i "s|$old|$new|g" "$COVERAGE_REPORT"
+            sed -i "s|$old|$new|g" "${{ env.COVERAGE_REPORT }}"
           )
         shell: bash
+      - name: Upload artifact (coverage report)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
+          path: ${{ env.COVERAGE_REPORT }}
+      - name: Upload artifact (go-binary)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
+          path: ${{ env.GO_BINARY }}
+
+  sonarcloud:
+    runs-on: ubuntu-latest
+    if: ${{ (github.actor != 'dependabot[bot]') }}
+    needs: ['go-app']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download artifact (coverage report)
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
+          path: ${{ env.COVERAGE_REPORT }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # ----- Commit stage (docs) -------------------
-
   generate-docs:
     runs-on: ubuntu-latest
     if: ${{ (github.actor != 'dependabot[bot]') }}
-    needs: [
-      'lint-yaml',
-      'lint-folders',
-      'lint-filenames',
-      'shellcheck',
-    ]
+    needs: ['go-app']
     permissions:
       contents: write
     steps:
@@ -132,14 +153,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{github.ref}}
+      - name: Download artifact (go-binary)
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
+          path: ${{ github.workspace }}
       - name: Adjust version in docs/antora.yml
         uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
         with:
           git_ref: ${{github.ref}}
           file: docs/antora.yml
       - name: Generate docs from source code
-        # TODO ... replace rather quickly !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        run: docker run --rm --volume "$(pwd):/project" --workdir "/project" sommerfeldio/source2docs:rc docs
+        run: ./source2adoc generate --lang=bash
+        shell: bash
+      - name: Generate manpage
+        run: |
+          ./source2adoc manpage
+          mv ./manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
         shell: bash
       - name: Copy Adoc files to project root
         run: |
@@ -182,12 +212,17 @@ jobs:
           message: "[Actions Bot] generate docs"
           tag_push: --force
 
-  # ----- Commit stage (build) ------------------
+  # ----- Commit stage (image) ------------------
 
   build-image:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}:${{ github.sha }}
-    needs: ['generate-docs']
+    needs: [
+      'lint-yaml',
+      'lint-folders',
+      'lint-filenames',
+      'shellcheck',
+    ]
     permissions:
       contents: read
       pull-requests: write
@@ -247,8 +282,6 @@ jobs:
           to: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
           exit-code: false
           write-comment: ${{ github.event_name == 'pull_request' }}
-
-  # ----- Test stage ----------------------------
 
   test-image:
     runs-on: ubuntu-latest

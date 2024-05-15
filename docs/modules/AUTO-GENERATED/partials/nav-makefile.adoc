@@ -1,2 +1,0 @@
-* xref:AUTO-GENERATED:components/testdata/path/to/some/more/code/Makefile.adoc[components/testdata/path/to/some/more/code/Makefile]
-* xref:AUTO-GENERATED:components/testdata/Makefile.adoc[components/testdata/Makefile]

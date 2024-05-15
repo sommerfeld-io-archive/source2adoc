@@ -1,1 +1,0 @@
-* xref:AUTO-GENERATED:components/testdata/some/inspec/profile/controls/basic-rb.adoc[components/testdata/some/inspec/profile/controls/basic.rb]
