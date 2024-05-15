@@ -21,6 +21,8 @@ image:{github-actions-url}/{job}/{badge}[Github Badge, link={github-actions-url}
 
 The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to Javadoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
 
+NOTE: This project is currently in its early stages and is still in the incubation phase. As a result, there are many moving parts and tasks that need to be completed. The project is currently incomplete and work is ongoing to further develop and enhance its functionality.
+
 == How to use
 CAUTION: todo ... put the `docker run ...` command here
 
