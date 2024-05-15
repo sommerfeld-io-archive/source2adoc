@@ -109,8 +109,6 @@ jobs:
         run: |
           (
             cd components/app || exit
-            # go mod download
-            # go mod tidy
             go build .
           )
         shell: bash
@@ -158,7 +156,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
-          path: ${{ env.COVERAGE_REPORT }}
       - name: ls -alF components/app
         run: ls -alF components/app
         shell: bash
@@ -186,12 +183,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
-          path: ${{ github.workspace }}
-      - name: Adjust version in docs/antora.yml
-        uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
-        with:
-          git_ref: ${{github.ref}}
-          file: docs/antora.yml
+      - name: ls -alF
+        run: ls -alF
+        shell: bash
       - name: Generate docs from source code
         run: ./source2adoc generate --lang=bash
         shell: bash
@@ -200,6 +194,11 @@ jobs:
           ./source2adoc manpage
           mv ./manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
         shell: bash
+      - name: Adjust version in docs/antora.yml
+        uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
+        with:
+          git_ref: ${{github.ref}}
+          file: docs/antora.yml
       - name: Copy Adoc files to project root
         run: |
           cp docs/modules/ROOT/pages/index.adoc README.adoc
