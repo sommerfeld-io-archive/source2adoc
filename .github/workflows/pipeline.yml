@@ -101,6 +101,11 @@ jobs:
       - name: Test app
         run: docker-compose up test-app
         shell: bash
+      - name: Build go app (binary)
+        run: |
+          cd components/app
+          go build .
+        shell: bash
       - name: Update coverage report
         run: |
           (
@@ -118,15 +123,19 @@ jobs:
         run: ls -alF components/app
         shell: bash
       - name: Upload artifact (coverage report)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
           path: ${{ env.COVERAGE_REPORT }}
+          if-no-files-found: error
+          retention-days: 1
       - name: Upload artifact (go-binary)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
           path: ${{ env.GO_BINARY }}
+          if-no-files-found: error
+          retention-days: 1
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -138,7 +147,7 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Download artifact (coverage report)
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
           path: ${{ env.COVERAGE_REPORT }}
@@ -166,7 +175,7 @@ jobs:
         with:
           ref: ${{github.ref}}
       - name: Download artifact (go-binary)
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
           path: ${{ github.workspace }}
