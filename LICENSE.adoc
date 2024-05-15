@@ -10,4 +10,3 @@ Not decided yet ... so all rights reserved for the moment.
 // |        Contents are based on Antora docs.         |
 // |                                                   |
 // +---------------------------------------------------+
-// copied from docs/modules/ROOT/pages/license.adoc

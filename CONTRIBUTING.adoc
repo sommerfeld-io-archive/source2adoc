@@ -39,4 +39,3 @@ To increase the likelihood of your feature request being accepted, please write 
 // |        Contents are based on Antora docs.         |
 // |                                                   |
 // +---------------------------------------------------+
-// copied from docs/modules/ROOT/pages/contribute.adoc
