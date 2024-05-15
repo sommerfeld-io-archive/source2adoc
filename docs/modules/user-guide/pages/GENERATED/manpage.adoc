@@ -1,5 +1,6 @@
 = Manpage
 
+
 == source2adoc
 Generate AsciiDoc from inline documentation
 
@@ -13,6 +14,7 @@ Convert inline documentation into AsciiDoc files, tailored for seamless integrat
 
 * help, h, default = false +
   help for source2adoc
+
 == source2adoc generate
 Generate AsciiDoc from inline documentation into an Antora component
 
@@ -32,6 +34,7 @@ This command allows you to generate AsciiDoc files from your inline documentatio
 * lang, default = _none_ +
   Source code language (required). Allowed languages are: Dockerfile, Makefile, Vagrantfile, bash, ruby, yaml, yml.
 
+
 == source2adoc lint
 Lint source code files for compliance with source2adoc rules
 
@@ -50,6 +53,7 @@ This command allows you to lint your source files and check if the comments comp
 * lang, default = _none_ +
   Source code language (required). Allowed languages are: Dockerfile, Makefile, Vagrantfile, bash, ruby, yaml, yml.
 
+
 == source2adoc list
 List for source code files that match a given pattern
 
@@ -65,6 +69,7 @@ This command allows you to list all source files that match a given pattern in t
   help for list
 * lang, default = _none_ +
   Source code language (required). Allowed languages are: Dockerfile, Makefile, Vagrantfile, bash, ruby, yaml, yml.
+
 
 == source2adoc manpage
 Generate manpage in Asciidoc format into the current working directory

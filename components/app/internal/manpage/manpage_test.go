@@ -42,7 +42,8 @@ func TestAppendCommandDocsToAdoc(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expectedContent := `== testCommand
+	expectedContent := `
+== testCommand
 Test command synopsis
 
 [source, bash]

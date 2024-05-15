@@ -83,7 +83,7 @@ func appendCommandDocsToAdoc(commandDocs CommandDocs, manpageFile string) {
 	}
 	defer file.Close()
 
-	appendStringToFile("== "+commandDocs.Name+"\n", manpageFile)
+	appendStringToFile("\n== "+commandDocs.Name+"\n", manpageFile)
 	appendStringToFile(commandDocs.Synopsis+"\n\n", manpageFile)
 
 	appendStringToFile("[source, bash]\n", manpageFile)
