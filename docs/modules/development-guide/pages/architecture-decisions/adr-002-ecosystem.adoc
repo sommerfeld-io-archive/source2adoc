@@ -1,8 +1,8 @@
-= ADR-001: Choosing a Development Ecosystem
+= ADR-002: Choosing a Development Ecosystem
 
 [cols="1,6"]
 |===
-|Status |Done
+|Status |Accepted
 |Decision Date |2024-05-13
 |Decision |Go with Cobra
 |===
