@@ -23,8 +23,7 @@ The primary objective of `source2adoc` is to facilitate the creation of comprehe
 
 NOTE: This project is currently in its early stages and is still in the incubation phase. As a result, there are many moving parts and tasks that need to be completed. The project is currently incomplete and work is ongoing to further develop and enhance its functionality.
 
-== How to use
-CAUTION: todo ... put the `docker run ...` command here
+CAUTION: todo ... Link Manpage and update link in pipeline
 
 == Risks and Technical Debts
 link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.

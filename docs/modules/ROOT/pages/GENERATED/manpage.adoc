@@ -1,0 +1,117 @@
+= Manpage
+
+== source2adoc
+Generate AsciiDoc from inline documentation
+
+Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora.
+
+[source, bash]
+....
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest
+....
+
+[options="header"]
+|===
+|Flag Name |Shorthand |Desc |Default Value
+|help
+|h
+|help for source2adoc
+|false
+|===
+== source2adoc generate
+Generate AsciiDoc from inline documentation into an Antora component
+
+
+This command allows you to generate AsciiDoc files from your inline documentation into an Antora component. The command scans the directory and all subdirectories.
+
+[source, bash]
+....
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest generate [flags]
+....
+
+[options="header"]
+|===
+|Flag Name |Shorthand |Desc |Default Value
+|antora-dir
+|
+|Directory for Antora (optional)
+|docs
+|help
+|h
+|help for generate
+|false
+|lang
+|
+|Source code language (required). Allowed languages are: Dockerfile, Makefile, Vagrantfile, bash, ruby, yaml, yml.
+
+|
+|===
+== source2adoc lint
+Lint source code files for compliance with source2adoc rules
+
+This command allows you to lint your source files and check if the comments comply with the rules of the source2adoc app. The command scans the directory and all subdirectories.
+
+[source, bash]
+....
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest lint [flags]
+....
+
+[options="header"]
+|===
+|Flag Name |Shorthand |Desc |Default Value
+|antora-dir
+|
+|Directory for Antora (optional)
+|docs
+|help
+|h
+|help for lint
+|false
+|lang
+|
+|Source code language (required). Allowed languages are: Dockerfile, Makefile, Vagrantfile, bash, ruby, yaml, yml.
+
+|
+|===
+== source2adoc list
+List for source code files that match a given pattern
+
+This command allows you to list all source files that match a given pattern in the current directory and all subdirectories.
+
+[source, bash]
+....
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest list [flags]
+....
+
+[options="header"]
+|===
+|Flag Name |Shorthand |Desc |Default Value
+|help
+|h
+|help for list
+|false
+|lang
+|
+|Source code language (required). Allowed languages are: Dockerfile, Makefile, Vagrantfile, bash, ruby, yaml, yml.
+
+|
+|===
+== source2adoc manpage
+Generate manpage in Asciidoc format into the current working directory
+
+
+This command generates a manpage in Asciidoc format into the current working directory. The `manpage.adoc` contains information about all commands.
+
+[source, bash]
+....
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest manpage [flags]
+....
+
+[options="header"]
+|===
+|Flag Name |Shorthand |Desc |Default Value
+|help
+|h
+|help for manpage
+|false
+|===
