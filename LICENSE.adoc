@@ -1,6 +1,6 @@
 = License
 
-tbd ...
+Not decided yet ... so all rights reserved for the moment.
 
 // +---------------------------------------------------+
 // |                                                   |
