@@ -2,4 +2,4 @@
 ** xref:contribute.adoc[]
 ** xref:security.adoc[]
 ** xref:license.adoc[]
-* xref:global-requirements.adoc[]
+* xref:requirements.adoc[]

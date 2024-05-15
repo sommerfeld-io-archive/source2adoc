@@ -1,4 +1,4 @@
-= Requirements and Feature Overview
+= Requirements and Features
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 This section outlines the global requirements for the `source2adoc` project, which aims to generate AsciiDoc documentation based on inline comments from source code files.
