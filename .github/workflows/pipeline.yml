@@ -101,10 +101,18 @@ jobs:
       - name: Test app
         run: docker-compose up test-app
         shell: bash
+      - name: Install go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.3'
       - name: Build go app (binary)
         run: |
-          cd components/app
-          go build .
+          (
+            cd components/app || exit
+            go mod download
+            go mod tidy
+            go build .
+          )
         shell: bash
       - name: Update coverage report
         run: |
