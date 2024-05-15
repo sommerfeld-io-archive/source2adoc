@@ -1,3 +1,3 @@
+* xref:AUTO-GENERATED:components/app/local-build-sh.adoc[components/app/local-build.sh]
 * xref:AUTO-GENERATED:components/testdata/bash-sh.adoc[components/testdata/bash.sh]
 * xref:AUTO-GENERATED:components/testdata/path/to/some/code/bash-with-functions-sh.adoc[components/testdata/path/to/some/code/bash-with-functions.sh]
-* xref:AUTO-GENERATED:components/app/local-build-sh.adoc[components/app/local-build.sh]
