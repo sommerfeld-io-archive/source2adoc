@@ -83,7 +83,10 @@ services:
 
   build-app:
     container_name: ${COMPOSE_PROJECT_NAME}
-    build: .
+    build:
+      context: .
+      args:
+        - VERSION=${DEV_TAG}
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
     volumes:
       - .:/project
@@ -91,4 +94,4 @@ services:
     depends_on:
       test-app:
         condition: service_completed_successfully
-    command: list --lang=bash
+    command: --version

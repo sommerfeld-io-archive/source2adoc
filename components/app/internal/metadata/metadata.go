@@ -13,5 +13,3 @@ var rawVersion string
 func Version() string {
 	return strings.ReplaceAll(rawVersion, "\n", "")
 }
-
-// https://github.com/hashicorp/terraform/blob/main/version/version.go

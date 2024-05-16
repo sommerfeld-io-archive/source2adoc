@@ -15,7 +15,7 @@
 #
 # [source, bash]
 # ....
-# docker build -t local/source2adoc:dev .
+# docker build --build-arg VERSION=<the-version-or-branchname> -t local/source2adoc:dev .
 # ....
 #
 # @see docker-compose.yml
@@ -28,14 +28,17 @@
 FROM golang:1.22.3-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
+ARG VERSION=UNSPECIFIED
+
 COPY /components/app /components/app
 COPY /components/testdata /components/testdata
 WORKDIR /components/app
 
-RUN ls -alF \
-    && go mod download \
+RUN go mod download \
     && go mod tidy \
-    && go test ./... \
+    && echo "${VERSION}" > internal/metadata/VERSION \
+    && cat internal/metadata/VERSION \
+    && test ./... \
     && go build .
 
 
@@ -44,6 +47,15 @@ RUN ls -alF \
 ##
 FROM alpine:3.19.1 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
+LABEL version=$VERSION
+LABEL org.opencontainers.image.title=source2adoc \
+      org.opencontainers.image.description="Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora. " \
+      org.opencontainers.image.authors="source2adoc open source project" \
+      org.opencontainers.image.url="https://source2adoc.sommerfeld.io" \
+      org.opencontainers.image.documentation="https://source2adoc.sommerfeld.io" \
+      org.opencontainers.image.source="https://github.com/sommerfeld-io/source2adoc" \
+      org.opencontainers.image.vendor="source2adoc open source project" \
+      org.opencontainers.image.licenses="... tbd ... "
 
 ARG USER=source2adoc
 RUN adduser -D "$USER"
@@ -51,5 +63,4 @@ RUN adduser -D "$USER"
 COPY --from=build /components/app/source2adoc /usr/bin/source2adoc
 
 USER $USER
-# TODO make sure params are passed to the binary
 ENTRYPOINT ["/usr/bin/source2adoc"]
