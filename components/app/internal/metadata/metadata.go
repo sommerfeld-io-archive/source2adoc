@@ -1,10 +1,17 @@
 package metadata
 
-//	type Metadata struct {
-//		Version   string `yaml:"version"`
-//		CommitSha string `yaml:"commit_sha"`
-//	}
+import (
+	_ "embed"
+	"strings"
+)
+
+// rawVersion is the current version, as read from the components/metadata/version file.
+//
+//go:embed VERSION
+var rawVersion string
 
 func Version() string {
-	return "dev"
+	return strings.ReplaceAll(rawVersion, "\n", "")
 }
+
+// https://github.com/hashicorp/terraform/blob/main/version/version.go
