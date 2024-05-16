@@ -73,7 +73,7 @@ func initManpageAdoc(manpageFile string) {
 	}
 	defer file.Close()
 
-	appendStringToFile("= Manpage\n\n", manpageFile)
+	appendStringToFile("= Manual\n\n", manpageFile)
 }
 
 func appendCommandDocsToAdoc(commandDocs CommandDocs, manpageFile string) {

@@ -247,7 +247,7 @@ jobs:
         run: |
           for file in *.adoc; do
             content=$(cat "$file")
-            content="${content//xref:development-guide:solution-strategy.adoc[]/link:https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/development-guide/pages/solution-strategy.adoc[Solution Strategy]}"
+            content="${content//xref:development-guide:development-guide.adoc[]/link:https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/development-guide/pages/development-guide.adoc[Solution Strategy]}"
             echo "$content" > "$file"
           done
         shell: bash

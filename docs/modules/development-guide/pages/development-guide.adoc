@@ -1,12 +1,12 @@
-= Solution Strategy
+= Development Guide
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
-This section outlines the global solution strategy for the `source2adoc` project, focusing on development, tooling, deployment, and support considerations.
+This section outlines the way we develop the `source2adoc` project, focusing on development, tooling, deployment, and support considerations. It outlines the practices and principles we value.
 
 == Everything as Code
 We embrace treating as much as possible as code, incorporating best practices from software development in every aspect of our work. We prioritize utilizing technologies and tools that allow us to leverage version control and adhere to established development practices like branching and code reviews. This applies to source code, infrastructure code, utility scripts and basically everything that can be depicted as some sort of code.
 
-When it comes to configuration management, we opt for approaches that align with software development principles. If there are multiple ways to apply a configuration, such as through a web UI or an API, we prioritize the API method. This preference is due to its reproducibility, (hopefully) idempotency and potential for automation, ensuring consistency and facilitating efficient management of configurations.
+When it comes to configuration management, we opt for approaches that align with software development principles. If there are multiple ways to apply a configuration, such as through a web UI or an API, we prioritize the API method. This preference is due to its reproducibility, (hopefully) idempotence and potential for automation, ensuring consistency and facilitating efficient management of configurations.
 
 By treating various aspects of our work as code, we can leverage the benefits of version control, automation, and reproducibility.
 
