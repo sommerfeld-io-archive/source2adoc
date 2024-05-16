@@ -5,4 +5,20 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
+== Global
+
+[cols="1,6"]
+|===
+|Tag & Parameter | Usage | Applies to
+|@see reference | Provides a link to another element of documentation (generates `xref`)
+|@param name description | Describes a method parameter.
+|@return description | Describes the return value.
+|@exception classname description  | Describes an exception that may be thrown from this method.
+|@throws classname description | Describes an exception that may be thrown from this method.
+|@exitcode code description | Describes the exit code of a (bash) method.
+|@deprecated description | Describes an outdated method.
+|{@link reference} | Link to external resource  (generates `link`).
+|===
+
+== Lang 1
 CAUTION: TODO ... put a section for each supported language
