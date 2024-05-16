@@ -67,6 +67,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Print Tag
+        run: |
+          cat metadata/NEXT_VERSION
+        shell: bash
       - name: Deploy to DockerHub
         run: |
           VERSION="$(cat metadata/NEXT_VERSION)"
@@ -78,7 +82,7 @@ jobs:
           fi
 
           docker tag "$IMAGE:rc" "$IMAGE:$VERSION"
-          docker push "$IMAGE:$VERSION_TAG"
+          docker push "$IMAGE:$VERSION"
         shell: bash
       - name: Convert README from Asciidoc to Markdown for DockerHub description
         run: |
