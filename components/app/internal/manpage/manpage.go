@@ -13,7 +13,7 @@ import (
 )
 
 var manpageFilename = "manpage.adoc"
-var dockerRun = `docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest`
+var dockerRun = `docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:` + internal.Version()
 
 type CommandDocs struct {
 	Name        string       `yaml:"name"`

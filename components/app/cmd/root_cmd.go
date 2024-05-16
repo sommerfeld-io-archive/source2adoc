@@ -3,12 +3,13 @@ package cmd
 import (
 	"strings"
 
+	"github.com/sommerfeld-io/source2adoc/internal"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
 	Use:     "source2adoc",
-	Version: "... tbd ...",
+	Version: internal.Version(),
 	Short:   "Generate AsciiDoc from inline documentation",
 	Long:    strings.Trim(`Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora.`, " "),
 
