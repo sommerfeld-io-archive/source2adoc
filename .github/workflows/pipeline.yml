@@ -83,6 +83,30 @@ jobs:
         with:
           ignore_paths: node_modules target
 
+  validate-nav-adoc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Validate nav.adoc files
+        run: |
+          readonly VIOLATIONS_LOG="violations.log"
+
+          find docs/modules -name "nav.adoc" | while read -r file; do
+            while IFS= read -r line; do
+              if [[ ! $line =~ ^\*\  ]]; then
+                echo "[ERROR] $file | $line" >> "$VIOLATIONS_LOG"
+              fi
+            done < "$file"
+          done
+
+          if [[ -f "$VIOLATIONS_LOG" ]]; then
+            echo "Violations found"
+            cat "$VIOLATIONS_LOG"
+            exit 1
+          fi
+        shell: bash
+
   # ----- Commit stage - 2 ----------------------
 
   go-app:
@@ -92,6 +116,7 @@ jobs:
       'lint-folders',
       'lint-filenames',
       'shellcheck',
+      'validate-nav-adoc',
     ]
     steps:
       - name: Checkout code
@@ -269,6 +294,7 @@ jobs:
       'lint-folders',
       'lint-filenames',
       'shellcheck',
+      'validate-nav-adoc',
     ]
     permissions:
       contents: read
