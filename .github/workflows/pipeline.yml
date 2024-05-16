@@ -221,9 +221,9 @@ jobs:
       - name: Copy Adoc files to project root
         run: |
           cp docs/modules/ROOT/pages/index.adoc README.adoc
-          cp docs/modules/ROOT/pages/license.adoc LICENSE.adoc
-          cp docs/modules/ROOT/pages/contribute.adoc CONTRIBUTING.adoc
-          cp docs/modules/ROOT/pages/security.adoc SECURITY.adoc
+          cp docs/modules/meta/pages/license.adoc LICENSE.adoc
+          cp docs/modules/meta/pages/contribute.adoc CONTRIBUTING.adoc
+          cp docs/modules/meta/pages/security.adoc SECURITY.adoc
         shell: bash
       - name: Add do-not-edit remark
         run: |
