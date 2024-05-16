@@ -7,20 +7,20 @@
 # free from dependencies. The Docker container is pre-configured with Ansible and all required
 # dependencies.
 #
-# To run playbooks successfully, make sure to run ``ssh-copy-id <REMOTE_USER>@<REMOTE_HOST>.fritz.box``
-# first to ensure seamless connects to all remote machines. Run ``ssh-copy-id <LOCAL_USER>@<LOCAL_HOST>.fritz.box``
+# To run playbooks successfully, make sure to run `ssh-copy-id <REMOTE_USER>@<REMOTE_HOST>.fritz.box`
+# first to ensure seamless connects to all remote machines. Run `ssh-copy-id <LOCAL_USER>@<LOCAL_HOST>.fritz.box`
 # for your local machine as well (if this machine is listed in the host inventory.). Otherwise Ansible
 # might fail when connecting to your local machine via its FQDN.
 #
 # [source, bash]
-# ```
+# ....
 # ssh-copy-id sebastian@caprica.fritz.box
 # ssh-copy-id sebastian@kobol.fritz.box
-# ```
+# ....
 #
-# NOTE: Ansible expects the user ``sebastian`` to be present on all nodes. This user is the default
+# NOTE: Ansible expects the user `sebastian` to be present on all nodes. This user is the default
 # user for each node (workstation, server and RasPi). Normally this user is created when installing
-# an operating system through its setup wizard. This scripts exits with ``exitcode=8`` if this user
+# an operating system through its setup wizard. This scripts exits with `exitcode=8` if this user
 # does not exist.
 #
 # Overall, this script is designed to simplify the management of Ansible playbooks by providing a
@@ -40,26 +40,26 @@
 #
 # == Ansible Playbooks
 #
-# This script automatically detects all Ansible playbooks in the ``components/homelab/src/main/ansible/playbooks``
+# This script automatically detects all Ansible playbooks in the `components/homelab/src/main/ansible/playbooks`
 # folder.
 #
-# === Ansible Playbook: ``desktops-main.yml``
+# === Ansible Playbook: `desktops-main.yml`
 #
 # This Ansible playbook is designed to configure basic settings, directory structure, and software
 # packages for Ubuntu desktop machines. The playbook also includes some tasks that are shared with
 # other playbooks to ensure a consistent setup among all machines.
 #
-# === Ansible Playbook: ``desktops-steam.yml``
+# === Ansible Playbook: `desktops-steam.yml`
 #
 # This Ansible playbook is designed to install Steam on Ubuntu desktop machines.
 #
-# === Ansible Playbook: ``raspi-main.yml``
+# === Ansible Playbook: `raspi-main.yml`
 #
 # This Ansible playbook is designed to configure basic settings, directory structure, and software
 # packages for Raspberry Pi machines. The playbook also includes some tasks that are shared with
 # other playbooks to ensure a consistent setup among all machines but uses a reduced tasks set.
 #
-# === Ansible Playbook: ``update-upgrade.yml``
+# === Ansible Playbook: `update-upgrade.yml`
 #
 # This Ansible playbook is designed to update all packages to their latest version and perform an
 # aptitude safe-upgrade on Ubuntu and RaspberryPi OS machines (both are Debian-based).
@@ -128,7 +128,7 @@ function invoke() {
 
 
 ##
-# Facade to map ``ansible`` command. The actual Ansible execution is delegated to
+# Facade to map `ansible` command. The actual Ansible execution is delegated to
 # Ansible running in a Docker container.
 #
 # @param $@ String The ansible-playbook commands (1-n arguments) - $1 is mandatory
@@ -139,7 +139,7 @@ function ansible() {
 
 
 ##
-# Facade to map ``ansible-playbook`` command. The actual Ansible execution is delegated to
+# Facade to map `ansible-playbook` command. The actual Ansible execution is delegated to
 # Ansible running in a Docker container.
 #
 # @param $@ String The ansible-playbook commands (1-n arguments) - $1 is mandatory

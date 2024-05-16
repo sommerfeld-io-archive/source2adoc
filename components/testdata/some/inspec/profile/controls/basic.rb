@@ -15,6 +15,9 @@
 
 title 'check basic system configuration'
 
+##
+# Do I have to change the language from ruby to chef inspec or something?
+##
 control 'basic-01' do
     impact 1.0
     title 'Check basic system configuration'

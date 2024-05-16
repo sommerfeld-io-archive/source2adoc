@@ -5,6 +5,8 @@
 # * Named `build`, this stage is responsible for unit-testing and building the Go application.
 # * Named `run`, this stage is responsible for running the Go application in a minimal Alpine Linux.
 #
+# CAUTION: This is a file from the test data set
+#
 # As the only Dockerfile relevant to the source2adoc application, it represents the sole artifact
 # published from the application. This means that any Docker images produced by the application,
 # whether for development or production, stem directly from this Dockerfile.
