@@ -107,6 +107,18 @@ jobs:
           fi
         shell: bash
 
+  validate-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal
+        run: |
+          if [[ "$(cat metadata/CURRENT_VERSION)" == "$(cat metadata/NEXT_VERSION)" ]]; then
+            exit 1
+          fi
+        shell: bash
+
   # ----- Build stage (go app + docs) -----------
 
   go-app:
@@ -117,6 +129,7 @@ jobs:
       'lint-filenames',
       'shellcheck',
       'validate-nav-adoc',
+      'validate-metadata',
     ]
     steps:
       - name: Checkout code
@@ -295,6 +308,7 @@ jobs:
       'lint-filenames',
       'shellcheck',
       'validate-nav-adoc',
+      'validate-metadata',
     ]
     permissions:
       contents: read
