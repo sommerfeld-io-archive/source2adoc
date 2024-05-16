@@ -24,10 +24,13 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 	}{
 		{"*.sh", []string{
 			"bash.sh",
+			"path/to/some/bash/scripts/ansible-cli.sh",
+			"path/to/some/bash/scripts/docker-stacks-cli.sh",
 			"path/to/some/code/bash-with-functions.sh",
 		}},
 		{"Dockerfile*", []string{
 			"Dockerfile",
+			"path/Dockerfile",
 			"path/to/some/more/code/Dockerfile",
 			"path/to/some/more/code/Dockerfile.test",
 		}},
@@ -46,6 +49,13 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 		}},
 		{"*.yml", []string{
 			"docker-compose.yml",
+			"path/to/some/ansible/desktops-main.yml",
+			"path/to/some/ansible/desktops-steam.yml",
+			"path/to/some/ansible/raspi-main.yml",
+			"path/to/some/ansible/update-upgrade.yml",
+		}},
+		{"*.yaml", []string{
+			"docker-compose.yaml",
 		}},
 	}
 	for _, test := range tests {
