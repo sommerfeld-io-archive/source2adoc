@@ -95,7 +95,7 @@ jobs:
           find docs/modules -name "nav.adoc" | while read -r file; do
             while IFS= read -r line; do
               if [[ ! $line =~ ^\*\  ]]; then
-                echo "$file | $line" >> "$VIOLATIONS_LOG"
+                echo "--> $file | $line" >> "$VIOLATIONS_LOG"
               fi
             done < "$file"
           done
