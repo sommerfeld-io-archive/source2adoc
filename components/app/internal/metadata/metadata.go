@@ -1,4 +1,4 @@
-package internal
+package metadata
 
 func Version() string {
 	return "latest"

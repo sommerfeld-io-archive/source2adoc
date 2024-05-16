@@ -7,13 +7,14 @@ import (
 	"strings"
 
 	"github.com/sommerfeld-io/source2adoc/internal"
+	"github.com/sommerfeld-io/source2adoc/internal/metadata"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 	"gopkg.in/yaml.v3"
 )
 
 var manpageFilename = "manpage.adoc"
-var dockerRun = `docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:` + internal.Version()
+var dockerRun = `docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:` + metadata.Version()
 
 type CommandDocs struct {
 	Name        string       `yaml:"name"`
