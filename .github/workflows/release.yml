@@ -37,8 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       NEXT_VERSION: ${{ steps.vars.outputs.NEXT_VERSION }}
-    permissions:
-      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
