@@ -1,4 +1,4 @@
-= ADR-002: Choosing a Development Ecosystem
+= ADR-001: We use ADRs
 
 [cols="1,6"]
 |===
