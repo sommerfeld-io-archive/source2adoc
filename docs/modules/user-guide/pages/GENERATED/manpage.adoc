@@ -1,4 +1,4 @@
-= Manpage
+= Manual
 
 
 == source2adoc
