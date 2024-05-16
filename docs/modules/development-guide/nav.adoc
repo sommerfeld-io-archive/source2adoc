@@ -4,3 +4,4 @@
 ** Architecture Decisions
 *** xref:architecture-decisions/adr-001-use-adr.adoc[]
 *** xref:architecture-decisions/adr-002-ecosystem.adoc[]
+*** xref:architecture-decisions/adr-003-open-source.adoc[]

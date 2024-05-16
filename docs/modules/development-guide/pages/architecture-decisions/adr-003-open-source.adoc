@@ -1,0 +1,17 @@
+= ADR-003: Open Source
+
+[cols="1,6"]
+|===
+|Status |Draft
+|Decision Date |...
+|Decision |...
+|===
+
+== Context
+CAUTION: Todo ... why open source
+
+== Decision
+CAUTION: Todo ...
+
+== Consequences
+CAUTION: Todo ...
