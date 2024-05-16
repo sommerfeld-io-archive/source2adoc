@@ -1,4 +1,5 @@
 = ADR-002: Choosing a Development Ecosystem
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 [cols="1,6"]
 |===

@@ -1,4 +1,5 @@
 = ADR-001: We use ADRs
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 [cols="1,6"]
 |===

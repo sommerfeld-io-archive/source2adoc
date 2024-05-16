@@ -83,11 +83,7 @@ services:
 
   build-app:
     container_name: ${COMPOSE_PROJECT_NAME}
-    build:
-      context: .
-      args:
-        - VERSION=${DEV_TAG}
-        - COMMIT_SHA=${DEV_TAG}
+    build: .
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
     volumes:
       - .:/project

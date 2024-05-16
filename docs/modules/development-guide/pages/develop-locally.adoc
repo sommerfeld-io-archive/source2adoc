@@ -1,4 +1,5 @@
 = Develop, Build and Run the Application Locally
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, nunc nec viverra ultricies, nunc nunc ultricies nunc, nec nunc nunc nunc nunc nunc nunc.
 

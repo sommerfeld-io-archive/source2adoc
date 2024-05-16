@@ -15,7 +15,7 @@
 #
 # [source, bash]
 # ....
-# docker build --build-arg VERSION=dev --build-arg COMMIT_SHA=dev -t local/source2adoc:dev .
+# docker build -t local/source2adoc:dev .
 # ....
 #
 # @see docker-compose.yml
@@ -28,17 +28,15 @@
 FROM golang:1.22.3-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
-ARG VERSION=UNSPECIFIED
 ARG COMMIT_SHA=UNSPECIFIED
 
 COPY /components/app /components/app
 COPY /components/testdata /components/testdata
+COPY /metadata/NEXT_VERSION /components/app/internal/metadata/VERSION
 WORKDIR /components/app
 
 RUN go mod download \
     && go mod tidy \
-    && echo "${VERSION}" > internal/metadata/VERSION \
-    && echo "${COMMIT_SHA}" > internal/metadata/COMMIT_SHA \
     && test ./... \
     && go build .
 
