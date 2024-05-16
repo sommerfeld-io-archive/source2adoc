@@ -19,19 +19,25 @@ image:{github-actions-url}/{job}/{badge}[Github Badge, link={github-actions-url}
 * SonarCloud Summary -> https://sonarcloud.io/project/overview?id={github-org}_{project-name}
 * Where to file issues -> {url-project}/issues
 
-The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to Javadoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
-
 NOTE: This project is currently in its early stages and is still in the incubation phase. As a result, there are many moving parts and tasks that need to be completed. The project is currently incomplete and work is ongoing to further develop and enhance its functionality.
 
-CAUTION: todo ... Link Manpage and update link in pipeline
+The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to Javadoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
+
+The app supports multiple source code languages. The common ground is, that  these languages mark their comments through the hash-symbol (`#`).
+
+
+* bash
+* yaml and yml
+* Vagrantfile
+* Dockerfile
+* Makefile
+* Ruby
+
+source2adoc does not aim at replacing or duplicating existing solutions like JavaDoc or GoDoc! We focus on languages that are not covered by existing solutions in a way we expect!
+
 
 == Requirements and Features
-This section outlines the global requirements for the `source2adoc` project, which aims to generate AsciiDoc documentation based on inline comments from source code files.
-
-=== Project Overview
-The `source2adoc` project is tasked with automatically generating AsciiDoc documentation from inline comments found within source code files. The application should support multiple source code languages, including bash, YAML, Vagrantfile, Dockerfile, Makefile, and Ruby. Comments in these files will be marked using the hash-symbol (`#`).
-
-CAUTION: Do not replace or duplicate existing solutions like JavaDoc or GoDoc! Make sure to focus on languages that are not covered by existing solutions in a way we expect!
+The following section outlines the requirements and features of the `source2adoc` project. These requirements serve as a guideline for the development of the application and provide a clear overview of the expected functionality.
 
 === Command Line Parameter
 The application must accept a command line parameter to specify the source code language to be considered. Only one option is allowed per run. To generate AsciiDoc documentation for multiple languages, the application must be executed multiple times with different language settings.
