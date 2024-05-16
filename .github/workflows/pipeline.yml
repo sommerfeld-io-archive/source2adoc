@@ -115,7 +115,10 @@ jobs:
       - name: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal
         run: |
           if [[ "$(cat metadata/CURRENT_VERSION)" == "$(cat metadata/NEXT_VERSION)" ]]; then
+            echo "ERROR: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal"
             exit 1
+          else
+            echo "OKAY: metadata/CURRENT_VERSION and metadata/NEXT_VERSION are not equal"
           fi
         shell: bash
 
