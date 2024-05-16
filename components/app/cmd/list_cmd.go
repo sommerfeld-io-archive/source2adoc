@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sommerfeld-io/source2adoc/internal"
 	"github.com/sommerfeld-io/source2adoc/internal/filesystem"
+	"github.com/sommerfeld-io/source2adoc/internal/helper"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +21,7 @@ var listCmd = &cobra.Command{
 		}
 		fmt.Println("Search source files for language:", lang)
 
-		files, err := filesystem.FindFilesForLanguage(internal.CurrentWorkingDir(), lang)
+		files, err := filesystem.FindFilesForLanguage(helper.CurrentWorkingDir(), lang)
 		if err != nil {
 			fmt.Println("Error finding files:", err)
 			return

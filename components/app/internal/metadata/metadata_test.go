@@ -7,7 +7,7 @@ import (
 )
 
 func TestVersion(t *testing.T) {
-	expected := "latest"
+	expected := "dev"
 	actual := Version()
 
 	assert.Equal(t, expected, actual, "Git invalid Version")

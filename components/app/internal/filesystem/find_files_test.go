@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sommerfeld-io/source2adoc/internal"
+	"github.com/sommerfeld-io/source2adoc/internal/helper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -60,8 +60,8 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.pattern, func(t *testing.T) {
-			paths, err := FindFilesByPattern(internal.TestDataDir(), test.pattern)
-			paths = trimPaths(paths, internal.TestDataDir())
+			paths, err := FindFilesByPattern(helper.TestDataDir(), test.pattern)
+			paths = trimPaths(paths, helper.TestDataDir())
 
 			assert.NoError(err, "Should not return an error")
 			assert.Equal(test.expected, paths, "Should return correct files")
