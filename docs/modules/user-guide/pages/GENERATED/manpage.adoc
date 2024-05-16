@@ -6,7 +6,7 @@ Generate AsciiDoc from inline documentation
 
 [source, bash]
 ....
-docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:dev
 ....
 
 Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora.
@@ -21,7 +21,7 @@ Generate AsciiDoc from inline documentation into an Antora component
 
 [source, bash]
 ....
-docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest generate [flags]
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:dev generate [flags]
 ....
 
 This command allows you to generate AsciiDoc files from your inline documentation into an Antora component. The command scans the directory and all subdirectories.
@@ -40,7 +40,7 @@ Lint source code files for compliance with source2adoc rules
 
 [source, bash]
 ....
-docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest lint [flags]
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:dev lint [flags]
 ....
 
 This command allows you to lint your source files and check if the comments comply with the rules of the source2adoc app. The command scans the directory and all subdirectories.
@@ -59,7 +59,7 @@ List for source code files that match a given pattern
 
 [source, bash]
 ....
-docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest list [flags]
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:dev list [flags]
 ....
 
 This command allows you to list all source files that match a given pattern in the current directory and all subdirectories.
@@ -77,7 +77,7 @@ Generate manpage in Asciidoc format into the current working directory
 
 [source, bash]
 ....
-docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest manpage [flags]
+docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:dev manpage [flags]
 ....
 
 This command generates a manpage in Asciidoc format into the current working directory. The `manpage.adoc` contains information about all commands.
