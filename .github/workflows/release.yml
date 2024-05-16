@@ -88,8 +88,8 @@ jobs:
         run: |
           sudo apt-get install -y pandoc asciidoc
           asciidoc -b docbook ${{ env.DOCS_FILE }}.adoc
-          mv ${{ env.DOCS_FILE }}.xml ./README.xml
-          pandoc -f docbook -t markdown_strict README.xml -o README.md
+          mv ${{ env.DOCS_FILE }}.xml ./UPLOAD.xml
+          pandoc -f docbook -t markdown_strict UPLOAD.xml -o UPLOAD.md
         shell: bash
       - name: Update DockerHub description
         uses: peter-evans/dockerhub-description@v4
@@ -98,7 +98,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ env.IMAGE }}
           short-description: ${{ github.event.repository.description }}
-          readme-filepath: ./README.md
+          readme-filepath: ./UPLOAD.md
       - name: Create tag and GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
