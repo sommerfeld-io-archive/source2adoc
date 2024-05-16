@@ -9,7 +9,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:     "source2adoc",
-	Version: metadata.Version(),
+	Version: version(),
 	Short:   "Generate AsciiDoc from inline documentation",
 	Long:    strings.Trim(`Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora.`, " "),
 
@@ -18,6 +18,10 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
+}
+
+func version() string {
+	return metadata.Version() + " (commit sha = " + metadata.CommitSha() + ")"
 }
 
 // Execute acts as the entrypoint for the command line interface.

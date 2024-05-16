@@ -87,6 +87,7 @@ services:
       context: .
       args:
         - VERSION=${DEV_TAG}
+        - COMMIT_SHA=${DEV_TAG}
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
     volumes:
       - .:/project

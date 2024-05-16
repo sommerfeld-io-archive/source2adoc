@@ -334,6 +334,7 @@ jobs:
           context: ${{ matrix.context }}
           build-args: |
             VERSION=${{ github.sha }}
+            COMMIT_SHA=${{ github.sha }}
           platforms: linux/amd64
           push: true
           tags: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
