@@ -25,7 +25,6 @@ The primary objective of `source2adoc` is to facilitate the creation of comprehe
 
 The app supports multiple source code languages. The common ground is, that  these languages mark their comments through the hash-symbol (`#`).
 
-
 * bash
 * yaml and yml
 * Vagrantfile
