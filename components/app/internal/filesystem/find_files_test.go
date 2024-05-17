@@ -68,3 +68,14 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 		})
 	}
 }
+
+func TestPathWithoutCWD(t *testing.T) {
+	startPath := "/path/to/start"
+	path := "/path/to/start/file.txt"
+	expected := "file.txt"
+
+	result, err := pathWithoutCWD(startPath, path)
+
+	assert.NoError(t, err, "Should not return an error")
+	assert.Equal(t, expected, result, "Should return the expected path without CWD")
+}

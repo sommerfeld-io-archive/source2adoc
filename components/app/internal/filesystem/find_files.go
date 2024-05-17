@@ -24,7 +24,11 @@ func FindFilesByPattern(startPath string, pattern string) ([]string, error) {
 			}
 
 			if match {
-				matchingFiles = append(matchingFiles, path)
+				pathWithoutCWD, err := pathWithoutCWD(startPath, path)
+				if err != nil {
+					return err
+				}
+				matchingFiles = append(matchingFiles, pathWithoutCWD)
 			}
 		}
 
@@ -36,4 +40,12 @@ func FindFilesByPattern(startPath string, pattern string) ([]string, error) {
 	}
 
 	return matchingFiles, nil
+}
+
+func pathWithoutCWD(startPath string, path string) (string, error) {
+	pathWithoutCWD, err := filepath.Rel(startPath, path)
+	if err != nil {
+		return "", err
+	}
+	return pathWithoutCWD, nil
 }
