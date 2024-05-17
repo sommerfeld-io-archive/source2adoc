@@ -3,16 +3,28 @@ Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 [cols="1,6"]
 |===
-|Status |Draft
-|Decision Date |...
-|Decision |...
+|Status |Accepted
+|Decision Date |2024-05-17
+|Decision |source2adoc will be open sourced
 |===
 
 == Context
-CAUTION: Todo ... why open source
+Open sourcing source2adoc could lead to various benefits, such as external contributions, increased visibility, and further improvements driven by community feedback. However, it also requires careful consideration of maintenance responsibilities, potential security risks.
+
+See https://opensource.guide/starting-a-project for some additional thoughts on Open Source Software.
 
 == Decision
-CAUTION: Todo ...
+We have decided to make the Source2Adoc CLI tool open source. This decision involves publishing the tool's source code in a public repository, along with necessary documentation, contribution guidelines, feature requests, and bug tracking.
+
+The choice of an open source license will be determined in a xref:architecture-decisions/adr-004-open-source-license.adoc[separate ADR] to ensure it provides the appropriate level of protection and freedom for both our organization and the community.
 
 == Consequences
-CAUTION: Todo ...
+. Positive Consequences
+.. Community Engagement: Opening the tool to the public invites contributions from a diverse set of developers, leading to potential enhancements, bug fixes, and new features.
+.. Innovation and Improvement: External feedback and contributions can drive innovation and improvements that might not be feasible with internal resources alone.
+. Negative Consequences
+.. Maintenance Overhead: Managing an open source project requires ongoing effort to review contributions, manage issues, and ensure the project remains active and healthy.
+. Neutral Consequences
+.. Licensing Considerations: While this ADR does not address the specific license to be used, choosing an appropriate license will be critical to balancing our objectives with the needs and expectations of the open source community. This will be addressed in a xref:architecture-decisions/adr-004-open-source-license.adoc[separate ADR].
+
+By making the source2Adoc CLI tool open source, we aim to leverage the collective intelligence and collaborative spirit of the open source community while being mindful of the associated challenges and responsibilities.
