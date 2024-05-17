@@ -252,6 +252,8 @@ jobs:
               echo "// +---------------------------------------------------+"
             } >> manpage.adoc
 
+          cat manpage.adoc
+
           mv ./manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
         shell: bash
       - name: Adjust version in docs/antora.yml
