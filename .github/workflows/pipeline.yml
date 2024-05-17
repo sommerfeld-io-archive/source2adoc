@@ -254,7 +254,7 @@ jobs:
 
           cat manpage.adoc
 
-          mv ./manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
+          mv manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
         shell: bash
       - name: Adjust version in docs/antora.yml
         uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
