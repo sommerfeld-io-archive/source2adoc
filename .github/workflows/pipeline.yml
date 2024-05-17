@@ -142,6 +142,21 @@ jobs:
       - name: Test app
         run: docker-compose up test-app
         shell: bash
+      - name: Update version information before building go app
+        run: |
+          (
+            echo "[INFO] before update"
+            cat metadata/NEXT_VERSION
+            cat components/app/internal/metadata/VERSION
+
+            echo "[INFO] copy"
+            cp metadata/NEXT_VERSION components/app/internal/metadata/VERSION
+
+            echo "[INFO] after update"
+            cat metadata/NEXT_VERSION
+            cat components/app/internal/metadata/VERSION
+          )
+        shell: bash
       - name: Install go
         uses: actions/setup-go@v5
         with:
@@ -163,11 +178,12 @@ jobs:
             sed -i "s|$old|$new|g" "${{ env.COVERAGE_REPORT }}"
           )
         shell: bash
-      - name: ls -alF
-        run: ls -alF
-        shell: bash
-      - name: ls -alF components/app
-        run: ls -alF components/app
+      - name: source2adoc --version
+        run: |
+          (
+            cd components/app || exit
+            ./source2adoc --version
+          )
         shell: bash
       - name: Upload artifact (coverage report)
         uses: actions/upload-artifact@v4
@@ -198,12 +214,6 @@ jobs:
         with:
           name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
           path: ${{ github.workspace }}/components/app
-      - name: ls -alF
-        run: ls -alF
-        shell: bash
-      - name: ls -alF components/app
-        run: ls -alF components/app
-        shell: bash
       - name: cat ${{ env.COVERAGE_REPORT }}
         run: cat ${{ env.COVERAGE_REPORT }}
         shell: bash
