@@ -54,7 +54,7 @@ LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.documentation="https://source2adoc.sommerfeld.io" \
       org.opencontainers.image.source="https://github.com/sommerfeld-io/source2adoc" \
       org.opencontainers.image.vendor="source2adoc open source project" \
-      org.opencontainers.image.licenses="... tbd ... "
+      org.opencontainers.image.licenses="GNU GENERAL PUBLIC LICENSE (Version 3, 29 June 2007)"
 
 ARG USER=source2adoc
 RUN adduser -D "$USER"
