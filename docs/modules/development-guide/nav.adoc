@@ -1,4 +1,3 @@
 * xref:development-guide.adoc[]
-* xref:develop-locally.adoc[]
-* xref:release.adoc[]
+* xref:development.adoc[]
 * xref:architecture-decisions/index.adoc[]
