@@ -1,4 +1,4 @@
-= ADR-003: Open Source
+= ADR-004: Open Source License
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 [cols="1,6"]
