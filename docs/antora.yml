@@ -1,5 +1,5 @@
 ---
-name: source2adoc
+name: public
 title: source2adoc
 version: main
 start_page: ROOT:index.adoc
