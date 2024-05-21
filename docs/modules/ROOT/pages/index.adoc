@@ -1,4 +1,4 @@
-= About source2adoc
+= Introduction
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 :github-org: sommerfeld-io
 :project-name: source2adoc
