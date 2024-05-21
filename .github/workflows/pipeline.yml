@@ -223,6 +223,30 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  license-scan:
+    runs-on: ubuntu-latest
+    if: ${{ (github.actor != 'dependabot[bot]') }}
+    needs: ['go-app']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+        shell: bash
+      - name: Install fosslight-dependency
+        run: pip install fosslight-dependency
+        shell: bash
+      - name: Scan for licenses
+        run: fosslight_dependency -m go -p "$(pwd)/components/app" -o "$(pwd)/target" -f yaml
+        shell: bash
+      - name: Display report
+        run: ls -alF "$(pwd)/target"
+        shell: bash
+
   generate-docs:
     runs-on: ubuntu-latest
     if: ${{ (github.actor != 'dependabot[bot]') }}
