@@ -1,3 +1,8 @@
 * xref:contribute.adoc[]
 * xref:security.adoc[]
 * xref:license.adoc[]
+* xref:terms.adoc[]
+* xref:contact.adoc[]
+* link:https://github.com/sommerfeld-io/source2adoc[On GitHub]
+* link:https://hub.docker.com/r/sommerfeldio/source2adoc[On DockerHub]
+* link:https://sonarcloud.io/project/overview?id=sommerfeld-io_source2adoc[On SonarCloud]
