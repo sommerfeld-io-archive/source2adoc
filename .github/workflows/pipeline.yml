@@ -241,10 +241,13 @@ jobs:
         run: pip install fosslight-dependency
         shell: bash
       - name: Scan for licenses
-        run: fosslight_dependency -m go -p "$(pwd)/components/app" -o "$(pwd)/target" -f yaml
-        shell: bash
-      - name: Display report
-        run: ls -alF "$(pwd)/target"
+        run: |
+          (
+            cd components/app || exit
+            fosslight_dependency -m go -p "$(pwd)/" -o "$(pwd)/target" -f yaml
+
+            ls -alF "$(pwd)/target"
+          )
         shell: bash
 
   generate-docs:
