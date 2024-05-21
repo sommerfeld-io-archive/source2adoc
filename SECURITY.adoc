@@ -1,4 +1,5 @@
 = Security Policy
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 == Supported Versions
 We only provide security updates for the latest release of source2adoc. This means that we recommend using the Docker images tagged with the latest version or the `latest` tag. Whenever we fix an issue, we release a new version that includes the fix. We do not provide security updates for older versions.
