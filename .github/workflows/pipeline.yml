@@ -249,7 +249,7 @@ jobs:
         run: fosslight_dependency -m go -p "$(pwd)/components/app" -o "$(pwd)/target" -f yaml
         shell: bash
       - name: Show Report
-        run:  ls -alF "$(pwd)/target"
+        run:  cat "$(pwd)"/target/fosslight_report_*.yml
         shell: bash
 
   generate-docs:
