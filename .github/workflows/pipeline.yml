@@ -259,7 +259,6 @@ jobs:
             } >> manpage.adoc
 
           cat manpage.adoc
-
           mv manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
         shell: bash
       - name: Adjust version in docs/antora.yml
@@ -267,14 +266,14 @@ jobs:
         with:
           git_ref: ${{github.ref}}
           file: docs/antora.yml
-      - name: Copy Adoc files to project root
+      - name: Copy adoc files to project root
         run: |
           cp docs/modules/ROOT/pages/index.adoc README.adoc
           cp docs/modules/meta/pages/license.adoc LICENSE.adoc
           cp docs/modules/meta/pages/contribute.adoc CONTRIBUTING.adoc
           cp docs/modules/meta/pages/security.adoc SECURITY.adoc
         shell: bash
-      - name: Add do-not-edit remark
+      - name: Add do-not-edit remark to adoc files in project root
         run: |
           for file in *.adoc; do
 
@@ -292,7 +291,15 @@ jobs:
 
           done
         shell: bash
-      - name: Replace xref with links to GitHub
+      - name: Replace Captions in adoc files in project root
+        run: |
+          for file in *.adoc; do
+            content=$(cat "$file")
+            content="${content//= Introduction/= source2adoc}"
+            echo "$content" > "$file"
+          done
+        shell: bash
+      - name: Replace xref with links to GitHub in adoc files in project root
         run: |
           for file in *.adoc; do
             content=$(cat "$file")
