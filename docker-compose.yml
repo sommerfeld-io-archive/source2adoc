@@ -20,30 +20,29 @@
 # GitHub Actions as well
 ##
 
-version: "3.3"
 services:
 
   filenames:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
     image: lslintorg/ls-lint:1.11.2
     volumes:
-      - .:/data
-    working_dir: /data
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
 
   folders:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
     image: sommerfeldio/folderslint:latest
     volumes:
-      - .:/data
-    working_dir: /data
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
     command: folderslint
 
   yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
     volumes:
-      - .:/data
-    working_dir: /data
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
     command: .
     tty: true
 
@@ -51,8 +50,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
     image: hadolint/hadolint:latest
     volumes:
-      - .:/data
-    working_dir: /data
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
     entrypoint: hadolint Dockerfile
     depends_on:
       - filenames

@@ -7,6 +7,8 @@
     ".vscode",
 
     "components/app/**",
+    "components/test/**",
+    "components/testdata/**",
 
     "docs/modules/*/assets/attachments/**",
     "docs/modules/*/assets/images/**",
@@ -16,6 +18,8 @@
     "docs/modules/*/pages/**",
     "docs/modules/*/partials/*",
     "docs/modules/*/partials/**",
+
+    "metadata",
 
     "target/**"
   ]
