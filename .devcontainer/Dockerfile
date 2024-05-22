@@ -1,14 +1,23 @@
 ##
-# This Dockerfile sets up an environment for Go development within a devcontainer.
-# It is based on the link:https://hub.docker.com/r/sommerfeldio/devcontainer-go[sommerfeldio/devcontainer-go:rc] image.
+# This Dockerfile is used to build the development container for the source2adoc project.
+# It contains the necessary instructions to create an environment with all the dependencies
+# required for development.
 #
-# The `USER` argument is set to 'vscode'.
+# == Prerequisites
+# Having Visual Studio Code (VSCode) and the Dev Container plugin installed are
+# essential prerequisites for this development environment. Docker is also mandatory.
 ##
 
-FROM sommerfeldio/devcontainer-go:rc
+FROM mcr.microsoft.com/devcontainers/go:1.22-bullseye
 LABEL maintainer="sebastian@sommerfeld.io"
 
 ARG USER=vscode
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3-pip=20.3.4-4+deb11u1 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir pre-commit==3.3.3
 
 USER $USER
 

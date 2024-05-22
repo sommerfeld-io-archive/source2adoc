@@ -84,6 +84,21 @@ jobs:
         with:
           ignore_paths: node_modules target
 
+  validate-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal
+        run: |
+          if [[ "$(cat metadata/CURRENT_VERSION)" == "$(cat metadata/NEXT_VERSION)" ]]; then
+            echo "ERROR: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal"
+            exit 1
+          else
+            echo "OKAY: metadata/CURRENT_VERSION and metadata/NEXT_VERSION are not equal"
+          fi
+        shell: bash
+
   validate-nav-adoc:
     runs-on: ubuntu-latest
     steps:
@@ -108,19 +123,24 @@ jobs:
           fi
         shell: bash
 
-  validate-metadata:
+  inspec-devcontainer:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal
+      - name: Validate devcontainer profile
         run: |
-          if [[ "$(cat metadata/CURRENT_VERSION)" == "$(cat metadata/NEXT_VERSION)" ]]; then
-            echo "ERROR: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal"
-            exit 1
-          else
-            echo "OKAY: metadata/CURRENT_VERSION and metadata/NEXT_VERSION are not equal"
-          fi
+          docker run --rm \
+            --volume ./components/test/compliance/inspec:/inspec \
+            --workdir /inspec \
+            chef/inspec:latest check devcontainer-profile --chef-license=accept-no-persist
+        shell: bash
+      - name: Run devcontainer profile
+        run: |
+          docker run --rm \
+            --volume ./components/test/compliance/inspec:/inspec \
+            --workdir /inspec \
+            chef/inspec:latest exec devcontainer-profile --chef-license=accept-no-persist
         shell: bash
 
   # ----- Build stage (go app + docs) -----------
@@ -132,7 +152,6 @@ jobs:
       'lint-folders',
       'lint-filenames',
       'shellcheck',
-      'validate-nav-adoc',
       'validate-metadata',
     ]
     steps:
@@ -323,7 +342,6 @@ jobs:
       'lint-folders',
       'lint-filenames',
       'shellcheck',
-      'validate-nav-adoc',
       'validate-metadata',
     ]
     permissions:
