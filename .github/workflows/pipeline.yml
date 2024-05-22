@@ -19,7 +19,7 @@
 # candidates are exclusively published from the `main` branch.
 ##
 
-name: Deployment Pipeline
+name: Build Pipeline
 
 on:
   push:
