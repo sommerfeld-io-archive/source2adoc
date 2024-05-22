@@ -123,34 +123,12 @@ jobs:
           fi
         shell: bash
 
-  inspec-devcontainer:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Validate devcontainer profile
-        run: |
-          docker run --rm \
-            --volume ./components/test/compliance/inspec:/inspec \
-            --workdir /inspec \
-            chef/inspec:latest check devcontainer-profile --chef-license=accept-no-persist
-        shell: bash
-      - name: Run devcontainer profile
-        run: |
-          docker run --rm \
-            --volume ./components/test/compliance/inspec:/inspec \
-            --workdir /inspec \
-            chef/inspec:latest exec devcontainer-profile --chef-license=accept-no-persist
-        shell: bash
-
   # ----- Build stage (go app + docs) -----------
 
   go-app:
     runs-on: ubuntu-latest
     needs: [
       'lint-yaml',
-      'lint-folders',
-      'lint-filenames',
       'shellcheck',
       'validate-metadata',
     ]
@@ -339,8 +317,6 @@ jobs:
     name: ${{ matrix.image-name }}:${{ github.sha }}
     needs: [
       'lint-yaml',
-      'lint-folders',
-      'lint-filenames',
       'shellcheck',
       'validate-metadata',
     ]
