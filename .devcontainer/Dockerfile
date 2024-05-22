@@ -21,5 +21,6 @@ RUN apt-get update \
 
 USER $USER
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN echo "alias ls='ls -a --color=auto'" >> /home/$USER/.bashrc \
     && echo "alias ll='ls -alF --color=auto'" >> /home/$USER/.bashrc
