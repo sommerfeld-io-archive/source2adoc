@@ -90,10 +90,11 @@ services:
     depends_on:
       test-app:
         condition: service_completed_successfully
-    command: --version
-    #command: list --lang=bash
-    #command: list --lang=ruby
-    #command: list --lang=yml
-    #command: list --lang=Dockerfile
-    #command: list --lang=Makefile
-    #command: list --lang=Vagrantfile
+    # command: --version
+    # command: list --lang=bash
+    # command: list --lang=ruby
+    command: list --lang=yml
+    # command: list --lang=Dockerfile
+    # command: list --lang=Makefile
+    # command: list --lang=Vagrantfile
+    # command: manpage

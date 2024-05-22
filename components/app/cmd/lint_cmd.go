@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -16,8 +14,8 @@ var lintCmd = &cobra.Command{
 			HandleInvalidLang(lang)
 			return
 		}
-		fmt.Println("Linting source files for language:", lang)
 		// Add service call here
+		// Print some success / failure message
 	},
 }
 

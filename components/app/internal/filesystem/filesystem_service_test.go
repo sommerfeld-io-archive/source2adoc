@@ -16,7 +16,7 @@ func TestFindFilesForLanguage(t *testing.T) {
 	for _, lang := range languages {
 		t.Run(lang, func(t *testing.T) {
 			files, err := FindFilesForLanguage(helper.TestDataDir(), lang)
-			assert.NotNil(files, "Should return files")
+			assert.NotNil(files, "Should return files for language = "+lang)
 			assert.NoError(err, "Should not return an error")
 		})
 	}

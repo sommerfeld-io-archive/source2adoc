@@ -11,7 +11,6 @@ var patterns = map[string]string{
 	"Makefile":    "Makefile*",
 	"ruby":        "*.rb",
 	"Vagrantfile": "Vagrantfile*",
-	"yaml":        "*.yaml",
 	"yml":         "*.yml",
 }
 

@@ -54,9 +54,6 @@ func TestShouldFindFilesByPattern(t *testing.T) {
 			"path/to/some/ansible/raspi-main.yml",
 			"path/to/some/ansible/update-upgrade.yml",
 		}},
-		{"*.yaml", []string{
-			"docker-compose.yaml",
-		}},
 	}
 	for _, test := range tests {
 		t.Run(test.pattern, func(t *testing.T) {

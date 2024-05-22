@@ -12,8 +12,8 @@ var manpageCmd = &cobra.Command{
 	Short: "Generate manpage in Asciidoc format into the current working directory",
 	Long:  "This command generates a manpage in Asciidoc format into the current working directory. The `manpage.adoc` contains information about all commands.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Generate manpage")
 		manpage.GenerateManpage(rootCmd)
+		fmt.Println("[DONE] Manpage created in the current working directory as manpage.adoc")
 	},
 }
 

@@ -19,7 +19,6 @@ var listCmd = &cobra.Command{
 			HandleInvalidLang(lang)
 			return
 		}
-		fmt.Println("Search source files for language:", lang)
 
 		files, err := filesystem.FindFilesForLanguage(helper.CurrentWorkingDir(), lang)
 		if err != nil {
