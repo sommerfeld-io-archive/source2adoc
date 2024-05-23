@@ -1,0 +1,4 @@
+= Source Code Docs
+source2adoc <https://source2adoc.sommerfeld.io>
+
+include::source2adoc:partial$nav.adoc[]

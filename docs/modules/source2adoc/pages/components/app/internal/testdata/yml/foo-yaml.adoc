@@ -1,0 +1,9 @@
+= foo.yaml
+source2adoc <https://source2adoc.sommerfeld.io>
+
+[cols="1,1"]
+|===
+|Source Code File Location |components/app/internal/testdata/yml/foo.yaml
+|Some More Meta |tbd ...
+|===
+

@@ -1,0 +1,9 @@
+= .pre-commit-config.yaml
+source2adoc <https://source2adoc.sommerfeld.io>
+
+[cols="1,1"]
+|===
+|Source Code File Location |.pre-commit-config.yaml
+|Some More Meta |tbd ...
+|===
+

@@ -1,0 +1,9 @@
+= Dockerfile
+source2adoc <https://source2adoc.sommerfeld.io>
+
+[cols="1,1"]
+|===
+|Source Code File Location |Dockerfile
+|Some More Meta |tbd ...
+|===
+

@@ -1,0 +1,9 @@
+= .hadolint.yml
+source2adoc <https://source2adoc.sommerfeld.io>
+
+[cols="1,1"]
+|===
+|Source Code File Location |.hadolint.yml
+|Some More Meta |tbd ...
+|===
+
