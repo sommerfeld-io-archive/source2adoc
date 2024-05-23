@@ -35,7 +35,8 @@ func TestGenerateTitle(t *testing.T) {
 		})
 	}
 }
-func TestWriteAdoc(t *testing.T) {
+
+func TestWriteAdocFile(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFilePath := "path/to/file.yml"
@@ -44,7 +45,7 @@ func TestWriteAdoc(t *testing.T) {
 
 	expectedAdocPath := antoraDir + "/modules/" + antoraModule + "/pages/path/to/file-yml.adoc"
 
-	adocPath, err := WriteAdoc(codeFilePath, antoraDir, antoraModule)
+	adocPath, err := WriteAdocFile(codeFilePath, antoraDir, antoraModule)
 
 	assert.NoError(err)
 	assert.Equal(expectedAdocPath, adocPath)

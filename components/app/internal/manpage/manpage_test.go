@@ -8,11 +8,17 @@ import (
 )
 
 func TestAppendCommandDocsToAdoc(t *testing.T) {
-	tempFile, err := os.Create("test_manpage.adoc")
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	tempFile, err := os.Create(currentDir + "/test_manpage.adoc")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(tempFile.Name())
+	//defer os.Remove(tempFile.Name())
 
 	sampleCommandDocs := CommandDocs{
 		Name:        "testCommand",

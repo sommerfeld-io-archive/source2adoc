@@ -89,7 +89,7 @@ services:
     depends_on:
       test-app:
         condition: service_completed_successfully
-    # command: --version
+    command: --version
     # command: list --lang=bash
     # command: list --lang=ruby
     # command: list --lang=yml
@@ -98,4 +98,4 @@ services:
     # command: list --lang=Makefile
     # command: list --lang=Vagrantfile
     # command: manpage
-    command: generate --lang=yml --antora-dir=docs-test --antora-module=source2adoc-test
+    # command: generate --lang=yml --antora-dir=docs-test --antora-module=source2adoc-test

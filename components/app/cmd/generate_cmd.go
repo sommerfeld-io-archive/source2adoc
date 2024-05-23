@@ -28,13 +28,26 @@ var generateCmd = &cobra.Command{
 		}
 		for _, file := range files {
 
-			adocPath, err := internal.WriteAdoc(file, antoraDir, antoraModule)
+			err = internal.AppendToNavPartial(antoraDir, antoraModule, file)
+			if err != nil {
+				fmt.Println("Error writing nav entry:", err)
+				return
+			}
+
+			adocPath, err := internal.WriteAdocFile(file, antoraDir, antoraModule)
 			if err != nil {
 				fmt.Println("Error writing AsciiDoc:", err)
-				continue
+				// continue
+				return
 			}
+
 			fmt.Println("Generated AsciiDoc file:", adocPath)
 		}
+
+		internal.WriteIndexAdoc(antoraDir, antoraModule)
+		internal.WriteNavAdoc(antoraDir, antoraModule)
+
+		printAntoraYmlWarning()
 	},
 }
 
@@ -43,4 +56,11 @@ func init() {
 	AddAntoraDirFlag(generateCmd)
 	AddAntoraModuleNameFlag(generateCmd)
 	rootCmd.AddCommand(generateCmd)
+}
+
+func printAntoraYmlWarning() {
+	fmt.Println("================================================================")
+	fmt.Println("  WARNING")
+	fmt.Println("  Remember to add the generated module to the antora.yml file.")
+	fmt.Println("================================================================")
 }
