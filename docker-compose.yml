@@ -89,12 +89,13 @@ services:
     depends_on:
       test-app:
         condition: service_completed_successfully
-    ## command: --version
-    ## command: list --lang=bash
-    ## command: list --lang=ruby
-    ## command: list --lang=yml
-    command: list --lang=yaml
-    ## command: list --lang=Dockerfile
-    ## command: list --lang=Makefile
-    ## command: list --lang=Vagrantfile
-    ## command: manpage
+    # command: --version
+    # command: list --lang=bash
+    # command: list --lang=ruby
+    # command: list --lang=yml
+    # command: list --lang=yaml
+    # command: list --lang=Dockerfile
+    # command: list --lang=Makefile
+    # command: list --lang=Vagrantfile
+    # command: manpage
+    command: generate --lang=yml --antora-dir=docs-test --antora-module=source2adoc-test

@@ -11,6 +11,7 @@ yamllint-*
 # Do not commit alongside the docs!
 source2adoc
 /manpage.adoc
+/docs-test
 
 .vagrant
 /.vagrant/

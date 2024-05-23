@@ -38,16 +38,11 @@ func generateAdocPath(codeFilePath string, antoraDir string, antoraModule string
 
 // writeTitleAndMetadataToAdocFile writes the title and metadata to an AsciiDoc file.
 func writeTitleAndMetadataToAdocFile(file *os.File, codeFilePath string) error {
-	_, err := file.WriteString(codeFilePath)
-	if err != nil {
-		return err
-	}
-
 	linesToWrite := []string{
 		"= " + generateTitle(codeFilePath),
 		"source2adoc <https://source2adoc.sommerfeld.io>",
 		"",
-		"[cols=auto]",
+		"[cols=\"1,1\"]",
 		"|===",
 		"|Source Code File Location |" + codeFilePath,
 		"|Some More Meta |tbd ...",
