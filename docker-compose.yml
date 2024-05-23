@@ -93,7 +93,8 @@ services:
     # command: --version
     # command: list --lang=bash
     # command: list --lang=ruby
-    command: list --lang=yml
+    # command: list --lang=yml
+    command: list --lang=yaml
     # command: list --lang=Dockerfile
     # command: list --lang=Makefile
     # command: list --lang=Vagrantfile
