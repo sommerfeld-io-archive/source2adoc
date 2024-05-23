@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/sommerfeld-io/source2adoc/internal/helper"
 	"github.com/sommerfeld-io/source2adoc/internal/metadata"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
@@ -33,7 +32,12 @@ type OptionDocs struct {
 }
 
 func GenerateManpage(rootCmd *cobra.Command) {
-	err := doc.GenYamlTree(rootCmd, helper.CurrentWorkingDir())
+	currentDir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	err = doc.GenYamlTree(rootCmd, currentDir)
 	if err != nil {
 		log.Fatal(err)
 	}

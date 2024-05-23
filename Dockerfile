@@ -30,7 +30,6 @@ LABEL maintainer="sebastian@sommerfeld.io"
 ARG COMMIT_SHA=UNSPECIFIED
 
 COPY /components/app /components/app
-COPY /components/testdata /components/testdata
 COPY /metadata/NEXT_VERSION /components/app/internal/metadata/VERSION
 WORKDIR /components/app
 
