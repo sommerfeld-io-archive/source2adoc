@@ -239,7 +239,18 @@ jobs:
         run: chmod +x source2adoc
         shell: bash
       - name: Generate docs from source code
-        run: ./source2adoc generate --lang=bash
+        run: |
+          langs=(
+            "Dockerfile"
+            "yml"
+            "yaml"
+          )
+
+          for item in "${langs[@]}"
+          do
+            echo "Generate docs from source code ... $item"
+            docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:rc generate --lang="$item"
+          done
         shell: bash
       - name: Generate manpage
         run: |

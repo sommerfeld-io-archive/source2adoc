@@ -9,7 +9,7 @@ yamllint-*
 
 # Pipeline places the binary inside the project root to generate docs.
 # Do not commit alongside the docs!
-source2adoc
+components/app/source2adoc
 /manpage.adoc
 /docs-test
 
