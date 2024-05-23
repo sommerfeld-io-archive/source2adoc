@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// LanguagePatternMapping represents a mapping between a language and its corresponding file pattern.
 type LanguagePatternMapping struct {
 	Language string
 	Pattern  string
