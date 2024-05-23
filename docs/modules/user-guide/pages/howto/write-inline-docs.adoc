@@ -1,4 +1,4 @@
-= How to write the inline docs
+= How to write inline docs
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 All supported languages share the `#` as marker for their comments. However source2adoc does not consider every comment worthy of being rendered into the documentation. Only comments that are specifically marked are considered relevant.
@@ -14,7 +14,7 @@ Even adding tables and code blocks into directly a `##` comment is supported.
 
 Additionally, inside the `##` comments, the following tags are supported to provide a more structured way of writing the comments:
 
-[cols="1,2"]
+[cols="1,2", options="header"]
 |===
 |Tag & Parameter |Usage
 |`@see reference` |Provides a link to another element of documentation (generates `xref`)
