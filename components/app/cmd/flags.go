@@ -42,5 +42,7 @@ func IsValidLanguage(lang string) bool {
 
 // HandleInvalidLang prints an error message indicating that the provided language is invalid.
 func HandleInvalidLang(lang string) {
-	fmt.Println("Error: Invalid language. Allowed languages are: bash, yaml, yml, Vagrantfile, Dockerfile, Makefile, Ruby.")
+	langs := strings.Join(internal.SupportedLangs(), ", ")
+	errorMsg := fmt.Sprintf("Error: Invalid language. Allowed languages are: %s.", langs)
+	fmt.Println(errorMsg)
 }

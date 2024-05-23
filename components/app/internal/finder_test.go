@@ -12,6 +12,7 @@ func TestFindCodeFilesForLanguage(t *testing.T) {
 
 	var tests = []string{
 		"yml",
+		"yaml",
 		"ruby",
 		"bash",
 		"Dockerfile",

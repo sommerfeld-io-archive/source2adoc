@@ -16,9 +16,12 @@ func TestIsValidLanguage(t *testing.T) {
 		assert.True(IsValidLanguage("ruby"))
 		assert.True(IsValidLanguage("Vagrantfile"))
 		assert.True(IsValidLanguage("yml"))
+		assert.True(IsValidLanguage("yaml"))
 	})
 
 	t.Run("should fail", func(t *testing.T) {
-		assert.False(IsValidLanguage("yaml"))
+		assert.False(IsValidLanguage("go"))
+		assert.False(IsValidLanguage("java"))
+		assert.False(IsValidLanguage("kotlin"))
 	})
 }

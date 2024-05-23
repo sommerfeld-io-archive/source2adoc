@@ -19,6 +19,7 @@ func TestShouldGetGetPatternForLanguage(t *testing.T) {
 		{"ruby", "*.rb"},
 		{"Vagrantfile", "Vagrantfile"},
 		{"yml", "*.yml"},
+		{"yaml", "*.yaml"},
 	}
 	for _, test := range tests {
 		t.Run(test.lang, func(t *testing.T) {
@@ -52,7 +53,7 @@ func TestShouldGetErrorForInvalidLanguage(t *testing.T) {
 func TestSupportedLangs(t *testing.T) {
 	assert := assert.New(t)
 
-	expected := []string{"Dockerfile", "Makefile", "Vagrantfile", "bash", "ruby", "yml"}
+	expected := []string{"Dockerfile", "Makefile", "Vagrantfile", "bash", "ruby", "yml", "yaml"}
 	langs := SupportedLangs()
 
 	assert.ElementsMatch(expected, langs, "Should return supported languages")

@@ -17,6 +17,7 @@ var languageMappings = []LanguagePatternMapping{
 	{Language: "ruby", Pattern: "*.rb"},
 	{Language: "Vagrantfile", Pattern: "Vagrantfile"},
 	{Language: "yml", Pattern: "*.yml"},
+	{Language: "yaml", Pattern: "*.yaml"},
 }
 
 // GetPatternForLanguage returns a single Pattern from languageMappings for a given language.
