@@ -24,6 +24,13 @@ func AddAntoraDirFlag(cmd *cobra.Command) {
 	cmd.Flags().String("antora-dir", "docs", "Directory for Antora (optional)")
 }
 
+// AddAntoraDirFlag adds the "antora-module" flag to the given command.
+// This flag allows specifying the target module name (= directory) for the adoc files, which is optional.
+// The default value for the flag is "source2adoc".
+func AddAntoraModuleNameFlag(cmd *cobra.Command) {
+	cmd.Flags().String("antora-module", "source2adoc", "Antora target module for the generated adoc files (optional)")
+}
+
 // IsValidLanguage checks if the given language is valid.
 //
 // Parameters:

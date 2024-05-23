@@ -24,5 +24,6 @@ var generateCmd = &cobra.Command{
 func init() {
 	AddLangFlag(generateCmd)
 	AddAntoraDirFlag(generateCmd)
+	AddAntoraModuleNameFlag(generateCmd)
 	rootCmd.AddCommand(generateCmd)
 }

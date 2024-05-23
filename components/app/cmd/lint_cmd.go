@@ -21,6 +21,5 @@ var lintCmd = &cobra.Command{
 
 func init() {
 	AddLangFlag(lintCmd)
-	AddAntoraDirFlag(lintCmd)
 	rootCmd.AddCommand(lintCmd)
 }
