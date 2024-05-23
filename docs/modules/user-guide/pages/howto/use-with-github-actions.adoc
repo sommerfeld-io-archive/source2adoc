@@ -4,3 +4,39 @@ Sebastian Sommerfeld <sebastian@sommerfeld.io>
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+[code, yaml]
+----
+generate-docs:
+  runs-on: ubuntu-latest
+  if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+  needs: ['go-app']
+  permissions:
+    contents: write
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{github.ref}}
+    - name: Generate docs from source code
+      run: |
+        langs=(
+          "Dockerfile"
+          "yml"
+          "yaml"
+        )
+        for item in "${langs[@]}"
+        do
+          echo "Generate docs from source code ... $item"
+          docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:rc generate --lang="$item"
+        done
+      shell: bash
+    - name: Commit and push
+      uses: EndBug/add-and-commit@v9.1.4
+      with:
+        author_name: sebastian
+        author_email: sebastian@sommerfeld.io
+        message: "[Actions Bot] generate docs"
+----
+
+CAUTION: Generating docs in a matrix is not recommended because this could cause issues with the commit and push step. The tip of the branch might be behind all the time. Additionally every run will write to the `nav.adoc` file, with only one run being able to commit and push the changes.
