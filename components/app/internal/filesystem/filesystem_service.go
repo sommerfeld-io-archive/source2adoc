@@ -7,7 +7,7 @@ import (
 // FindFilesForLanguage serves as a service layer that acts as a bridge between the `cobra`
 // commands and the actual implementations.
 func FindFilesForLanguage(currentDir string, lang string) ([]string, error) {
-	pattern, err := internal.FileNamePatternForLanguage(lang)
+	pattern, err := internal.GetPatternForLanguage(lang)
 	if err != nil {
 		return nil, err
 	}

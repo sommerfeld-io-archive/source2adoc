@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestShouldGetFileNamePatternForLanguage(t *testing.T) {
+func TestShouldGetGetPatternForLanguage(t *testing.T) {
 	assert := assert.New(t)
 
 	var tests = []struct {
@@ -22,7 +22,7 @@ func TestShouldGetFileNamePatternForLanguage(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.lang, func(t *testing.T) {
-			pattern, err := FileNamePatternForLanguage(test.lang)
+			pattern, err := GetPatternForLanguage(test.lang)
 
 			assert.NoError(err, "Should not return an error")
 			assert.NotEmpty(pattern, "Should return a pattern")
@@ -42,7 +42,7 @@ func TestShouldGetErrorForInvalidLanguage(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.lang, func(t *testing.T) {
-			pattern, err := FileNamePatternForLanguage(test.lang)
+			pattern, err := GetPatternForLanguage(test.lang)
 
 			assert.Error(err, "Should return an error")
 			assert.Empty(pattern, "Should not return a pattern")
