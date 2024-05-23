@@ -221,7 +221,7 @@ jobs:
 
   generate-docs:
     runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') }}
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     needs: ['go-app']
     permissions:
       contents: write
