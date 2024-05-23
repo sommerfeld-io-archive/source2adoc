@@ -1,5 +1,7 @@
 #!/bin/bash
 ##
+# CAUTION: This is a file from the test data set
+#
 # This Bash script allows to running Ansible playbooks. The script is designed to
 # simplify the management of Ansible playbooks.
 #

@@ -11,10 +11,10 @@ type LanguagePatternMapping struct {
 
 var languageMappings = []LanguagePatternMapping{
 	{Language: "bash", Pattern: "*.sh"},
-	{Language: "Dockerfile", Pattern: "Dockerfile*"},
-	{Language: "Makefile", Pattern: "Makefile*"},
+	{Language: "Dockerfile", Pattern: "Dockerfile"},
+	{Language: "Makefile", Pattern: "Makefile"},
 	{Language: "ruby", Pattern: "*.rb"},
-	{Language: "Vagrantfile", Pattern: "Vagrantfile*"},
+	{Language: "Vagrantfile", Pattern: "Vagrantfile"},
 	{Language: "yml", Pattern: "*.yml"},
 }
 

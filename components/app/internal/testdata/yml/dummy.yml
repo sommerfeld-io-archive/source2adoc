@@ -1,11 +1,5 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
+---
 ##
-# Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
-# ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-# dolores et ea rebum.
-#
 # Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 # ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
 # dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
@@ -17,16 +11,4 @@
 # CAUTION: This is a file from the test data set
 ##
 
-IMAGE_NAME = "ubuntu/oracular64"
-HOSTNAME = "testbox"
-
-Vagrant.configure("2") do |config|
-	config.vm.box = IMAGE_NAME
-	config.vm.hostname = HOSTNAME
-
-	config.vm.provider "virtualbox" do |v|
-		v.memory = 1024
-		v.cpus = 1
-		v.name = HOSTNAME
-	end
-end
+dummy: true

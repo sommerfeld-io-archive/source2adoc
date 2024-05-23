@@ -14,10 +14,10 @@ func TestShouldGetGetPatternForLanguage(t *testing.T) {
 		expected string
 	}{
 		{"bash", "*.sh"},
-		{"Dockerfile", "Dockerfile*"},
-		{"Makefile", "Makefile*"},
+		{"Dockerfile", "Dockerfile"},
+		{"Makefile", "Makefile"},
 		{"ruby", "*.rb"},
-		{"Vagrantfile", "Vagrantfile*"},
+		{"Vagrantfile", "Vagrantfile"},
 		{"yml", "*.yml"},
 	}
 	for _, test := range tests {
