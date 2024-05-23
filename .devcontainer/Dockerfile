@@ -1,12 +1,10 @@
+## This Dockerfile is used to build the development container for the source2adoc project.
+## It contains the necessary instructions to create an environment with all the dependencies
+## required for development.
 ##
-# This Dockerfile is used to build the development container for the source2adoc project.
-# It contains the necessary instructions to create an environment with all the dependencies
-# required for development.
-#
-# == Prerequisites
-# Having Visual Studio Code (VSCode) and the Dev Container plugin installed are
-# essential prerequisites for this development environment. Docker is also mandatory.
-##
+## == Prerequisites
+## Having Visual Studio Code (VSCode) and the Dev Container plugin installed are
+## essential prerequisites for this development environment. Docker is also mandatory.
 
 FROM mcr.microsoft.com/devcontainers/go:1.22-bullseye
 LABEL maintainer="sebastian@sommerfeld.io"
