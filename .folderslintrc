@@ -8,7 +8,6 @@
 
     "components/app/**",
     "components/test/**",
-    "components/testdata/**",
 
     "docs/modules/*/assets/attachments/**",
     "docs/modules/*/assets/images/**",
