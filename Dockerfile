@@ -36,7 +36,7 @@ RUN go mod download \
 
 
 ## Named `run`, this stage is responsible for running the Go application in a minimal Alpine Linux.
-FROM alpine:3.20.0 AS run
+FROM alpine:3.20.1 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
 LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.description="Convert inline documentation into AsciiDoc files, tailored for seamless integration with Antora. " \
