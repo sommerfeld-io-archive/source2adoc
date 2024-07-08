@@ -20,7 +20,7 @@
 
 
 ## Named `build`, this stage is responsible for unit-testing and building the Go application.
-FROM golang:1.22.4-alpine3.19 AS build
+FROM golang:1.22.5-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
 ARG COMMIT_SHA=UNSPECIFIED
