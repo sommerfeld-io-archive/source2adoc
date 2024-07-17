@@ -21,7 +21,7 @@ NOTE: This project is currently in its early stages and is still in the incubati
 
 The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to JavaDoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
 
-The app supports multiple source code languages. The common ground is, that  these languages mark their comments through the hash-symbol (`#`).
+The app supports multiple source code languages. The common ground is, that these languages mark their comments through the hash-symbol (`#`).
 
 * bash
 * yaml and yml
@@ -35,11 +35,12 @@ source2adoc does not aim at replacing or duplicating existing solutions like Jav
 == Requirements and Features
 The following section outlines the requirements and features of the `source2adoc` project. These requirements serve as a guideline for the development of the application and provide a clear overview of the expected functionality.
 
-=== Command Line Parameter
-The application must accept a command line parameter to specify the source code language to be considered. Only one option is allowed per run. To generate AsciiDoc documentation for multiple languages, the application must be executed multiple times with different language settings.
+// === Command Line Parameter
+// The application must accept a command line parameter to specify the source code language to be considered. Only one option is allowed per run. To generate AsciiDoc documentation for multiple languages, the application must be executed multiple times with different language settings.
 
 === Output Location
-Generated AsciiDoc files should be placed into an Antora module named `source2adoc`. It is crucial not to delete the entire module and regenerate it from scratch with each application run, as this would prevent running the application multiple times for different languages.
+Generated AsciiDoc files should be placed into an Antora module named `source2adoc`.
+// It is crucial not to delete the entire module and regenerate it from scratch with each application run, as this would prevent running the application multiple times for different languages.
 
 === Initial Documentation Scope
 Initially, the application will only consider code comments acting as header documentation for entire files. Documentation blocks for classes and functions may be considered in future iterations.
@@ -54,7 +55,34 @@ The root folder of the Antora component should be changeable via a command line 
 The caption of the AsciiDoc file should automatically be set from the source code file's name. Additionally, the path of the source code file and the author (if specified within the code file) should be included in the generated AsciiDoc file. The actual text of the header docs should be rendered into the AsciiDoc file as well. This text will not be translated any further, it is taken as is, thus allowing to write AsciiDoc directly into the source code docs.
 
 === Comment Style
-The code comment style should resemble JavaDoc but use the hash-symbol (`#`) as the marker for commented lines. That means the marker for metadata should be similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc). `@see` should generate an xref, @link should generate a static link
+The code comment style should resemble JavaDoc but a double hash-symbol (`##`) as the marker for commented lines. That means the comment is different from "regular" comments and still allows to use metadata similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc). `@see` should generate an xref, @link should generate a static link.
+
+== Usage
+...
+
+TODO ... Docker Run commands for both images
+
+== Development
+...
+
+TODO ... Development with Kotlin and Spring Shell ... ArchUnit ... etc ...
+
+[ditaa, ditaa-image, svg]
+....
+                                                         +---------------------+        +--------------+
+                                                         |  CodeFileInventory  |        |  Converter   |
++---------------------+       +-------------+            |                     |        |              |
+|  FileSystemScanner  +------>| CodeFile    +-------------> List of CodeFile <------------ CodeFile    |
++---------------------+  new  |             |  register  |                     |  read  |   |          |
+                              |       type  |  CodeFile  +---------------------+  for   |   v          |
+                              |       path  |                                     type  |              |
+                              |   filename  |                                           |  parse()     |
+                              +-------------+                                           |   |          |
+                                                                                        |   v          |
+                                                                                        |              |
+                                                                                        |  writeAdoc() |
+                                                                                        +--------------+
+....
 
 == Risks and Technical Debts
 link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.
