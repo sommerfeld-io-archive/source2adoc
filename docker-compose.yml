@@ -64,11 +64,15 @@ services:
       dockerfile: Dockerfile.app
     ports:
       - 3000:3000
-    depends_on:
-      - lint-dockerfile-docs
-      - lint-filenames
-      - lint-folders
-      - lint-yaml
+    depends_on: &depends_on
+      lint-dockerfile-app:
+        condition: service_completed_successfully
+      lint-filenames:
+        condition: service_completed_successfully
+      lint-folders:
+        condition: service_completed_successfully
+      lint-yaml:
+        condition: service_completed_successfully
 
   docs:
     container_name: ${COMPOSE_PROJECT_NAME}-docs
@@ -78,8 +82,4 @@ services:
       dockerfile: Dockerfile.docs
     ports:
       - 3080:3000
-    depends_on:
-      - lint-dockerfile-docs
-      - lint-filenames
-      - lint-folders
-      - lint-yaml
+    depends_on: *depends_on

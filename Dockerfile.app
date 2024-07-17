@@ -33,7 +33,10 @@ RUN chown -hR "$USER:$USER" /usr/local/apache2 \
     && chmod g-r /etc/shadow \
     && rm /usr/local/apache2/htdocs/index.html
 
+# TODO ... A CLI app should not run in a webserver !!!!!
+RUN echo "A CLI app should not run in a webserver !!!!!" > /usr/local/apache2/htdocs/index.html
+
 USER "$USER"
 EXPOSE 3000
 
-# TODO ... A CLI app should not run in a webserver !!!!!
+
