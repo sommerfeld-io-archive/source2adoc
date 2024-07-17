@@ -1,14 +1,28 @@
 {
   "rules": [
+    ".devcontainer",
+    ".devcontainer/ops",
     ".devcontainer/ops/assets",
 
+    ".github",
     ".github/workflows",
 
     ".vscode",
 
-    "components/app/**",
-    "components/test/**",
+    "components",
+    "components/app",
+    "components/app/resources",
+    "components/app/src",
+    "components/app/src/main",
+    "components/app/src/test",
 
+    "config",
+    "config/dist",
+    "config/dist/helm",
+
+    "docs",
+    "docs/playbooks",
+    "docs/modules",
     "docs/modules/*/assets/attachments/**",
     "docs/modules/*/assets/images/**",
     "docs/modules/*/examples/*",
@@ -18,8 +32,10 @@
     "docs/modules/*/partials/*",
     "docs/modules/*/partials/**",
 
-    "metadata",
+    "public/**",
+    "src",
 
+    "node_modules/**",
     "target/**"
   ]
 }

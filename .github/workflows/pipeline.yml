@@ -1,14 +1,14 @@
 ---
-## The deployment pipeline for the source2docs app is implemented using GitHub Actions. The primary
+## The deployment pipeline for the source2adoc app is implemented using GitHub Actions. The primary
 ## objective of this pipeline is to assess the releasability of the application for deployment with
 ## every push to the `main` branch. This is achieved through a series of automated tests and
-## validations (performed on all branches, but the `main` branch carries the code thatshould be
-## stable and production-ready). The workflow is designed to build every artifact of the source2docs
+## validations (performed on all branches, but the `main` branch carries the code that should be
+## stable and production-ready). The workflow is designed to build every artifact of the source2adoc
 ## app and subject it to various types of tests to verify its functionality and integrity. If all
 ## tests are successful, indicating that the project is ready for release, a release candidate is
 ## generated and published to DockerHub.
 ##
-## The deployment process for the source2docs app utilizes Docker images. Images are built and
+## The deployment process for the source2adoc app utilizes Docker images. Images are built and
 ## unit tested. Each Snapshot image is tagged with the commit-sha, providing a clear reference to
 ## the version of the codebase from which it was generated, and subsequently pushed to DockerHub.
 ## Following this initial deployment, the Snapshot Docker images undergo further testing (security,
@@ -16,34 +16,38 @@
 ## tests pass successfully (and the workflow is running on the `main` branch), indicating that the
 ## Snapshot image is robust and reliable, it is then tagged as a release candidate. Notably, release
 ## candidates are exclusively published from the `main` branch.
+##
+## === Release
+## link:https://github.com/semantic-release/semantic-release[semantic-release] is used to automate
+## the release process.
+##
+## GitHub Actions does not trigger workflows on release events created by the GitHub Actions
+## `GITHUB_TOKEN`. This is a known limitation to prevent recursive workflow runs. To work around
+## this, a Personal Access Token (PAT) is used instead of the `GITHUB_TOKEN`. The PAT should have
+## the repo scope. This will allow the release event to trigger other workflows.
 
-name: Build Pipeline
+name: Build + Deployment Pipeline
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches-ignore:
       - dependabot/**
+    paths-ignore:
+      - '**.adoc'
+      - '.devcontainer/**'
+      - '.vscode/**'
   schedule:
     - cron: '0 1 * * 2'
 
 env:
   IMAGE_TAG_RC: rc
   IMAGE_TAG_LATEST: latest
-  COVERAGE_REPORT: components/app/go-code-coverage.out
-  COVERAGE_REPORT_WORKFLOW_ARTIFACT: coverage-report
-  GO_BINARY: components/app/source2adoc
-  GO_BINARY_WORKFLOW_ARTIFACT: go-binary
-  GO_VERSION: 1.22.3
 
 permissions:
   contents: read
 
 jobs:
-
-  # ----- Commit stage ----- lint ---------------
+  # ----- Commit stage - 1 - lint ---------------
 
   lint-yaml:
     runs-on: ubuntu-latest
@@ -51,16 +55,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run yamllint
-        run: docker-compose up yaml
-        shell: bash
-
-  lint-folders:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run folderslint in container
-        run: docker-compose up folders
+        run: docker compose up lint-yaml --exit-code-from lint-yaml
         shell: bash
 
   lint-filenames:
@@ -69,7 +64,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run ls-lint in container
-        run: docker-compose up filenames
+        run: docker compose up lint-filenames --exit-code-from lint-filenames
+        shell: bash
+
+  lint-folders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run folderslint in container
+        run: docker compose up lint-folders --exit-code-from lint-folders
         shell: bash
 
   shellcheck:
@@ -82,145 +86,11 @@ jobs:
         with:
           ignore_paths: node_modules target
 
-  validate-metadata:
+  # ----- Build stage - docs --------------------
+
+  docs:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal
-        run: |
-          if [[ "$(cat metadata/CURRENT_VERSION)" == "$(cat metadata/NEXT_VERSION)" ]]; then
-            echo "ERROR: metadata/CURRENT_VERSION and metadata/NEXT_VERSION should not be equal"
-            exit 1
-          else
-            echo "OKAY: metadata/CURRENT_VERSION and metadata/NEXT_VERSION are not equal"
-          fi
-        shell: bash
-
-  validate-nav-adoc:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Validate nav.adoc files
-        run: |
-          readonly VIOLATIONS_LOG="violations.log"
-
-          find docs/modules -name "nav.adoc" | while read -r file; do
-            while IFS= read -r line; do
-              if [[ ! $line =~ ^\*\  ]]; then
-                echo "--> $file | $line" >> "$VIOLATIONS_LOG"
-              fi
-            done < "$file"
-          done
-
-          if [[ -f "$VIOLATIONS_LOG" ]]; then
-            echo "Violations found"
-            cat "$VIOLATIONS_LOG"
-            exit 1
-          fi
-        shell: bash
-
-  # ----- Build stage (go app + docs) -----------
-
-  build-go-app:
-    runs-on: ubuntu-latest
-    needs: [
-      'validate-metadata',
-    ]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Test app
-        run: docker-compose up test-app
-        shell: bash
-      - name: Update version information before building go app
-        run: |
-          (
-            echo "[INFO] before update"
-            cat metadata/NEXT_VERSION
-            cat components/app/internal/metadata/VERSION
-
-            echo "[INFO] copy"
-            cp metadata/NEXT_VERSION components/app/internal/metadata/VERSION
-
-            echo "[INFO] after update"
-            cat metadata/NEXT_VERSION
-            cat components/app/internal/metadata/VERSION
-          )
-        shell: bash
-      - name: Install go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - name: Build go app (binary)
-        run: |
-          (
-            cd components/app || exit
-            go build .
-          )
-        shell: bash
-      - name: Update coverage report
-        run: |
-          (
-            docker-compose up test-app
-
-            readonly old='github.com/sommerfeld-io/source2adoc'
-            readonly new='components/app'
-            sed -i "s|$old|$new|g" "${{ env.COVERAGE_REPORT }}"
-          )
-        shell: bash
-      - name: source2adoc --version
-        run: |
-          (
-            cd components/app || exit
-            ./source2adoc --version
-          )
-        shell: bash
-      - name: Upload artifact (coverage report)
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
-          path: ${{ env.COVERAGE_REPORT }}
-          if-no-files-found: error
-          retention-days: 1
-      - name: Upload artifact (go-binary)
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
-          path: ${{ env.GO_BINARY }}
-          if-no-files-found: error
-          retention-days: 1
-
-  sonarcloud:
-    runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') }}
-    needs: ['build-go-app']
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Download artifact (coverage report)
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.COVERAGE_REPORT_WORKFLOW_ARTIFACT }}
-          path: ${{ github.workspace }}/components/app
-      - name: cat ${{ env.COVERAGE_REPORT }}
-        run: cat ${{ env.COVERAGE_REPORT }}
-        shell: bash
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  generate-docs:
-    runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
-    needs: ['build-go-app']
+    if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
       contents: write
     steps:
@@ -228,48 +98,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{github.ref}}
-      - name: Download artifact (go-binary)
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.GO_BINARY_WORKFLOW_ARTIFACT }}
-      - name: ls -alF
-        run: ls -alF
-        shell: bash
-      - name: Make binary executable
-        run: chmod +x source2adoc
-        shell: bash
-      - name: Generate docs from source code
-        run: |
-          langs=(
-            "Dockerfile"
-            "yml"
-            "yaml"
-          )
-
-          for item in "${langs[@]}"
-          do
-            echo "Generate docs from source code ... $item"
-            ./source2adoc generate --lang="$item"
-          done
-        shell: bash
-      - name: Generate manpage
-        run: |
-          ./source2adoc manpage
-
-          {
-              echo
-              echo "// +---------------------------------------------------+"
-              echo "// |                                                   |"
-              echo "// |        DO NOT EDIT DIRECTLY !!!!!                 |"
-              echo "// |                                                   |"
-              echo "// |        File is auto-generated by pipeline.        |"
-              echo "// |                                                   |"
-              echo "// +---------------------------------------------------+"
-            } >> manpage.adoc
-
-          cat manpage.adoc
-          mv manpage.adoc docs/modules/user-guide/pages/GENERATED/manpage.adoc
-        shell: bash
       - name: Adjust version in docs/antora.yml
         uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
         with:
@@ -278,9 +106,9 @@ jobs:
       - name: Copy adoc files to project root
         run: |
           cp docs/modules/ROOT/pages/index.adoc README.adoc
-          cp docs/modules/meta/pages/license.adoc LICENSE.adoc
-          cp docs/modules/meta/pages/contribute.adoc CONTRIBUTING.adoc
-          cp docs/modules/meta/pages/security.adoc SECURITY.adoc
+          cp docs/modules/ROOT/pages/license.adoc LICENSE.adoc
+          cp docs/modules/ROOT/pages/contribute.adoc CONTRIBUTING.adoc
+          cp docs/modules/ROOT/pages/security.adoc SECURITY.adoc
         shell: bash
       - name: Add do-not-edit remark to adoc files in project root
         run: |
@@ -300,19 +128,19 @@ jobs:
 
           done
         shell: bash
-      - name: Replace Captions in adoc files in project root
+      - name: Replace Caption in README.adoc
         run: |
-          for file in *.adoc; do
-            content=$(cat "$file")
-            content="${content//= Introduction/= source2adoc}"
-            echo "$content" > "$file"
-          done
+          file=README.adoc
+          content=$(cat "$file")
+          content="${content//= Introduction/= source2adoc}"
+          echo "$content" > "$file"
         shell: bash
       - name: Replace xref with links to GitHub in adoc files in project root
         run: |
           for file in *.adoc; do
             content=$(cat "$file")
-            content="${content//xref:development-guide:development-guide.adoc[]/link:https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/development-guide/pages/development-guide.adoc[Solution Strategy]}"
+            content="${content//xref:development-guide.adoc[]/link:https://github.com/sommerfeld-io/source2adoc/blob/main/docs/modules/ROOT/pages/development-guide.adoc[Development Guide]}"
+            content="${content//xref:contribute.adoc[]/link:https://github.com/sommerfeld-io/source2adoc/blob/main/CONTRIBUTING.adoc[Contribute to this Project]}"
             echo "$content" > "$file"
           done
         shell: bash
@@ -321,17 +149,15 @@ jobs:
         with:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
-          message: "[Actions Bot] generate docs"
-          tag_push: --force
+          message: 'docs: [Actions Bot] generate docs'
 
-  # ----- Build stage (image) -------------------
+  # ----- Build stage ---------------------------
 
   build-image:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
     name: ${{ matrix.image-name }}:${{ github.sha }}
-    needs: [
-      'validate-metadata',
-    ]
+    needs: ['docs']
     permissions:
       contents: read
       pull-requests: write
@@ -342,13 +168,18 @@ jobs:
           - registry: docker.io
             image-name: source2adoc
             context: .
+            dockerfile: Dockerfile.app
+          - registry: docker.io
+            image-name: source2adoc-docs
+            context: .
+            dockerfile: Dockerfile.docs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: hadolint
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ${{ matrix.context }}/Dockerfile
+          dockerfile: ${{ matrix.context }}/${{ matrix.dockerfile }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Container Registry ${{ matrix.registry }}
@@ -368,6 +199,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
           build-args: |
             VERSION=${{ github.sha }}
             COMMIT_SHA=${{ github.sha }}
@@ -379,13 +211,14 @@ jobs:
           # cache-to: type=gha,mode=max
           provenance: true
           sbom: true
-      - name: Docker Scout CVEs for :${{ github.sha }}
+      - name: Docker Scout CVEs for ${{ matrix.image-name }}:${{ github.sha }}
         uses: docker/scout-action@v1.10.0
         with:
           command: cves
           image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
           exit-code: false
-          write-comment: ${{ github.event_name == 'pull_request' }}
+          #write-comment: ${{ github.event_name == 'pull_request' }}
+          write-comment: true
       - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_RC }}"
         uses: docker/scout-action@v1.10.0
         with:
@@ -393,10 +226,12 @@ jobs:
           image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
           to: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
           exit-code: false
-          write-comment: ${{ github.event_name == 'pull_request' }}
+          #write-comment: ${{ github.event_name == 'pull_request' }}
+          write-comment: true
 
   test-image:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
     name: ${{ matrix.image-name }}
     needs: ['build-image']
     permissions:
@@ -406,21 +241,22 @@ jobs:
         include:
           - registry: docker.io
             image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
-        run: |
-          echo "CHANGE ME"
+        run: echo "CHANGE ME"
         shell: bash
 
   # ----- Deploy :rc stage ----------------------
 
   publish-rc:
     runs-on: ubuntu-latest
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     name: ${{ matrix.image-name }} as release candidate
     needs: ['test-image']
-    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     permissions: # see build-image (duplicated because github actions does not support anchors)
       contents: read
       pull-requests: write
@@ -430,6 +266,8 @@ jobs:
         include:
           - registry: docker.io
             image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -454,36 +292,98 @@ jobs:
           image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
           to: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_LATEST }}
           exit-code: false
-          write-comment: ${{ github.event_name == 'pull_request' }}
+          #write-comment: ${{ github.event_name == 'pull_request' }}
+          write-comment: true
 
-  # ----- Test :rc stage -------------------------
+  test-rc:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    name: ${{ matrix.image-name }}
+    needs: ['publish-rc']
+    permissions:
+      contents: read
+    strategy: # see build-image (duplicated because github actions does not support anchors)
+      matrix:
+        include:
+          - registry: docker.io
+            image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
+        run: echo "CHANGE ME"
+        shell: bash
 
-  # test-rc:
-  #   runs-on: ubuntu-latest
-  #   name: ${{ matrix.image-name }}
-  #   needs: ['publish-rc']
-  #   permissions:
-  #     contents: read
-  #   strategy: # see build-image (duplicated because github actions does not support anchors)
-  #     matrix:
-  #       include:
-  #         - registry: docker.io
-  #           image-name: source2adoc
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
-  #       run: |
-  #         echo "CHANGE ME"
-  #       shell: bash
+  # ----- Tag repository ------------------------
+
+  release-code:
+    runs-on: ubuntu-latest
+    needs: ['test-rc']
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.ref}}
+      - name: Info - package.json
+        run: cat package.json
+        shell: bash
+      - name: Info - docs/antora.yml
+        run: cat docs/antora.yml
+        shell: bash
+      - name: Install Node.js
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 22.2.0
+      - name: semantic-release - Install
+        run: |
+          npm install --save-dev semantic-release
+          npm install --save-dev @semantic-release/commit-analyzer
+          npm install --save-dev @semantic-release/release-notes-generator
+          npm install --save-dev @semantic-release/npm
+          npm install --save-dev @semantic-release/exec
+          npm install --save-dev @semantic-release/git
+          npm install --save-dev @semantic-release/github
+        shell: bash
+      - name: semantic-release - Run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
+        run: npx semantic-release
+        shell: bash
+      - name: Info - package.json
+        run: cat package.json
+        shell: bash
+      - name: Info - docs/antora.yml
+        run: cat docs/antora.yml
+        shell: bash
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: sebastian
+          author_email: sebastian@sommerfeld.io
+          message: 'docs: [Actions Bot] bump version'
+      - name: Reset version in docs/antora.yml (back to branch name)
+        uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
+        with:
+          git_ref: ${{github.ref}}
+          file: docs/antora.yml
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: sebastian
+          author_email: sebastian@sommerfeld.io
+          message: 'docs: [Actions Bot] reset version back to branch name'
 
   # ----- Cleanup -------------------------------
 
   cleanup:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
-    # needs: ['test-rc']
-    needs: ['publish-rc']
+    needs: ['test-rc']
     if: always()
     permissions:
       contents: read
@@ -492,6 +392,8 @@ jobs:
         include:
           - registry: docker.io
             image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

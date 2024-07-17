@@ -1,0 +1,43 @@
+---
+site:
+  title: source2adoc
+  url: /
+  start_page: public::index.adoc
+  robots: allow
+
+content:
+  # branches: ['*', '!dependabot/*']
+  sources:
+    - url: /workspaces/source2adoc
+      branches: ['main']
+      start_path: docs
+    - url: https://github.com/sommerfeld-io/source2adoc.git
+      branches: ~
+      tags: ['v*', '!v0.1.*']
+      start_path: docs
+
+asciidoc:
+  attributes:
+    kroki-fetch-diagram: true
+  extensions:
+    - asciidoctor-kroki
+
+antora:
+  extensions:
+    - require: '@antora/lunr-extension'
+      enabled: true
+      index_latest_only: true
+      snippet_length: 160
+
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+
+output:
+  clean: true
+  dir: /workspaces/source2adoc/target/public
+
+runtime:
+  cache_dir: /workspaces/source2adoc/target/cache/antora
+  fetch: true

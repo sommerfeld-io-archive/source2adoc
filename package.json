@@ -1,0 +1,20 @@
+{
+  "name": "source2adoc",
+  "version": "0.1.0",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "sebastian-sommerfeld.io",
+  "license": "MIT",
+  "description": "Streamline the process of generating AsciiDoc documentation from inline comments in source code files",
+  "devDependencies": {
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.1.0",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "semantic-release": "^24.0.0"
+  }
+}

@@ -13,30 +13,9 @@
 ## docker compose build
 ## docker compose up
 ## ....
-##
-## NOTE: Building the application is used for local development only. For CI/CD workflows, the
-## Github Actions workflow is used to build the application. Linting and testing is used from
-## GitHub Actions as well
-
 
 services:
-
-  filenames:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
-    image: lslintorg/ls-lint:1.11.2
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-
-  folders:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
-    image: sommerfeldio/folderslint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-    command: folderslint
-
-  yaml:
+  lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
     volumes:
@@ -45,56 +24,62 @@ services:
     command: .
     tty: true
 
-  dockerfile:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
+  lint-filenames:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
+    image: lslintorg/ls-lint:1.11.2
+    volumes:
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+
+  lint-folders:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
+    image: sommerfeldio/folderslint:latest
+    volumes:
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+    command: .
+    tty: true
+
+  lint-dockerfile-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
     image: hadolint/hadolint:latest
     volumes:
       - .:/workspaces/source2adoc
     working_dir: /workspaces/source2adoc
-    entrypoint: hadolint Dockerfile
-    depends_on:
-      - filenames
-      - folders
-      - yaml
+    entrypoint: hadolint Dockerfile.app
 
-  test-app:
-    image: golang:1.22.3-alpine3.19
-    container_name: ${COMPOSE_PROJECT_NAME}-test
+  lint-dockerfile-docs:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-docs
+    image: hadolint/hadolint:latest
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./components/app:/components/app:rw
-    working_dir: /components/app
-    command:
-      - /bin/sh
-      - -c
-      - |
-        go mod download
-        go mod tidy
-        go fmt ./...
-        go vet ./...
-        go test -coverprofile=go-code-coverage.out ./...
-        chown 1000:1000 /components/app/go.sum
-    depends_on:
-      - dockerfile
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+    entrypoint: hadolint Dockerfile.docs
 
-  build-app:
-    container_name: ${COMPOSE_PROJECT_NAME}
-    build: .
+  app:
+    container_name: ${COMPOSE_PROJECT_NAME}-app
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
-    volumes:
-      - .:/project
-    working_dir: /project
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - 3000:3000
     depends_on:
-      test-app:
-        condition: service_completed_successfully
-    # command: --version
-    # command: list --lang=bash
-    # command: list --lang=ruby
-    # command: list --lang=yml
-    # command: list --lang=yaml
-    # command: list --lang=Dockerfile
-    # command: list --lang=Makefile
-    # command: list --lang=Vagrantfile
-    # command: manpage
-    command: generate --lang=yml --antora-dir=docs-test --antora-module=source2adoc-test
+      - lint-dockerfile-docs
+      - lint-filenames
+      - lint-folders
+      - lint-yaml
+
+  docs:
+    container_name: ${COMPOSE_PROJECT_NAME}-docs
+    image: local/${COMPOSE_PROJECT_NAME}-docs:${DEV_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    ports:
+      - 3080:3000
+    depends_on:
+      - lint-dockerfile-docs
+      - lint-filenames
+      - lint-folders
+      - lint-yaml

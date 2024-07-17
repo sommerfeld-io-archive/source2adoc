@@ -1,4 +1,0 @@
-* xref:GENERATED/manpage.adoc[]
-* xref:howto/use-with-github-actions.adoc[]
-* xref:howto/write-inline-docs.adoc[]
-* xref:howto/setup-with-antora.adoc[]

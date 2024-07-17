@@ -1,9 +1,0 @@
-= .yamllint.yml
-source2adoc <https://source2adoc.sommerfeld.io>
-
-[cols="1,1"]
-|===
-|Source Code File Location |.yamllint.yml
-|Some More Meta |tbd ...
-|===
-

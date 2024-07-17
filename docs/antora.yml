@@ -5,7 +5,3 @@ version: main
 start_page: ROOT:index.adoc
 nav:
   - modules/ROOT/nav.adoc
-  - modules/user-guide/nav.adoc
-  - modules/development-guide/nav.adoc
-  - modules/source2adoc/nav.adoc
-  - modules/meta/nav.adoc

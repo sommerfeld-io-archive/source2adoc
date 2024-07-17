@@ -1,3 +1,0 @@
-* xref:development-principles.adoc[]
-* xref:development-guide.adoc[]
-* xref:architecture-decisions/index.adoc[]
