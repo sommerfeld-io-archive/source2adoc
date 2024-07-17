@@ -35,10 +35,6 @@ ls:
   .shellcheckrc: lowercase
 
 ignore:
-  - dist
-  - docs/ui-bundle/.gulp.json
-  - docs/ui-bundle/src/js/vendor/highlight.bundle.js
-
   # commons
   - .git
   - .idea
@@ -51,7 +47,5 @@ ignore:
   - .hadolint.yml
   - .ls-lint.yml
   - .yamllint.yml
-  - .prettierrc
-  - commitlint.config.js
-  - release.config.js
-  - webpack.config.js
+  - .pre-commit-config.yaml
+  - .releaserc
