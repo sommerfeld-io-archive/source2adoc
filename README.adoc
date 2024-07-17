@@ -19,7 +19,7 @@ image:{github-actions-url}/{job}/{badge}[Github Badge, link={github-actions-url}
 
 NOTE: This project is currently in its early stages and is still in the incubation phase. As a result, there are many moving parts and tasks that need to be completed. The project is currently incomplete and work is ongoing to further develop and enhance its functionality.
 
-The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to Javadoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
+The primary objective of `source2adoc` is to facilitate the creation of comprehensive and well-structured documentation directly from code comments. By leveraging the familiar syntax of inline comments in a style similar to JavaDoc, developers can annotate their code, ensuring that insights and explanations are captured and preserved in the generated AsciiDoc files.
 
 The app supports multiple source code languages. The common ground is, that  these languages mark their comments through the hash-symbol (`#`).
 
@@ -54,7 +54,7 @@ The root folder of the Antora component should be changeable via a command line 
 The caption of the AsciiDoc file should automatically be set from the source code file's name. Additionally, the path of the source code file and the author (if specified within the code file) should be included in the generated AsciiDoc file. The actual text of the header docs should be rendered into the AsciiDoc file as well. This text will not be translated any further, it is taken as is, thus allowing to write AsciiDoc directly into the source code docs.
 
 === Comment Style
-The code comment style should resemble Javadoc but use the hash-symbol (`#`) as the marker for commented lines. That means the marker for metadata should be similar to Javadoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/Javadoc). `@see` should generate an xref, @link should generate a static link
+The code comment style should resemble JavaDoc but use the hash-symbol (`#`) as the marker for commented lines. That means the marker for metadata should be similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc). `@see` should generate an xref, @link should generate a static link
 
 == Risks and Technical Debts
 link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.
