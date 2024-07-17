@@ -157,6 +157,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     name: ${{ matrix.image-name }}:${{ github.sha }}
+    needs: ['docs']
     permissions:
       contents: read
       pull-requests: write
