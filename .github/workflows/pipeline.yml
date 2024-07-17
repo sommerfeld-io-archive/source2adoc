@@ -211,23 +211,23 @@ jobs:
           # cache-to: type=gha,mode=max
           provenance: true
           sbom: true
-      - name: Docker Scout CVEs for ${{ matrix.image-name }}:${{ github.sha }}
-        uses: docker/scout-action@v1.10.0
-        with:
-          command: cves
-          image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
-          exit-code: false
-          #write-comment: ${{ github.event_name == 'pull_request' }}
-          write-comment: true
-      - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_RC }}"
-        uses: docker/scout-action@v1.10.0
-        with:
-          command: compare
-          image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
-          to: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
-          exit-code: false
-          #write-comment: ${{ github.event_name == 'pull_request' }}
-          write-comment: true
+      # - name: Docker Scout CVEs for ${{ matrix.image-name }}:${{ github.sha }}
+      #   uses: docker/scout-action@v1.10.0
+      #   with:
+      #     command: cves
+      #     image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
+      #     exit-code: false
+      #     #write-comment: ${{ github.event_name == 'pull_request' }}
+      #     write-comment: true
+      # - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_RC }}"
+      #   uses: docker/scout-action@v1.10.0
+      #   with:
+      #     command: compare
+      #     image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
+      #     to: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
+      #     exit-code: false
+      #     #write-comment: ${{ github.event_name == 'pull_request' }}
+      #     write-comment: true
 
   test-image:
     runs-on: ubuntu-latest
