@@ -63,9 +63,7 @@ The code comment style should resemble JavaDoc but a double hash-symbol (`##`) a
 TODO ... Docker Run commands for both images
 
 == Development
-...
-
-TODO ... Development with Kotlin and Spring Shell ... ArchUnit ... etc ...
+source2adoc is a Kotlin application targeting Java 21 using Maven as the build tool. We are working in a Linux development container using Visual Studio Code (VSCode) as our integrated development environment (IDE).
 
 [ditaa, ditaa-image, svg]
 ....
