@@ -19,7 +19,10 @@
 	<url>https://source2adoc.sommerfeld.io</url>
 
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
 	</licenses>
 
 	<developers>
