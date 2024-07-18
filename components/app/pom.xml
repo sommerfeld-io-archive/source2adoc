@@ -114,6 +114,122 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>4.5</version>
+				<executions>
+					<execution>
+						<id>check-licenses</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<dependencyEnforce>true</dependencyEnforce>
+					<dependencyExceptionMessage>Dependencies do not comply with license policy</dependencyExceptionMessage>
+					<dependencyPolicies>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>MIT License</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Apache License 2.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Apache License, Version 2.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>The Apache License, Version 2.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>BSD 2 License</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>BSD 3 License</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>ISC License</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Zlib License</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Boost Software License 1.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Creative Commons Zero (CC0)</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Public Domain</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Public Domain Dedication and License (PDDL)</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Unlicense</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>Eclipse Public License 2.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>GNU Lesser General Public License (LGPL) Version 2.1</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>APPROVE</rule>
+							<value>GNU Lesser General Public License (LGPL) Version 3.0</value>
+						</dependencyPolicy>
+
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>DENY</rule>
+							<value>GNU General Public License (GPL) Version 2.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>DENY</rule>
+							<value>GNU General Public License (GPL) Version 3.0</value>
+						</dependencyPolicy>
+						<dependencyPolicy>
+							<type>LICENSE_NAME</type>
+							<rule>DENY</rule>
+							<value>Mozilla Public License (MPL) Version 2.0</value>
+						</dependencyPolicy>
+					</dependencyPolicies>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
