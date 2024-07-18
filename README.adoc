@@ -67,20 +67,29 @@ source2adoc is a Kotlin application targeting Java 21 using Maven as the build t
 
 [ditaa, ditaa-image, svg]
 ....
-                                                         +---------------------+        +--------------+
-                                                         |  CodeFileInventory  |        |  Converter   |
-+---------------------+       +-------------+            |                     |        |              |
-|  FileSystemScanner  +------>| CodeFile    +-------------> List of CodeFile <------------ CodeFile    |
-+---------------------+  new  |             |  register  |                     |  read  |   |          |
-                              |       type  |  CodeFile  +---------------------+  for   |   v          |
-                              |       path  |                                     type  |              |
-                              |   filename  |                                           |  parse()     |
-                              +-------------+                                           |   |          |
-                                                                                        |   v          |
-                                                                                        |              |
-                                                                                        |  writeAdoc() |
-                                                                                        +--------------+
+                                                         +---------------------+                  +---------------------+
+                                                         |  CodeFileInventory  |           +------|  Parser (and Lint)  |
++---------------------+       +-------------+            |                     |           |      +---------------------+
+|  FileSystemScanner  +------>| CodeFile    +-------------> List of CodeFile --------------+------|  Metadata           |
++---------------------+  new  |             |  register  |                     |  fetch    |      +---------------------+
+                              |       type  |  CodeFile  +---------------------+  single   +------|  ContentGenerator   |
+                              |       path  |                                              |      +---------------------+
+                              |   filename  |                                              +------|  DocFileWriter      |
+                              +-------------+                                                     +---------------------+
 ....
+
+[CAUTION]
+====
+TODO
+
+. find all code files
+. store in List or stack or some sort of event bus / event thing
+. parse all file and store somewhere
+. get metadata for each code file and store somewhere (filename, path, ...)
+. generate content for each docs file and store somewhere
+. write docs files to filesystem
+. generate single `nav.adoc` for all code files
+====
 
 == Risks and Technical Debts
 link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.
