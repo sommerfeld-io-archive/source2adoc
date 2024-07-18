@@ -30,4 +30,4 @@ FROM eclipse-temurin:21-jre-jammy AS run
 LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY --from=build /workspace/source2adoc/components/app/target/source2adoc.jar /opt/source2adoc.jar
-CMD ["java", "-jar", "/opt/source2adoc.jar"]
+ENTRYPOINT ["java", "-jar", "/opt/source2adoc.jar"]
