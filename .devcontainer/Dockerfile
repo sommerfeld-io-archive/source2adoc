@@ -23,13 +23,13 @@ RUN apt-get update \
     && pip install --no-cache-dir pre-commit==3.3.3
 
 WORKDIR /opt
-RUN wget https://dlcdn.apache.org/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.tar.gz \
+RUN wget --progress=dot:giga https://dlcdn.apache.org/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.tar.gz \
     && tar xzvf apache-maven-${MVN_VERSION}-bin.tar.gz \
     && echo PATH="/opt/apache-maven-${MVN_VERSION}/bin:$PATH" >> /home/${USER}/.profile \
     && echo export PATH >> /home/${USER}/.profile
 
 ARG KOTLIN_VERSION=2.0.0
-RUN wget https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip \
+RUN wget --progress=dot:giga https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip \
     && unzip kotlin-compiler-${KOTLIN_VERSION}.zip \
     && echo PATH="/opt/kotlinc/bin:$PATH" >> /home/${USER}/.profile \
     && echo export PATH >> /home/${USER}/.profile
