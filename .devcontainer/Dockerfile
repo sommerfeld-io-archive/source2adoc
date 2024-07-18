@@ -14,7 +14,6 @@ FROM mcr.microsoft.com/vscode/devcontainers/java:21-bullseye
 LABEL maintainer="sebastian@sommerfeld.io"
 
 ARG USER=vscode
-ARG MVN_VERSION=3.9.8
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends python3-pip=20.3.4-4+deb11u1 \
@@ -23,16 +22,17 @@ RUN apt-get update \
     && pip install --no-cache-dir pre-commit==3.3.3
 
 WORKDIR /opt
+
+ARG MVN_VERSION=3.9.8
 RUN wget --progress=dot:giga https://dlcdn.apache.org/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.tar.gz \
     && tar xzvf apache-maven-${MVN_VERSION}-bin.tar.gz \
-    && echo PATH="/opt/apache-maven-${MVN_VERSION}/bin:$PATH" >> /home/${USER}/.profile \
-    && echo export PATH >> /home/${USER}/.profile
+    && echo PATH="/opt/apache-maven-${MVN_VERSION}/bin:\$PATH" >> /home/${USER}/.profile
 
-ARG KOTLIN_VERSION=2.0.0
-RUN wget --progress=dot:giga https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip \
-    && unzip kotlin-compiler-${KOTLIN_VERSION}.zip \
-    && echo PATH="/opt/kotlinc/bin:$PATH" >> /home/${USER}/.profile \
-    && echo export PATH >> /home/${USER}/.profile
+# ARG KOTLIN_VERSION=2.0.0
+# RUN wget --progress=dot:giga https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip \
+#     && unzip kotlin-compiler-${KOTLIN_VERSION}.zip \
+#     && echo PATH="/opt/kotlinc/bin:\$PATH" >> /home/${USER}/.profile \
+#     && echo export PATH >> /home/${USER}/.profile
 
 USER $USER
 
