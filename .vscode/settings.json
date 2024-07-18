@@ -5,7 +5,8 @@
         "https://json.schemastore.org/yamllint.json": "file:///workspaces/source2adoc/docs/playbooks/public.yml"
     },
     "cSpell.words": [
-        "ditaa"
+        "ditaa",
+        "mvnw"
     ],
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic"
