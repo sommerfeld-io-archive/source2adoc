@@ -29,13 +29,16 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2.10.2": {}
   },
 
-  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create-command.sh",
-  "postStartCommand": "docker compose --file ${containerWorkspaceFolder}/.devcontainer/ops/docker-compose.yml --env-file ${containerWorkspaceFolder}/.devcontainer/ops/.env up -d",
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",
+  "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post-start.sh",
 
-  "forwardPorts": [3990, 9000, 3000, 3001, 3000],
+  "forwardPorts": [3990, 3080],
   "portsAttributes": {
     "3990": {
       "label": "3990 Portainer"
+    },
+    "3080": {
+      "label": "3080 Antora Docs Page"
     }
   }
 }
