@@ -11,10 +11,13 @@
 
     "components",
     "components/app",
-    "components/app/resources",
     "components/app/src",
     "components/app/src/main",
+    "components/app/src/main/kotlin/**",
+    "components/app/src/main/resources/**",
     "components/app/src/test",
+    "components/app/src/test/kotlin/**",
+    "components/app/target/**",
 
     "config",
     "config/dist",

@@ -54,3 +54,9 @@ repos:
         name: lint-dockerfile-docs
         language: script
         entry: /bin/bash -c 'docker compose up lint-dockerfile-docs --exit-code-from lint-dockerfile-docs'
+  - repo: local
+    hooks:
+      - id: maven-package
+        name: maven-package
+        language: script
+        entry: /bin/bash -c '(cd components/app || exit && ./mvnw clean package)'
