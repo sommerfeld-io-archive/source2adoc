@@ -17,7 +17,10 @@
         "jebbs.plantuml",
         "github.vscode-github-actions",
         "redhat.vscode-yaml",
-        "GitHub.copilot"
+        "GitHub.copilot",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-maven",
+        "fwcd.kotlin"
       ]
     }
   },
@@ -33,18 +36,6 @@
   "portsAttributes": {
     "3990": {
       "label": "3990 Portainer"
-    },
-    "9000": {
-      "label": "9000 Node app (preview or bundled)"
-    },
-    "3000": {
-      "label": "3000 Node app from Docker Compose"
-    },
-    "3001": {
-      "label": "3001 Kroki from Docker Compose"
-    },
-    "3000": {
-      "label": "3000 Docs website from Docker Compose"
     }
   }
 }
