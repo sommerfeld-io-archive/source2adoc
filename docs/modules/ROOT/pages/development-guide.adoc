@@ -85,17 +85,28 @@ Similarly, a Deprecation section should start with "DEPRECATED: " followed by a 
 We use link:@commitlint/config-conventional[commitlint] to lint our commit messages. This ensures that all commit messages follow a consistent format and adhere to the guidelines outlined above.
 
 == Trunk-Based Development
-We follow a trunk-based development approach, which means that we primarily focus our development efforts on the main branch of our repository. This approach encourages frequent and continuous integration of code changes directly into the main branch, allowing us to avoid long-lived feature branches and promote a fast-paced development cycle. We still rely on branching and Pull Requests, but our branches do not live for longer than one day (more on that in the coming sections).
+We follow a trunk-based development approach, which means that we primarily focus our development efforts on the `main` branch of our repository. This approach encourages frequent and continuous integration of code changes into the `main` branch, allowing us to avoid long-lived feature branches and promote a fast-paced development cycle. We still rely on branching and Pull Requests, but our branches do not live for longer than one day (more on that in the coming sections).
 
 The `main` branch represents the releasable state of the software. It serves as the mainline branch from which stable releases are made.
 
-Any branch other than main is considered a short-lived branch. These branches are used for feature development, bug fixing, and any other updates. There are no specific naming conventions for these branches. These branches do not live for longer than one day.
+Any branch other than `main` is considered a short-lived branch. These branches are used for feature development, bug fixing, and any other updates. There are no specific naming conventions for these branches. These branches do not live for longer than one day.
 
-Git tags are always created from the main branch, ensuring that they represent stable and release-worthy versions of the software. The creation of tags is done exclusively through our deployment pipeline, ensuring consistent and reproducible release processes.
+Git tags are always created from the `main` branch, ensuring that they represent stable and release-worthy versions of the software. The creation of tags is done exclusively through our deployment pipeline without manual interaction, ensuring consistent and reproducible release processes.
 
-Each developer is streaming small commits either directly into the main branch with a pre-integration step of running the build first (which must pass) or commits into short-lived branches and flows through Pull-Request style code-review and build automation before merging into main.
+Each developer is streaming small commits either into a short-lived branch with a pre-integration step of running the build first (which must pass) and integrates into the `main` branch through a Pull-Request.
 
 Basically we follow most recommendations from link:https://trunkbaseddevelopment.com[trunkbaseddevelopment.com].
+
+== Branch Protection
+Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that any potential issues are caught and resolved early. This ensures that all modifications are reviewed before they are integrated into the `main` codebase
+
+The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] on GitHub come with these settings (plus the default settings):
+
+* Required approvals = 0
+* Require a pull request before merging
+** Dismiss stale pull request approvals when new commits are pushed
+** Require approval of the most recent reviewable push
+
 
 == Continuous Integration
 We integrate code changes from all developers at least once per day. This frequent integration ensures that our software is thoroughly tested and checked with everyone's changes on a daily basis.
