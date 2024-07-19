@@ -24,7 +24,7 @@ jobs:
       - name: Setup CodeQL
         uses: github/codeql-action/init@v3.25.12
         with:
-          languages: java-kotlin
+          languages: go
       - name: Build and analyze code
         uses: github/codeql-action/analyze@v3.25.12
       - name: Upload SARIF report
