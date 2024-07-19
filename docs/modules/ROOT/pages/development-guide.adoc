@@ -98,7 +98,7 @@ Each developer is streaming small commits either into a short-lived branch with 
 Basically we follow most recommendations from link:https://trunkbaseddevelopment.com[trunkbaseddevelopment.com].
 
 == Branch Protection
-Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that any potential issues are caught and resolved early. This ensures that all modifications are reviewed before they are integrated into the `main` codebase
+Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that potential issues are caught and resolved early. This ensures that modifications are reviewed before they are integrated into the `main` codebase
 
 The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] on GitHub come with these settings (plus the default settings):
 
@@ -106,7 +106,6 @@ The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] o
 * Require a pull request before merging
 ** Dismiss stale pull request approvals when new commits are pushed
 ** Require approval of the most recent reviewable push
-
 
 == Continuous Integration
 We integrate code changes from all developers at least once per day. This frequent integration ensures that our software is thoroughly tested and checked with everyone's changes on a daily basis.
