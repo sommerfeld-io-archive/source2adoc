@@ -30,7 +30,7 @@ jobs:
       - name: Upload SARIF report
         uses: github/codeql-action/upload-sarif@v3.25.12
         with:
-          sarif_file: codeql-results/results.sarif
+          sarif_file: /home/runner/work/source2adoc/results/go.sarif
 
       - name: Comment on PR with CodeQL results
         uses: actions/github-script@v4
