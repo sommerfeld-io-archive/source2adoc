@@ -60,3 +60,9 @@ repos:
         name: maven-package
         language: script
         entry: /bin/bash -c '(cd components/app || exit && ./mvnw clean package)'
+  - repo: local
+    hooks:
+      - id: docker-compose-build
+        name: docker-compose-build
+        language: script
+        entry: /bin/bash -c '(docker compose build)'
