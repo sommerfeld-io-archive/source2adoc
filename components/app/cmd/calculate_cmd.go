@@ -32,5 +32,5 @@ var plusCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(plusCmd)
+	RegisterSubCommand(plusCmd)
 }

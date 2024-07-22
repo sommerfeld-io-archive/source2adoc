@@ -90,7 +90,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.app
-    command: --version
+    command: --help
     depends_on:
       app-test:
         condition: service_completed_successfully

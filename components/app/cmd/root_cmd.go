@@ -17,10 +17,9 @@ these languages mark their comments through the hash-symbol (#).
 `
 
 var rootCmd = &cobra.Command{
-	Use:     "source2adoc",
-	Version: "tbd ... ",
-	Short:   rootDescShort,
-	Long:    rootDescLong,
+	Use:   "source2adoc",
+	Short: rootDescShort,
+	Long:  rootDescLong,
 
 	Args: cobra.ExactArgs(0),
 }
@@ -32,4 +31,9 @@ func init() {
 // Execute acts as the entrypoint for the command line interface.
 func Execute() error {
 	return rootCmd.Execute()
+}
+
+// RegisterSubCommand adds a subcommand to the root command.
+func RegisterSubCommand(cmd *cobra.Command) {
+	rootCmd.AddCommand(cmd)
 }
