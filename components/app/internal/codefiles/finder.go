@@ -42,13 +42,16 @@ func isSupportedCode(path string) bool {
 }
 
 // FindSourceCodeFiles lists all files in srcDir and all subfolders.
-func (f *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
+func (finder *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
 	var files []*CodeFile
 
-	err := filepath.Walk(f.srcDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(finder.srcDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
+
+		fmt.Println("-------- " + finder.srcDir)
+		fmt.Println("-------- " + path)
 
 		if !info.IsDir() && isSupportedCode(path) {
 			code := NewCodeFile(path, "filename")
