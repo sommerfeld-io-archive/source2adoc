@@ -1,5 +1,7 @@
 * xref:index.adoc[]
 * xref:development-guide.adoc[]
+* Architecture Decisions
+** xref:architecture-decisions/adr-001.adoc[]
 * xref:contribute.adoc[]
 * xref:license.adoc[]
 * xref:security.adoc[]
