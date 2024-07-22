@@ -56,13 +56,24 @@ services:
     working_dir: /workspaces/source2adoc
     entrypoint: hadolint Dockerfile.docs
 
-  app:
-    container_name: ${COMPOSE_PROJECT_NAME}-app
-    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
-    build:
-      context: .
-      dockerfile: Dockerfile.app
-    command: help
+  app-test:
+    image: golang:1.22.3-alpine3.19
+    container_name: ${COMPOSE_PROJECT_NAME}-app-test
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./components/app:/workspace/source2adoc/components/app:rw
+    working_dir: /workspace/source2adoc/components/app
+    command:
+      - /bin/sh
+      - -c
+      - |
+        go mod download
+        go mod tidy
+        go fmt ./...
+        go vet ./...
+        go test -coverprofile=go-code-coverage.out ./...
+        chown 1000:1000 /workspace/source2adoc/components/app/go.sum
     depends_on: &depends_on
       lint-dockerfile-app:
         condition: service_completed_successfully
@@ -71,6 +82,17 @@ services:
       lint-folders:
         condition: service_completed_successfully
       lint-yaml:
+        condition: service_completed_successfully
+
+  app:
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    command: --version
+    depends_on:
+      app-test:
         condition: service_completed_successfully
 
   docs:

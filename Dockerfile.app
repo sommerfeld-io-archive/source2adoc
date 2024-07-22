@@ -1,4 +1,4 @@
-## Dockerfile for a Kotlin application that is build using Maven.
+## Dockerfile for a Go application.
 ##
 ## == How to use
 ## Build the Docker image using the following command: `docker build --no-cache  -t local/source2adoc:dev -f Dockerfile.app .`
@@ -11,27 +11,34 @@
 ## @see docker-compose.yml
 
 
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM golang:1.22.5-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
-ARG MVN_VERSION=3.9.8
-WORKDIR /opt
-RUN wget --progress=dot:giga https://dlcdn.apache.org/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.tar.gz \
-    && tar xzvf apache-maven-${MVN_VERSION}-bin.tar.gz \
-    && echo PATH="/opt/apache-maven-${MVN_VERSION}/bin:$PATH" >> ~/.profile \
-    && echo export PATH >> ~/.profile
-
-COPY components/app /workspace/source2adoc/components/app
+COPY /components/app /workspace/source2adoc/components/app
 WORKDIR /workspace/source2adoc/components/app
-RUN ./mvnw clean verify
+
+RUN pwd && ls -alF \
+    && go mod download \
+    && go mod tidy \
+    && go test -coverprofile=go-code-coverage.out ./... \
+    && go build .
 
 
-FROM eclipse-temurin:21-jre-jammy AS run
+FROM alpine:3.20.1 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
+LABEL org.opencontainers.image.title=source2adoc \
+      org.opencontainers.image.description="Streamline the process of generating documentation from inline comments within source code files." \
+      org.opencontainers.image.authors="source2adoc open source project" \
+      org.opencontainers.image.url="https://source2adoc.sommerfeld.io" \
+      org.opencontainers.image.documentation="https://source2adoc.sommerfeld.io" \
+      org.opencontainers.image.source="https://github.com/sommerfeld-io/source2adoc" \
+      org.opencontainers.image.vendor="source2adoc open source project" \
+      org.opencontainers.image.licenses="MIT License"
 
-COPY --from=build /workspace/source2adoc/components/app/target/source2adoc.jar /opt/source2adoc.jar
-RUN chown -R 1001:1001 /opt/source2adoc.jar
+ARG USER=source2adoc
+RUN adduser -D "$USER"
 
-USER 1001
+COPY --from=build /workspace/source2adoc/components/app/source2adoc /usr/bin/source2adoc
 
-ENTRYPOINT ["java", "-jar", "/opt/source2adoc.jar"]
+USER $USER
+ENTRYPOINT ["/usr/bin/source2adoc"]
