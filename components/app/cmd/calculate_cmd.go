@@ -9,8 +9,8 @@ import (
 
 var plusCmd = &cobra.Command{
 	Use:   "plus",
-	Short: "plus",
-	Long:  `plus`,
+	Short: "Just a placeholder",
+	Long:  `Just a placeholder`,
 
 	Args: cobra.ExactArgs(2),
 

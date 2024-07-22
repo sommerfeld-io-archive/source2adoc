@@ -1,20 +1,31 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
 const rootDescShort = "Streamline the process of generating documentation from inline comments within source code files."
 const rootDescLong = `
-The primary objective of source2adoc is to facilitate the creation of
-comprehensive and well-structured documentation directly from code comments.
-By leveraging the familiar syntax of inline comments in a style similar to
-JavaDoc, developers can annotate their code, ensuring that insights and
-explanations are captured and preserved in the generated AsciiDoc files.
+Facilitate the creation of comprehensive and well-structured documentation
+directly from code comments. The app supports multiple source code languages.
+The common ground is, that these languages mark their comments through the
+hash-symbol (#).
 
-The app supports multiple source code languages. The common ground is, that
-these languages mark their comments through the hash-symbol (#).
+For more information, visit the project's documentation:
+  https://source2adoc.sommerfeld.io
+
+Quick Start:
+  The root command source2adoc [flags] scans the --source-dir for code files
+  and starts the conversion process. The output is written to --output-dir.
+
+Example:
+  source2adoc --source-dir ./src --output-dir ./docs
 `
+
+var sourceDir string
+var outputDir string
 
 var rootCmd = &cobra.Command{
 	Use:   "source2adoc",
@@ -22,9 +33,23 @@ var rootCmd = &cobra.Command{
 	Long:  rootDescLong,
 
 	Args: cobra.ExactArgs(0),
+
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("do stuff")
+	},
 }
 
 func init() {
+	var sourceParam = "source-dir"
+	var sourceParamShort = "s"
+	rootCmd.Flags().StringVarP(&sourceDir, sourceParam, sourceParamShort, "", "Directory containing the source code files")
+	rootCmd.MarkFlagRequired(sourceParam)
+
+	var outputParam = "output-dir"
+	var outputParamShort = "o"
+	rootCmd.Flags().StringVarP(&outputDir, outputParam, outputParamShort, "", "Directory to write the generated documentation to")
+	rootCmd.MarkFlagRequired(outputParam)
+
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
 
