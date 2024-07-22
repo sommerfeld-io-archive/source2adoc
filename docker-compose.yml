@@ -62,8 +62,8 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ./components/app:/workspace/source2adoc/components/app:rw
-    working_dir: /workspace/source2adoc/components/app
+      - ./components/app:/workspaces/source2adoc/components/app:rw
+    working_dir: /workspaces/source2adoc/components/app
     command:
       - /bin/sh
       - -c
@@ -73,7 +73,7 @@ services:
         go fmt ./...
         go vet ./...
         go test -coverprofile=go-code-coverage.out ./...
-        chown 1000:1000 /workspace/source2adoc/components/app/go.sum
+        chown 1000:1000 /workspaces/source2adoc/components/app/go.sum
     depends_on: &depends_on
       lint-dockerfile-app:
         condition: service_completed_successfully

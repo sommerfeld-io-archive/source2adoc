@@ -14,8 +14,8 @@
 FROM golang:1.22.5-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
-COPY /components/app /workspace/source2adoc/components/app
-WORKDIR /workspace/source2adoc/components/app
+COPY /components/app /workspaces/source2adoc/components/app
+WORKDIR /workspaces/source2adoc/components/app
 
 RUN pwd && ls -alF \
     && go mod download \
@@ -38,7 +38,7 @@ LABEL org.opencontainers.image.title=source2adoc \
 ARG USER=source2adoc
 RUN adduser -D "$USER"
 
-COPY --from=build /workspace/source2adoc/components/app/source2adoc /usr/bin/source2adoc
+COPY --from=build /workspaces/source2adoc/components/app/source2adoc /usr/bin/source2adoc
 
 USER $USER
 ENTRYPOINT ["/usr/bin/source2adoc"]

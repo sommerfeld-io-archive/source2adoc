@@ -1,0 +1,17 @@
+---
+## This Docker Compose file handles three responsibilities:
+##
+## . Linting the project files to ensure they adhere to coding standards.
+## . Building the source2adoc application.
+## . Testing the application.
+##
+## When running docker-compose up, all services are orchestrated to execute sequentially, ensuring
+## the project is linted, built, and tested efficiently within the Docker environment.
+##
+## [source, bash]
+## ....
+## docker compose build
+## docker compose up
+## ....
+
+some: testdata

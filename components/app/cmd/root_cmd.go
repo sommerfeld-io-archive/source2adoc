@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/sommerfeld-io/source2adoc/internal/codefiles"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +37,14 @@ var rootCmd = &cobra.Command{
 	Args: cobra.ExactArgs(0),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("do stuff")
+		sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, file := range sourceCodeFiles {
+			fmt.Println(file)
+		}
 	},
 }
 

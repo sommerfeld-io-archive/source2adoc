@@ -5,8 +5,11 @@
         "https://json.schemastore.org/yamllint.json": "file:///workspaces/source2adoc/docs/playbooks/public.yml"
     },
     "cSpell.words": [
+        "codefile",
+        "codefiles",
         "ditaa",
-        "mvnw"
+        "mvnw",
+        "testdata"
     ],
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic"
