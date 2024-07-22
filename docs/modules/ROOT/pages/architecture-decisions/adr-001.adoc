@@ -1,59 +1,34 @@
-= ADR 001: Decision on Language and Framework for CLI Documentation Tool
+= ADR-001: About Architecture Decision Records
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 ====
 Status: Accepted +
-Outcome: CLI app with Go and Cobra +
-Date: 2024-07-22
+Outcome: We use ADRs to document architecture decisions +
+Date: 2024-07-18
 ====
 
 == Context
-We are building a CLI application to generate documentation from source code files. The options considered are:
 
-. Go with Cobra
-. Kotlin with Spring Shell
-
-Key considerations for the decision include:
-
-* Development environment preferences
-* Integration with VSCode and devcontainers
-* Language familiarity and comfort
-* Performance and efficiency
-
-After discussing the options, the following points were highlighted:
-
-=== Go with Cobra
-
-* **Pros:**
-** Excellent integration with VSCode, providing features like debugging, linting, testing, and code navigation.
-** Simplicity in setting up devcontainers, benefiting from Go’s static binary compilation.
-** High performance and efficient concurrency handling.
-** Strong built-in tooling for formatting, testing, and building code.
-* **Cons:**
-** Less natural syntax and structure for those more accustomed to Kotlin/Java.
-** Potentially fewer libraries for specific advanced tasks.
-
-=== Kotlin with Spring Shell
-
-* **Pros:**
-** More expressive and natural language for developers familiar with Kotlin/Java.
-** Rich ecosystem and libraries for a variety of tasks.
-* Potentially better for more complex CLI tools needing extensive features.
-* **Cons:**
-** Less mature VSCode integration compared to Go.
-** More complex setup in devcontainers and potentially heavier resource usage.
-
-Given the key requirement for a devcontainer and preference for working in VSCode, Go with Cobra seems to have a stronger case due to its superior integration with VSCode and ease of setting up development environments.
-
-However, it's acknowledged that Kotlin feels more natural to the developer, which could impact productivity and code maintainability in the long run.
-
-== Recommendation
-Go with Cobra is recommended based on the current key requirements and tooling integration. However, the final decision remains open, considering the developer's familiarity and comfort with Kotlin. Both options remain viable, and the decision can be revisited based on further experimentation and feedback.
-
-== Consequences
-Choosing Go with Cobra will streamline the setup and development process within the preferred tools (VSCode and devcontainers), leveraging Go's performance and simplicity. Opting for Kotlin with Spring Shell would leverage the developer's familiarity with Kotlin, potentially resulting in more maintainable and expressive code.
+* We want to think about all our architectural decisions, exploring all alternatives and making a careful, considered, well-researched choice.
+* We want to be as transparent as possible in our decision-making process.
+* We want to be able to revisit prior decisions to determine fairly if they still make sense, and if the motivating circumstances or conditions have changed.
 
 == Decision
-The CLI application will be developed using Go with Cobra. This decision is based on the superior integration with VSCode and devcontainers, as well as the performance and efficiency benefits of Go. Over time writing code in Go will feel more natural and comfortable, and developers can leverage the strong tooling and ecosystem that Go provides.
 
-== Author
-ChatGPT (this ADR was created with the help of ChatGPT, but the decision was made by the team, not the AI)
+We will document every architecture-level decision an
+link:http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions[Architecture Decision Record]. These are a well structured, relatively lightweight way to capture architectural proposals. They can serve as an artifact for discussion, and remain as an enduring record of the context and motivation of past decisions.
+
+The workflow will be:
+
+. A developer creates an ADR document outlining an approach for a particular question or problem. The ADR has an initial status of "proposed."
+. The developers discuss the ADR. During this period, the ADR should be updated to reflect additional context, concerns raised, and proposed changes.
+. Once consensus is reached, ADR can be transitioned to either an "accepted" or "rejected" state.
+. Only after an ADR is accepted should implementing code be committed to the main branch of the relevant project/module.
+.. If a decision is revisited and a different conclusion is reached, a new ADR should be created documenting the context and rationale for the change. The new ADR should reference the old one, and once the new one is accepted, the old one should (in its "status" section) be updated to point to the new one. The old ADR should not be removed or otherwise modified except for the annotation pointing to the new ADR.
+
+== Consequences
+
+. Developers must write an ADR and submit it for review before selecting an approach to any architectural decision -- that is, any decision that affects the way source2adoc application is put together at a high level.
+. We will have a concrete artifact around which to focus discussion, before finalizing decisions.
+. If we follow the process, decisions will be made deliberately, as a group.
+. We will have a useful persistent record of why the system is the way it is.

@@ -1,0 +1,7 @@
+== Architecture Decisions
+
+We use architecture decision records (ADRs) to document the key decisions made during the development of the CLI documentation tool. ADRs help us track the context, considerations, and outcomes of each decision, providing a clear rationale for future reference.
+
+* xref:architecture-decisions/adr-001.adoc[]
+* xref:architecture-decisions/adr-002.adoc[]
+* xref:architecture-decisions/adr-003.adoc[]

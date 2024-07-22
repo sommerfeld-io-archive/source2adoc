@@ -1,0 +1,69 @@
+= ADR 003:Distributing source2adoc CLI as Binary vs Docker Image
+
+====
+Status: Proposed +
+Outcome: ... +
+Date: 2024-07-22
+====
+
+IMPORTANT: Still undecided because mounting volumes and specifying directories is a duplication and hence an pain. But Docker images are consistent with our existing pipeline and are really easy to update. Recommendation and consequences are still pending and might need an overhaul.
+
+== Context
+The `source2adoc` CLI app is currently in development and will need to be distributed to users. We have traditionally distributed software via Docker images stored on Docker Hub, which ensures consistency, ease of deployment and consistent artifact management and easy deployment across various environments. However, distributing `source2adoc` as a simple Go binary is also a viable option and is common practice for many CLI tools. Popular tools like `kubectl`, `helm`, `terraform`, `Docker` and `hugo` are distributed as binaries. We need to decide between continuing with Docker image distribution or adopting binary distribution for this new tool.
+
+Considerations include:
+
+* Simplicity and ease of use for end-users
+* Direct filesystem access required by the CLI
+* Impact on our existing deployment pipeline and artifact storage
+* Support for multiple architectures, including ARM
+
+We need to decide between continuing with Docker image distribution or adopting binary distribution for the `source2adoc` CLI. Below are detailed comparisons of both options:
+
+=== Docker Image Distribution
+* Consistency with Existing Pipeline:
+** Fits seamlessly into our current CI/CD pipeline pattern.
+** Utilizes Docker Hub for storing intermediate artifacts, avoiding the need for additional artifact repositories.
+* Environment Isolation:
+** Provides a consistent runtime environment, reducing issues related to dependencies and environment differences.
+* Complexity and Overhead:
+** Requires managing Docker volume mounts for filesystem access, adding redundancy because the `--source-dir` and `--output-dir` flags are still needed by the CLI app
+* Multi-Architecture Support:
+** Docker Buildx allows building multi-architecture images, including support for ARM architectures.
+** Allows running the App in Windows and MacOS environments as well as long as Docker is installed.
+* Distribution, Updates, and Versioning:
+** Updating the app is as simple as pulling the latest Docker image.
+
+=== Binary Distribution
+* Simplicity and Ease of Use:
+** Users can download and execute the binary directly, simplifying the installation process.
+** Direct filesystem access without the need for volume mounts.
+* Performance:
+** Lower overhead and faster execution times compared to running within a Docker container.
+** More efficient in terms of CPU and memory usage.
+* Portability:
+** Go binaries can be cross-compiled for various operating systems and architectures, ensuring wide compatibility.
+** Smaller distribution size compared to Docker images, reducing download times.
+* Industry Standard for CLI Tools:
+** Aligns with the common practice of distributing CLI tools as binaries.
+* Distribution, Updates, and Versioning:
+** A bootstrap script should be provided to automate the download and installation process.
+** The bootstrap script must handle updates and versioning, ensuring users have the latest version.
+
+== Recommendation
+Distribute the `source2adoc` CLI as a Go binary. This decision is based on the following factors:
+
+* Performance:
+** Provides better performance and lower resource usage compared to Docker containers.
+* Alignment with Industry Practices:
+** Follows the blueprint for CLI tools outlined by popular tools like `kubectl`, `helm`, `terraform`, `Docker` and `hugo`.
+* Simplicity for Users:
+** Direct access to the filesystem simplifies usage and avoids duplication.
+
+== Consequences
+* Adjustment to Deployment Pipeline:
+** Requires changes to the existing CI/CD pipeline to include steps for building and releasing binaries.
+** Need to host binaries on GitHub Releases or a similar platform, adding a new distribution method to manage. Especially intermediate artifacts need some additional thought. Maybe discarding the intermediate artifacts is a possibility because maybe we only publish releases and no release candidates.
+
+== Author
+ChatGPT (this ADR was created with the help of ChatGPT, but the decision lies with the team, not the AI).
