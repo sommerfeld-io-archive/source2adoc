@@ -62,7 +62,7 @@ func init() {
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
 
-// Execute acts as the entrypoint for the command line interface.
+// Execute acts as the entrypoint for the CLI app.
 func Execute() error {
 	return rootCmd.Execute()
 }
