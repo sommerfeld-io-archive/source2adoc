@@ -1,7 +1,7 @@
 package codefiles
 
+// CodeFile represents a source code file.
 type CodeFile struct {
-	lang string
 	path string
 	name string
 }
