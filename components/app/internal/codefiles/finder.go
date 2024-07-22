@@ -50,9 +50,6 @@ func (finder *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
 			return err
 		}
 
-		fmt.Println("-------- " + finder.srcDir)
-		fmt.Println("-------- " + path)
-
 		if !info.IsDir() && isSupportedCode(path) {
 			code := NewCodeFile(path, "filename")
 			files = append(files, code)
