@@ -9,7 +9,8 @@ content:
   # branches: ['*', '!dependabot/*']
   sources:
     - url: /workspaces/source2adoc
-      branches: ['main']
+      # branches: ['main']
+      branches: HEAD
       start_path: docs
     - url: https://github.com/sommerfeld-io/source2adoc.git
       branches: ~
@@ -33,6 +34,7 @@ ui:
   bundle:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
+  supplemental_files: /workspaces/source2adoc/docs/supplemental-ui
 
 output:
   clean: true

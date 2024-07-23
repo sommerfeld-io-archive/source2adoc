@@ -31,6 +31,7 @@
     "docs/modules/*/pages/**",
     "docs/modules/*/partials/*",
     "docs/modules/*/partials/**",
+    "docs/supplemental-ui/partials",
 
     "public/**",
     "src",
