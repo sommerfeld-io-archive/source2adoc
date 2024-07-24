@@ -1,34 +1,42 @@
 {
-	"name": "source2adoc",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+  "name": "source2adoc",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
 
-	"customizations": {
-		"vscode": {
-			"settings": {},
-			"extensions": [
-				"streetsidesoftware.code-spell-checker",
-				"asciidoctor.asciidoctor-vscode",
-				"ms-azuretools.vscode-docker",
-				"aaron-bond.better-comments",
-				"pomdtr.markdown-kroki",
-				"timonwong.shellcheck",
-				"jebbs.plantuml",
-				"github.vscode-github-actions",
-				"redhat.vscode-yaml",
-				"GitHub.copilot",
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "asciidoctor.asciidoctor-vscode",
+        "ms-azuretools.vscode-docker",
+        "aaron-bond.better-comments",
+        "pomdtr.markdown-kroki",
+        "timonwong.shellcheck",
+        "jebbs.plantuml",
+        "github.vscode-github-actions",
+        "redhat.vscode-yaml",
+        "GitHub.copilot",
 				"golang.go"
-			]
-		}
-	},
+      ]
+    }
+  },
 
-	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2.10.2": {}
-	},
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2.10.2": {}
+  },
 
-	"postCreateCommand": "pre-commit install",
-	"postStartCommand": "docker compose --file ${containerWorkspaceFolder}/.devcontainer/ops/docker-compose.yml --env-file ${containerWorkspaceFolder}/.devcontainer/ops/.env up -d",
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/post-create.sh",
+  "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/post-start.sh",
 
-	"forwardPorts": [7990]
+  "forwardPorts": [3990, 3080],
+  "portsAttributes": {
+    "3990": {
+      "label": "3990 Portainer"
+    },
+    "3080": {
+      "label": "3080 Antora Docs Page"
+    }
+  }
 }

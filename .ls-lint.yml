@@ -13,8 +13,9 @@ ls:
   .yaml: kebab-case
   .feature: kebab-case
 
-  .sh: kebab-case
+  .java: PascalCase
   .kt: PascalCase
+  .sh: kebab-case
 
   .css: kebab-case
   .html: kebab-case
@@ -24,31 +25,27 @@ ls:
 
   Dockerfile: PascalCase
   Vagrantfile: PascalCase
-  Jenkinsfile: PascalCase
 
+  .babelrc: lowercase
   .env: lowercase
+  .dockerignore: lowercase
   .folderslintrc: lowercase
-  .shellcheckrc: lowercase
   .gitignore: lowercase
   .gitkeep: lowercase
+  .shellcheckrc: lowercase
 
 ignore:
+  # commons
   - .git
   - .idea
   - .vscode
   - node_modules
   - .gitpod.yml
   - target
-  - .adoc-links.json
-  - .gherkin-lintrc.json
-  - .ls-lint.yml
-  - .pre-commit-config.yaml
-  - .yamllint.yml
 
-  # linter definitions
-  - .adoc-links.json
-  - .gherkin-lintrc.json
+  # linter definitions etc.
   - .hadolint.yml
   - .ls-lint.yml
-  - .pre-commit-config.yaml
   - .yamllint.yml
+  - .pre-commit-config.yaml
+  - .releaserc

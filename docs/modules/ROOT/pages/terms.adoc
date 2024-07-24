@@ -1,0 +1,8 @@
+= Terms of Use and Privacy Policy
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
+
+== source2adoc App
+The source2adoc App does not use any cookies or local storage. The app is a command line tool that does not report any usage data to any remote server or service.
+
+== source2adoc Documentation Website
+The source2adoc Documentation Website does not use any cookies or local storage.

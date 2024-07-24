@@ -13,30 +13,9 @@
 ## docker compose build
 ## docker compose up
 ## ....
-##
-## NOTE: Building the application is used for local development only. For CI/CD workflows, the
-## Github Actions workflow is used to build the application. Linting and testing is used from
-## GitHub Actions as well
-
 
 services:
-
-  filenames:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
-    image: lslintorg/ls-lint:1.11.2
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-
-  folders:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
-    image: sommerfeldio/folderslint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-    command: folderslint
-
-  yaml:
+  lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
     volumes:
@@ -45,26 +24,46 @@ services:
     command: .
     tty: true
 
-  dockerfile:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
+  lint-filenames:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
+    image: lslintorg/ls-lint:1.11.2
+    volumes:
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+
+  lint-folders:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
+    image: sommerfeldio/folderslint:latest
+    volumes:
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+    command: .
+    tty: true
+
+  lint-dockerfile-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
     image: hadolint/hadolint:latest
     volumes:
       - .:/workspaces/source2adoc
     working_dir: /workspaces/source2adoc
-    entrypoint: hadolint Dockerfile
-    depends_on:
-      - filenames
-      - folders
-      - yaml
+    entrypoint: hadolint Dockerfile.app
 
-  test-app:
+  lint-dockerfile-docs:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-docs
+    image: hadolint/hadolint:latest
+    volumes:
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+    entrypoint: hadolint Dockerfile.docs
+
+  app-test:
     image: golang:1.22.3-alpine3.19
-    container_name: ${COMPOSE_PROJECT_NAME}-test
+    container_name: ${COMPOSE_PROJECT_NAME}-app-test
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ./components/app:/components/app:rw
-    working_dir: /components/app
+      - ./components/app:/workspaces/source2adoc/components/app:rw
+    working_dir: /workspaces/source2adoc/components/app
     command:
       - /bin/sh
       - -c
@@ -74,27 +73,34 @@ services:
         go fmt ./...
         go vet ./...
         go test -coverprofile=go-code-coverage.out ./...
-        chown 1000:1000 /components/app/go.sum
-    depends_on:
-      - dockerfile
-
-  build-app:
-    container_name: ${COMPOSE_PROJECT_NAME}
-    build: .
-    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
-    volumes:
-      - .:/project
-    working_dir: /project
-    depends_on:
-      test-app:
+        chown 1000:1000 /workspaces/source2adoc/components/app/go.sum
+    depends_on: &depends_on
+      lint-dockerfile-app:
         condition: service_completed_successfully
-    # command: --version
-    # command: list --lang=bash
-    # command: list --lang=ruby
-    # command: list --lang=yml
-    # command: list --lang=yaml
-    # command: list --lang=Dockerfile
-    # command: list --lang=Makefile
-    # command: list --lang=Vagrantfile
-    # command: manpage
-    command: generate --lang=yml --antora-dir=docs-test --antora-module=source2adoc-test
+      lint-filenames:
+        condition: service_completed_successfully
+      lint-folders:
+        condition: service_completed_successfully
+      lint-yaml:
+        condition: service_completed_successfully
+
+  app:
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    command: --help
+    depends_on:
+      app-test:
+        condition: service_completed_successfully
+
+  docs:
+    container_name: ${COMPOSE_PROJECT_NAME}-docs
+    image: local/${COMPOSE_PROJECT_NAME}-docs:${DEV_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    ports:
+      - 3080:3000
+    depends_on: *depends_on

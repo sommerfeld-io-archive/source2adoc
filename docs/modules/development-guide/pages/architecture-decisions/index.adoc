@@ -1,7 +1,0 @@
-= Architecture Desicions
-
-* xref:architecture-decisions/adr-001-use-adr.adoc[]
-* xref:architecture-decisions/adr-002-ecosystem.adoc[]
-* xref:architecture-decisions/adr-003-open-source.adoc[]
-* xref:architecture-decisions/adr-004-open-source-license.adoc[]
-* xref:architecture-decisions/adr-005-code-comment-style.adoc[]

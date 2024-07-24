@@ -1,5 +1,0 @@
-* xref:contribute.adoc[]
-* xref:security.adoc[]
-* xref:license.adoc[]
-* xref:terms.adoc[]
-* xref:contact.adoc[]

@@ -1,0 +1,59 @@
+= ADR 002: Decision on Language and Framework for CLI Documentation Tool
+
+====
+Status: Accepted +
+Outcome: CLI app with Go and Cobra +
+Date: 2024-07-22
+====
+
+== Context
+We are building a CLI application to generate documentation from source code files. The options considered are:
+
+. Go with Cobra
+. Kotlin with Spring Shell
+
+Key considerations for the decision include:
+
+* Development environment preferences
+* Integration with VSCode and devcontainers
+* Language familiarity and comfort
+* Performance and efficiency
+
+After discussing the options, the following points were highlighted:
+
+=== Go with Cobra
+
+* **Pros:**
+** Excellent integration with VSCode, providing features like debugging, linting, testing, and code navigation.
+** Simplicity in setting up devcontainers, benefiting from Go’s static binary compilation.
+** High performance and efficient concurrency handling.
+** Strong built-in tooling for formatting, testing, and building code.
+* **Cons:**
+** Less natural syntax and structure for those more accustomed to Kotlin/Java.
+** Potentially fewer libraries for specific advanced tasks.
+
+=== Kotlin with Spring Shell
+
+* **Pros:**
+** More expressive and natural language for developers familiar with Kotlin/Java.
+** Rich ecosystem and libraries for a variety of tasks.
+* Potentially better for more complex CLI tools needing extensive features.
+* **Cons:**
+** Less mature VSCode integration compared to Go.
+** More complex setup in devcontainers and potentially heavier resource usage.
+
+Given the key requirement for a devcontainer and preference for working in VSCode, Go with Cobra seems to have a stronger case due to its superior integration with VSCode and ease of setting up development environments.
+
+However, it's acknowledged that Kotlin feels more natural to the developer, which could impact productivity and code maintainability in the long run.
+
+== Recommendation
+Go with Cobra is recommended based on the current key requirements and tooling integration. However, the final decision remains open, considering the developer's familiarity and comfort with Kotlin. Both options remain viable, and the decision can be revisited based on further experimentation and feedback.
+
+== Consequences
+Choosing Go with Cobra will streamline the setup and development process within the preferred tools (VSCode and devcontainers), leveraging Go's performance and simplicity. Opting for Kotlin with Spring Shell would leverage the developer's familiarity with Kotlin, potentially resulting in more maintainable and expressive code.
+
+== Decision
+The CLI application will be developed using Go with Cobra. This decision is based on the superior integration with VSCode and devcontainers, as well as the performance and efficiency benefits of Go. Over time writing code in Go will feel more natural and comfortable, and developers can leverage the strong tooling and ecosystem that Go provides.
+
+== Author
+ChatGPT (this ADR was created with the help of ChatGPT, but the decision lies with the team, not the AI).

@@ -5,15 +5,18 @@ updates:
     directory: /
     schedule:
       interval: weekly
+
   - package-ecosystem: docker
     directory: .devcontainer
     schedule:
       interval: weekly
+
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: weekly
-  - package-ecosystem: gomod
+
+  - package-ecosystem: maven
     directory: components/app
     schedule:
-      interval: daily
+      interval: weekly
