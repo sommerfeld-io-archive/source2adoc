@@ -1,7 +1,7 @@
 = ADR 003:Distributing source2adoc CLI as Binary vs Docker Image
 
 ====
-Status: Proposed +
+Status: Evaluation +
 Outcome: ... +
 Date: 2024-07-22
 ====
@@ -50,15 +50,24 @@ We need to decide between continuing with Docker image distribution or adopting 
 ** A bootstrap script should be provided to automate the download and installation process.
 ** The bootstrap script must handle updates and versioning, ensuring users have the latest version.
 
-== Recommendation
-Distribute the `source2adoc` CLI as a Go binary. This decision is based on the following factors:
+== Evaluation
+We will begin by distributing the `source2adoc` CLI as a Docker image. During this evaluation period, we will:
 
-* Performance:
-** Provides better performance and lower resource usage compared to Docker containers.
-* Alignment with Industry Practices:
-** Follows the blueprint for CLI tools outlined by popular tools like `kubectl`, `helm`, `terraform`, `Docker` and `hugo`.
-* Simplicity for Users:
-** Direct access to the filesystem simplifies usage and avoids duplication.
+* Monitor User Experience:
+** Collect feedback on ease of installation, configuration, and usage.
+** Assess any challenges related to Docker volume mounts and filesystem access.
+* Assess Performance:
+** Compare the performance of the CLI running within Docker containers versus expected performance benchmarks for binaries.
+* Ensure Compatibility:
+** Test the Docker image across multiple architectures, including ARM, using Docker Buildx.
+** **Verify integration with our existing CI/CD pipeline and artifact storage practices.
+
+Based on the findings from this evaluation period, we will update this ADR with the final decision on the distribution method for the `source2adoc` CLI.
+
+
+== Recommendation
+We will experiment with the Docker image approach to understand its impact on usability, performance, and compatibility with our existing deployment pipeline. Based on our experience and user feedback, we will make a final decision on whether to continue with Docker images or switch to binary distribution. The ADR will be updated accordingly to reflect the final decision.
+
 
 == Consequences
 * Adjustment to Deployment Pipeline:
