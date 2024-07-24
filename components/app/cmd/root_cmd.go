@@ -27,7 +27,7 @@ Example:
   source2adoc --source-dir ./src --output-dir ./docs
 
 Example (Docker):
-  docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s ./src -o ./docs
+  docker run -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s ./src -o ./docs
 
 Supported Languages:
   `
