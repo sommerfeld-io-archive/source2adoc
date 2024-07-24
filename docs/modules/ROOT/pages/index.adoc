@@ -35,12 +35,8 @@ source2adoc does not aim at replacing or duplicating existing solutions like Jav
 == Requirements and Features
 The following section outlines the requirements and features of the `source2adoc` project. These requirements serve as a guideline for the development of the application and provide a clear overview of the expected functionality.
 
-// === Command Line Parameter
-// The application must accept a command line parameter to specify the source code language to be considered. Only one option is allowed per run. To generate AsciiDoc documentation for multiple languages, the application must be executed multiple times with different language settings.
-
 === Output Location
 Generated AsciiDoc files should be placed into an Antora module named `source2adoc`.
-// It is crucial not to delete the entire module and regenerate it from scratch with each application run, as this would prevent running the application multiple times for different languages.
 
 === Initial Documentation Scope
 Initially, the application will only consider code comments acting as header documentation for entire files. Documentation blocks for classes and functions may be considered in future iterations.
@@ -58,38 +54,21 @@ The caption of the AsciiDoc file should automatically be set from the source cod
 The code comment style should resemble JavaDoc but a double hash-symbol (`##`) as the marker for commented lines. That means the comment is different from "regular" comments and still allows to use metadata similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc). `@see` should generate an xref, @link should generate a static link.
 
 == Usage
-...
+For detailed information on how to use the `source2adoc` application, take a look at the application's help output.
 
-TODO ... Docker Run commands for both images
-
-== Development
-source2adoc is a Kotlin application targeting Java 21 using Maven as the build tool. We are working in a Linux development container using Visual Studio Code (VSCode) as our integrated development environment (IDE).
-
-[ditaa, ditaa-image, svg]
+[source, bash]
 ....
-                                                         +---------------------+                  +---------------------+
-                                                         |  CodeFileInventory  |           +------|  Parser (and Lint)  |
-+---------------------+       +-------------+            |                     |           |      +---------------------+
-|  FileSystemScanner  +------>| CodeFile    +-------------> List of CodeFile --------------+------|  Metadata           |
-+---------------------+  new  |             |  register  |                     |  fetch    |      +---------------------+
-                              |       type  |  CodeFile  +---------------------+  single   +------|  ContentGenerator   |
-                              |       path  |                                              |      +---------------------+
-                              |   filename  |                                              +------|  DocFileWriter      |
-                              +-------------+                                                     +---------------------+
+docker run --rm sommerfeldio/source2adoc:latest --help
 ....
 
-[CAUTION]
-====
-TODO
+To generate documentation based on the inline comments in a source code file, execute the following command: `--source-dir` and `--output-dir` are relative to `--workdir`.
 
-. find all code files
-. store in List or stack or some sort of event bus / event thing
-. parse all file and store somewhere
-. get metadata for each code file and store somewhere (filename, path, ...)
-. generate content for each docs file and store somewhere
-. write docs files to filesystem
-. generate single `nav.adoc` for all code files
-====
+[source, bash]
+....
+docker run --rm --volume "$(pwd):$(pwd)" --workdir $(pwd) sommerfeldio/source2adoc:latest --source-dir ./src --output-dir ./docs
+....
+
+`source2adoc` is distributed as a Docker image only, so remember to always use a complete Docker command to run the application.
 
 == Risks and Technical Debts
 link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/sommerfeld-io/source2adoc/internal/codefiles"
 	"github.com/spf13/cobra"
@@ -24,7 +25,21 @@ Quick Start:
 
 Example:
   source2adoc --source-dir ./src --output-dir ./docs
-`
+
+Example (Docker):
+  docker run --rm -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s ./src -o ./docs
+
+Supported Languages:
+  `
+
+func supportedLanguagesDesc() string {
+	supportedLanguages := codefiles.SupportedCodeFilenames
+	keys := make([]string, 0, len(supportedLanguages))
+	for k := range supportedLanguages {
+		keys = append(keys, k)
+	}
+	return strings.Join(keys, ", ")
+}
 
 var sourceDir string
 var outputDir string
@@ -32,7 +47,7 @@ var outputDir string
 var rootCmd = &cobra.Command{
 	Use:   "source2adoc",
 	Short: rootDescShort,
-	Long:  rootDescLong,
+	Long:  rootDescLong + supportedLanguagesDesc(),
 
 	Args: cobra.ExactArgs(0),
 
