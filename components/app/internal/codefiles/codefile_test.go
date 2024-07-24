@@ -55,7 +55,17 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 			supported: true,
 		},
 		{
-			filename:  "Dockerfile.dev",
+			filename:  "Dockerfile",
+			expected:  LanguageDockerfile,
+			supported: true,
+		},
+		{
+			filename:  "Dockerfile.app",
+			expected:  LanguageDockerfile,
+			supported: true,
+		},
+		{
+			filename:  "Dockerfile.docs",
 			expected:  LanguageDockerfile,
 			supported: true,
 		},
