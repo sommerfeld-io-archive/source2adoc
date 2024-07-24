@@ -14,20 +14,9 @@ func TestCodeFile_ShouldSplitPathAndFilename(t *testing.T) {
 		expectedPath     string
 		expectedFilename string
 	}{
-		{
-			path:             "/path/to/source.sh",
-			expectedPath:     "/path/to",
-			expectedFilename: "source.sh",
-		}, {
-			path:             "path/to/Dockerfile",
-			expectedPath:     "path/to",
-			expectedFilename: "Dockerfile",
-		},
-		{
-			path:             "source.sh",
-			expectedPath:     "",
-			expectedFilename: "source.sh",
-		},
+		{path: "/path/to/source.sh", expectedPath: "/path/to", expectedFilename: "source.sh"},
+		{path: "path/to/Dockerfile", expectedPath: "path/to", expectedFilename: "Dockerfile"},
+		{path: "source.sh", expectedPath: "", expectedFilename: "source.sh"},
 	}
 
 	for _, test := range tests {
@@ -45,51 +34,15 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		expected  string
 		supported bool
 	}{
-		{
-			filename:  "config.yml",
-			expected:  LanguageYML,
-			supported: true,
-		},
-		{
-			filename:  "config.yaml",
-			expected:  LanguageYML,
-			supported: true,
-		},
-		{
-			filename:  "Dockerfile",
-			expected:  LanguageDockerfile,
-			supported: true,
-		},
-		{
-			filename:  "Dockerfile.app",
-			expected:  LanguageDockerfile,
-			supported: true,
-		},
-		{
-			filename:  "Dockerfile.docs",
-			expected:  LanguageDockerfile,
-			supported: true,
-		},
-		{
-			filename:  "Vagrantfile.prod",
-			expected:  LanguageVagrantfile,
-			supported: true,
-		},
-		{
-			filename:  "Makefile",
-			expected:  LanguageMakefile,
-			supported: true,
-		},
-		{
-			filename:  "script.sh",
-			expected:  LanguageShellScript,
-			supported: true,
-		},
-		{
-			filename:  "script.go",
-			expected:  LanguageInvalid,
-			supported: false,
-		},
+		{filename: "config.yml", expected: LanguageYML, supported: true},
+		{filename: "config.yaml", expected: LanguageYML, supported: true},
+		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
+		{filename: "Dockerfile.app", expected: LanguageDockerfile, supported: true},
+		{filename: "Dockerfile.docs", expected: LanguageDockerfile, supported: true},
+		{filename: "Vagrantfile.prod", expected: LanguageVagrantfile, supported: true},
+		{filename: "Makefile", expected: LanguageMakefile, supported: true},
+		{filename: "script.sh", expected: LanguageShellScript, supported: true},
+		{filename: "script.go", expected: LanguageInvalid, supported: false},
 	}
 
 	for _, test := range tests {
