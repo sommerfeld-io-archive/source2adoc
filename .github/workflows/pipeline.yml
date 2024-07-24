@@ -283,6 +283,20 @@ jobs:
         run: echo "CHANGE ME"
         shell: bash
 
+  # ----- Deploy --- upload website -------------
+
+  publish-docs:
+    runs-on: ubuntu-latest
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+    needs: ['test-image']
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.ref}}
+
   # ----- Deploy :rc stage ----------------------
 
   publish-rc:
