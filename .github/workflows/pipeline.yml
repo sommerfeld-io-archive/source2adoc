@@ -131,7 +131,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{github.ref}}
-          token: ${{ secrets.GH_TOKEN_REPO_AND_PROJECT }}
       - name: Adjust version in docs/antora.yml
         uses: sebastian-sommerfeld-io/github-action-update-antora-yml@main
         with:
