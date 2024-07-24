@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // CodeFileFinder is responsible for finding code files in a given directory.
@@ -19,28 +18,6 @@ func NewFinder(srcDir string) *CodeFileFinder {
 	}
 }
 
-func isSupportedCode(path string) bool {
-	filename := filepath.Base(path)
-	ext := filepath.Ext(filename)
-
-	switch ext {
-	case ".yml", ".yaml", ".sh":
-		return true
-	}
-
-	switch {
-	case strings.HasPrefix(filename, "Dockerfile"):
-		return true
-	}
-
-	switch filename {
-	case "Makefile", "Vagrantfile":
-		return true
-	}
-
-	return false
-}
-
 // FindSourceCodeFiles lists all files in srcDir and all subfolders.
 func (finder *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
 	var files []*CodeFile
@@ -50,8 +27,8 @@ func (finder *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
 			return err
 		}
 
-		if !info.IsDir() && isSupportedCode(path) {
-			code := NewCodeFile(path, "filename")
+		code := NewCodeFile(path)
+		if !info.IsDir() && code.IsSupported() {
 			files = append(files, code)
 		}
 

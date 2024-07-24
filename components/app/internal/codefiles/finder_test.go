@@ -7,58 +7,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCodeFileFinder_CodeShouldBeSupported(t *testing.T) {
-	assert := assert.New(t)
-
-	var tests = []string{
-		"path/to/some.sh",
-		"path/to/some.yml",
-		"path/to/some.yaml",
-		"path/to/Dockerfile",
-		"path/to/Dockerfile.app",
-		"path/to/Dockerfile.docs",
-		"path/to/Dockerfile.dev",
-		"path/to/Dockerfile.whatever",
-		"path/to/Makefile",
-		"path/to/Vagrantfile",
-	}
-	for _, test := range tests {
-		t.Run(test, func(t *testing.T) {
-			assert.True(isSupportedCode(test), "Should be supported: "+test)
-		})
-	}
-}
-
-func TestCodeFileFinder_CodeShouldNotBeSupported(t *testing.T) {
-	assert := assert.New(t)
-
-	var tests = []string{
-		"path/to/some.go",
-		"path/to/some.java",
-		"path/to/some.kt",
-		"path/to/some.json",
-	}
-	for _, test := range tests {
-		t.Run(test, func(t *testing.T) {
-			assert.False(isSupportedCode(test), "Should NOT be supported: "+test)
-		})
-	}
-}
-
 func TestCodeFileFinder_ShouldFindSourceCodeFiles(t *testing.T) {
 	assert := assert.New(t)
 
 	srcDir := "/workspaces/source2adoc/components/app/testdata"
 
 	expectedFiles := []*CodeFile{
-		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile.app"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile.docs"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yml"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yaml"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/Makefile"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/Vagrantfile"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "good/script.sh"), "filename"),
+		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile")),
+		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile.app")),
+		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile.docs")),
+		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yml")),
+		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yaml")),
+		NewCodeFile(filepath.Join(srcDir, "good/Makefile")),
+		NewCodeFile(filepath.Join(srcDir, "good/Vagrantfile")),
+		NewCodeFile(filepath.Join(srcDir, "good/script.sh")),
 	}
 
 	finder := NewFinder(srcDir)
@@ -78,9 +40,9 @@ func TestCodeFileFinder_ShouldNotFindUndesiredSourceCodeFiles(t *testing.T) {
 	srcDir := "/workspaces/source2adoc/components/app/testdata"
 
 	undesiredFiles := []*CodeFile{
-		NewCodeFile(filepath.Join(srcDir, "bad/some.go"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "bad/some.java"), "filename"),
-		NewCodeFile(filepath.Join(srcDir, "bad/some.kotlin"), "filename"),
+		NewCodeFile(filepath.Join(srcDir, "bad/some.go")),
+		NewCodeFile(filepath.Join(srcDir, "bad/some.java")),
+		NewCodeFile(filepath.Join(srcDir, "bad/some.kotlin")),
 	}
 
 	finder := NewFinder(srcDir)
