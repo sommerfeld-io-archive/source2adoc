@@ -36,6 +36,7 @@ func TestCodeFile_ShouldSplitPathAndFilename(t *testing.T) {
 		assert.Equal(test.expectedFilename, filename, "Incorrect filename")
 	}
 }
+
 func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 	assert := assert.New(t)
 
