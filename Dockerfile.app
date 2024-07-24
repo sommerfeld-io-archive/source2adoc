@@ -24,7 +24,7 @@ RUN pwd && ls -alF \
     && go build .
 
 
-FROM alpine:3.20.1 AS run
+FROM alpine:3.20.2 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
 LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.description="Streamline the process of generating documentation from inline comments within source code files." \
