@@ -97,3 +97,27 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		assert.Equal(test.supported, supported, "Invalid supported status for: "+test.filename)
 	}
 }
+func TestCodeFile_Path(t *testing.T) {
+	codeFile := &CodeFile{
+		path:      "/path/to",
+		name:      "source.sh",
+		lang:      LanguageShellScript,
+		supported: true,
+	}
+
+	expectedPath := "/path/to"
+	actualPath := codeFile.Path()
+	assert.Equal(t, expectedPath, actualPath, "Incorrect path")
+
+	expectedName := "source.sh"
+	actualName := codeFile.Filename()
+	assert.Equal(t, expectedName, actualName, "Incorrect filename")
+
+	expectedLang := LanguageShellScript
+	actualLang := codeFile.Language()
+	assert.Equal(t, expectedLang, actualLang, "Incorrect path language")
+
+	expectedSupported := true
+	actualSupported := codeFile.IsSupported()
+	assert.Equal(t, expectedSupported, actualSupported, "Incorrect path supported status")
+}
