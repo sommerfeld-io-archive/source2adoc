@@ -83,6 +83,7 @@ func (cf *CodeFile) ReadFileContent() error {
 
 // Split the path and filename
 // If no "/" is found, return the entire path as the filename
+// TODO turn into a method of CodeFile
 func splitPathAndFilename(path string) (string, string) {
 	lastIndex := strings.LastIndex(path, "/")
 	if lastIndex == -1 {
@@ -93,6 +94,7 @@ func splitPathAndFilename(path string) (string, string) {
 
 // Identify the language of the file based on the filename or extension
 // Return the language and a boolean indicating if the language is supported
+// TODO turn into a method of CodeFile
 func identifyLanguage(filename string) (string, bool) {
 	for key, value := range SupportedCodeFilenames {
 		if strings.HasSuffix(filename, key) || strings.HasPrefix(filename, value) {
