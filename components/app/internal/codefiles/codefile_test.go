@@ -82,10 +82,8 @@ func TestCodeFile_Path(t *testing.T) {
 func TestCodeFile_ReadFileContent(t *testing.T) {
 	assert := assert.New(t)
 
-	srcDir := "/workspaces/source2adoc/components/app/testdata"
-
 	codeFile := &CodeFile{
-		path:      filepath.Join(srcDir, "good"),
+		path:      filepath.Join(TestDataDir, "good"),
 		name:      "small-comment.sh",
 		lang:      LanguageShellScript,
 		supported: true,

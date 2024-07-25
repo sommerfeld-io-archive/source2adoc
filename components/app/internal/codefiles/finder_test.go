@@ -10,21 +10,19 @@ import (
 func TestCodeFileFinder_ShouldFindSourceCodeFiles(t *testing.T) {
 	assert := assert.New(t)
 
-	srcDir := "/workspaces/source2adoc/components/app/testdata"
-
 	expectedFiles := []*CodeFile{
-		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile")),
-		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile.app")),
-		NewCodeFile(filepath.Join(srcDir, "good/docker/Dockerfile.docs")),
-		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yml")),
-		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yaml")),
-		NewCodeFile(filepath.Join(srcDir, "good/Makefile")),
-		NewCodeFile(filepath.Join(srcDir, "good/Vagrantfile")),
-		NewCodeFile(filepath.Join(srcDir, "good/small-comment.sh")),
-		NewCodeFile(filepath.Join(srcDir, "good/script.sh")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/docker/Dockerfile")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/docker/Dockerfile.app")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/docker/Dockerfile.docs")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/yaml/some.yml")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/yaml/some.yaml")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/Makefile")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/Vagrantfile")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/small-comment.sh")),
+		NewCodeFile(filepath.Join(TestDataDir, "good/script.sh")),
 	}
 
-	finder := NewFinder(srcDir)
+	finder := NewFinder(TestDataDir)
 
 	files, err := finder.FindSourceCodeFiles()
 	assert.NoError(err, "Should not return an error")
@@ -38,15 +36,13 @@ func TestCodeFileFinder_ShouldFindSourceCodeFiles(t *testing.T) {
 func TestCodeFileFinder_ShouldNotFindUndesiredSourceCodeFiles(t *testing.T) {
 	assert := assert.New(t)
 
-	srcDir := "/workspaces/source2adoc/components/app/testdata"
-
 	undesiredFiles := []*CodeFile{
-		NewCodeFile(filepath.Join(srcDir, "bad/some.go")),
-		NewCodeFile(filepath.Join(srcDir, "bad/some.java")),
-		NewCodeFile(filepath.Join(srcDir, "bad/some.kotlin")),
+		NewCodeFile(filepath.Join(TestDataDir, "bad/some.go")),
+		NewCodeFile(filepath.Join(TestDataDir, "bad/some.java")),
+		NewCodeFile(filepath.Join(TestDataDir, "bad/some.kotlin")),
 	}
 
-	finder := NewFinder(srcDir)
+	finder := NewFinder(TestDataDir)
 
 	files, err := finder.FindSourceCodeFiles()
 	assert.NoError(err, "Should not return an error")
