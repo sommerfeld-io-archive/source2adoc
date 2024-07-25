@@ -6,8 +6,8 @@ import (
 	"github.com/sommerfeld-io/source2adoc/cmd"
 )
 
-func init() {
-}
+// func init() {
+// }
 
 func main() {
 	err := cmd.Execute()

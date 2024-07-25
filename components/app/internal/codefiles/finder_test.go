@@ -20,6 +20,7 @@ func TestCodeFileFinder_ShouldFindSourceCodeFiles(t *testing.T) {
 		NewCodeFile(filepath.Join(srcDir, "good/yaml/some.yaml")),
 		NewCodeFile(filepath.Join(srcDir, "good/Makefile")),
 		NewCodeFile(filepath.Join(srcDir, "good/Vagrantfile")),
+		NewCodeFile(filepath.Join(srcDir, "good/small-comment.sh")),
 		NewCodeFile(filepath.Join(srcDir, "good/script.sh")),
 	}
 

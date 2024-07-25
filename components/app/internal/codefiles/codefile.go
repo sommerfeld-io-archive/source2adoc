@@ -1,6 +1,9 @@
 package codefiles
 
-import "strings"
+import (
+	"os"
+	"strings"
+)
 
 // CodeFile represents a source code file in the file system.
 type CodeFile struct {
@@ -8,6 +11,7 @@ type CodeFile struct {
 	name      string
 	lang      string
 	supported bool
+	content   string
 }
 
 const (
@@ -60,6 +64,21 @@ func (cf *CodeFile) Language() string {
 // IsSupported returns true if the CodeFile is supported.
 func (cf *CodeFile) IsSupported() bool {
 	return cf.supported
+}
+
+// Content returns the content of the CodeFile.
+func (cf *CodeFile) Content() string {
+	return cf.content
+}
+
+// ReadFileContent reads the content of the CodeFile from the file system.
+func (cf *CodeFile) ReadFileContent() error {
+	content, err := os.ReadFile(cf.path + "/" + cf.name)
+	if err != nil {
+		return err
+	}
+	cf.content = string(content)
+	return nil
 }
 
 // Split the path and filename

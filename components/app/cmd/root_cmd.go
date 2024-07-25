@@ -52,15 +52,43 @@ var rootCmd = &cobra.Command{
 	Args: cobra.ExactArgs(0),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
-		if err != nil {
-			log.Fatal(err)
-		}
+		sourceCodeFiles := findCodeFiles()
+		sourceCodeFiles = readCodeFiles(sourceCodeFiles)
+		sourceCodeFiles = parseFileContent(sourceCodeFiles)
+		writeDocsFiles(sourceCodeFiles)
 
 		for _, file := range sourceCodeFiles {
 			fmt.Println(file)
 		}
 	},
+}
+
+func findCodeFiles() []*codefiles.CodeFile {
+	sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return sourceCodeFiles
+}
+
+// readCodeFiles reads the code files from the source directory.
+func readCodeFiles(files []*codefiles.CodeFile) []*codefiles.CodeFile {
+	for _, file := range files {
+		file.ReadFileContent()
+	}
+	return files
+}
+
+// parseFileContent parses the content of the code files for comments.
+func parseFileContent(files []*codefiles.CodeFile) []*codefiles.CodeFile {
+	// TODO: Implement parsing the content for comments
+	return files
+}
+
+// writeDocsFiles writes the documentation files to the output directory.
+func writeDocsFiles(files []*codefiles.CodeFile) {
+	// TODO Implement writing the documentation files
 }
 
 func init() {

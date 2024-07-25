@@ -1,6 +1,7 @@
 package codefiles
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -52,6 +53,8 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 	}
 }
 func TestCodeFile_Path(t *testing.T) {
+	assert := assert.New(t)
+
 	codeFile := &CodeFile{
 		path:      "/path/to",
 		name:      "source.sh",
@@ -61,17 +64,40 @@ func TestCodeFile_Path(t *testing.T) {
 
 	expectedPath := "/path/to"
 	actualPath := codeFile.Path()
-	assert.Equal(t, expectedPath, actualPath, "Incorrect path")
+	assert.Equal(expectedPath, actualPath, "Incorrect path")
 
 	expectedName := "source.sh"
 	actualName := codeFile.Filename()
-	assert.Equal(t, expectedName, actualName, "Incorrect filename")
+	assert.Equal(expectedName, actualName, "Incorrect filename")
 
 	expectedLang := LanguageShellScript
 	actualLang := codeFile.Language()
-	assert.Equal(t, expectedLang, actualLang, "Incorrect path language")
+	assert.Equal(expectedLang, actualLang, "Incorrect path language")
 
 	expectedSupported := true
 	actualSupported := codeFile.IsSupported()
-	assert.Equal(t, expectedSupported, actualSupported, "Incorrect path supported status")
+	assert.Equal(expectedSupported, actualSupported, "Incorrect path supported status")
+}
+
+func TestCodeFile_ReadFileContent(t *testing.T) {
+	assert := assert.New(t)
+
+	srcDir := "/workspaces/source2adoc/components/app/testdata"
+
+	codeFile := &CodeFile{
+		path:      filepath.Join(srcDir, "good"),
+		name:      "small-comment.sh",
+		lang:      LanguageShellScript,
+		supported: true,
+	}
+
+	err := codeFile.ReadFileContent()
+	assert.Nil(err, "Error reading file content")
+
+	expectedContent := `#!/bin/bash
+## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+## ut labore et dolore magna aliquyam erat, sed diam voluptua.
+`
+	actualContent := codeFile.Content()
+	assert.Equal(expectedContent, actualContent, "Incorrect file content")
 }
