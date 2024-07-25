@@ -14,15 +14,6 @@ type CodeFile struct {
 	content   string
 }
 
-const (
-	LanguageYML         = "yml"
-	LanguageDockerfile  = "Dockerfile"
-	LanguageVagrantfile = "Vagrantfile"
-	LanguageMakefile    = "Makefile"
-	LanguageShellScript = "sh"
-	LanguageInvalid     = "invalid"
-)
-
 // SupportedCodeFilenames maps supported file extensions to their corresponding languages.
 var SupportedCodeFilenames = map[string]string{
 	".yml":        LanguageYML,
