@@ -40,6 +40,15 @@ services:
     command: .
     tty: true
 
+  lint-go:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-go
+    image: golangci/golangci-lint:v1.59.1
+    volumes:
+      - ./components/app:/workspaces/source2adoc/components/app
+    working_dir: /workspaces/source2adoc/components/app
+    command: golangci-lint run -v
+    tty: true
+
   lint-dockerfile-app:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
     image: hadolint/hadolint:latest
@@ -82,6 +91,8 @@ services:
       lint-folders:
         condition: service_completed_successfully
       lint-yaml:
+        condition: service_completed_successfully
+      lint-go:
         condition: service_completed_successfully
 
   app:
