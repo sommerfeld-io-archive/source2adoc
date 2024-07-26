@@ -92,15 +92,23 @@ func writeDocsFiles(files []*codefiles.CodeFile) {
 }
 
 func init() {
-	var sourceParam = "source-dir"
-	var sourceParamShort = "s"
-	rootCmd.Flags().StringVarP(&sourceDir, sourceParam, sourceParamShort, "", "Directory containing the source code files")
-	rootCmd.MarkFlagRequired(sourceParam)
+	var params = []struct {
+		name     string
+		short    string
+		variable *string
+		desc     string
+	}{
+		{name: "source-dir", short: "s", variable: &sourceDir, desc: "Directory containing the source code files"},
+		{name: "output-dir", short: "o", variable: &outputDir, desc: "Directory to write the generated documentation to"},
+	}
 
-	var outputParam = "output-dir"
-	var outputParamShort = "o"
-	rootCmd.Flags().StringVarP(&outputDir, outputParam, outputParamShort, "", "Directory to write the generated documentation to")
-	rootCmd.MarkFlagRequired(outputParam)
+	for _, param := range params {
+		rootCmd.Flags().StringVarP(param.variable, param.name, param.short, "", param.desc)
+		err := rootCmd.MarkFlagRequired(param.name)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
