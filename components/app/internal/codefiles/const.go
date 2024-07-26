@@ -8,8 +8,8 @@ const (
 	LANGUAGE_BASH       = "sh"
 	LANGUAGE_INVALID    = "invalid"
 
-	// DOCUMENTATION_PART_META represents the meta information of a code file like the filename and path.
-	DOCUMENTATION_PART_META = "meta"
+	// DOCUMENTATION_PART_METADATA represents the meta information of a code file like the filename and path.
+	DOCUMENTATION_PART_METADATA = "meta"
 
 	// DOCUMENTATION_PART_HEADER represents the header documentation of a code file.
 	DOCUMENTATION_PART_HEADER = "header"

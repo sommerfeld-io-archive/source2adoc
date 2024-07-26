@@ -121,7 +121,14 @@ func TestCodeFile_ShouldParseDocumentation(t *testing.T) {
 		documentationParts: []DocumentationPart{},
 	}
 
-	expectedHeaderDocs := `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+	expectedDocs := `= small-comment.sh
+
+[cols="1,5"]
+|===
+|Path |` + TEST_SOURCE_DIR + `/good/small-comment.sh
+|===
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 ut labore et dolore magna aliquyam erat, sed diam voluptua.
 `
 
@@ -129,7 +136,7 @@ ut labore et dolore magna aliquyam erat, sed diam voluptua.
 	assert.Nil(err, "Error parsing documentation")
 
 	docs := codeFile.parsedDocumentation()
-	assert.Equal(expectedHeaderDocs, docs, "Incorrect parsed documentation")
+	assert.Equal(expectedDocs, docs, "Incorrect parsed documentation")
 }
 func TestCodeFile_ShouldTranslateDocumentationFileName(t *testing.T) {
 	codeFile := &CodeFile{

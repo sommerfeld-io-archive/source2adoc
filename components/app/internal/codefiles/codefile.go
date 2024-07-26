@@ -103,10 +103,10 @@ func (cf *CodeFile) ReadFileContent() error {
 
 // Parse parses the CodeFile and extracts the documentation parts.
 func (cf *CodeFile) Parse() error {
-	// TODO err := cf.parseMetadata()
+	cf.parseMetadata()
 	err := cf.parseHeaderDocs()
 	if err != nil {
-		return fmt.Errorf("failed to parse code file: %v", err)
+		return fmt.Errorf("failed to parse header docs from code file: %v", err)
 	}
 	return nil
 }
@@ -119,6 +119,26 @@ func (cf *CodeFile) parsedDocumentation() string {
 		parsedDocs += part.sectionContent
 	}
 	return parsedDocs
+}
+
+func (cf *CodeFile) parseMetadata() {
+	asciidoc := "= " + cf.name + "\n"
+	asciidoc += "\n"
+	asciidoc += "[cols=\"1,5\"]\n"
+	asciidoc += "|===\n"
+	if cf.path == "" {
+		asciidoc += "|Path |" + cf.name + "\n"
+	} else {
+		asciidoc += "|Path |" + cf.path + "/" + cf.name + "\n"
+	}
+	asciidoc += "|===\n"
+	asciidoc += "\n"
+
+	part := DocumentationPart{
+		sectionType:    DOCUMENTATION_PART_METADATA,
+		sectionContent: asciidoc,
+	}
+	cf.documentationParts = append(cf.documentationParts, part)
 }
 
 // parseHeaderDocs finds all relevant comments (marked with `##`) at the beginning of the file
