@@ -55,6 +55,8 @@ jobs:
 
           gh label create "released" --color "000000" --description "semantic-release: Released by pipeline" --force
 
+          gh label create "ADR" --color "0052CC" --description "Architecture Decision Record" --force
+
           gh label create "dependencies" --color "000000" --description "Dependabot: Pull requests that update a dependency file" --force
           gh label create "docker" --color "000000" --description "Dependabot: Pull requests that update Docker code" --force
           gh label create "github_actions" --color "000000" --description "Dependabot: Pull requests that update GitHub Actions code" --force
