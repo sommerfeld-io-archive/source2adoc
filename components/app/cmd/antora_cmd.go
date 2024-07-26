@@ -36,10 +36,20 @@ var antoraCmd = &cobra.Command{
 }
 
 func init() {
-	var moduleParam = "module"
-	var moduleParamShort = "m"
-	antoraCmd.Flags().StringVarP(&moduleDir, moduleParam, moduleParamShort, "", "Directory containing antora module")
-	antoraCmd.MarkFlagRequired(moduleParam)
+	var params = []struct {
+		name     string
+		short    string
+		variable *string
+		desc     string
+	}{
+		{name: "module", short: "m", variable: &moduleDir, desc: "Directory containing antora module"},
+	}
+
+	for _, param := range params {
+		antoraCmd.Flags().StringVarP(param.variable, param.name, param.short, "", param.desc)
+		err := antoraCmd.MarkFlagRequired(param.name)
+		handleError(err)
+	}
 
 	RegisterSubCommand(antoraCmd)
 }

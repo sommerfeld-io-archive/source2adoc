@@ -1,12 +1,12 @@
 ---
 ## Run the defined checks before committing code to the remote repo. This should catch
 ## simple violations early and lessens the amount of pipeline failures.
-#
+##
 ## Every time you clone a project using pre-commit running `pre-commit install` should always be the
 ## first thing you do.
-#
+##
 ## IMPORTANT: For pre-commit to work, this file must carry the extension `.yaml`, NOT `.yml`.
-#
+##
 ## == Install the git hook scripts
 ## run `pre-commit install` to set up the git hook scripts. Now pre-commit will run automatically
 ## on git commit.
@@ -54,6 +54,12 @@ repos:
         name: lint-dockerfile-docs
         language: script
         entry: /bin/bash -c 'docker compose up lint-dockerfile-docs --exit-code-from lint-dockerfile-docs'
+  - repo: local
+    hooks:
+      - id: lint-go
+        name: lint-go
+        language: script
+        entry: /bin/bash -c 'docker compose up lint-go --exit-code-from lint-go'
   - repo: local
     hooks:
       - id: docker-compose-build

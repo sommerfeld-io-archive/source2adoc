@@ -1,6 +1,8 @@
 package codefiles
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,15 +36,15 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		expected  string
 		supported bool
 	}{
-		{filename: "config.yml", expected: LanguageYML, supported: true},
-		{filename: "config.yaml", expected: LanguageYML, supported: true},
-		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
-		{filename: "Dockerfile.app", expected: LanguageDockerfile, supported: true},
-		{filename: "Dockerfile.docs", expected: LanguageDockerfile, supported: true},
-		{filename: "Vagrantfile.prod", expected: LanguageVagrantfile, supported: true},
-		{filename: "Makefile", expected: LanguageMakefile, supported: true},
-		{filename: "script.sh", expected: LanguageShellScript, supported: true},
-		{filename: "script.go", expected: LanguageInvalid, supported: false},
+		{filename: "config.yml", expected: LANGUAGE_YML, supported: true},
+		{filename: "config.yaml", expected: LANGUAGE_YML, supported: true},
+		{filename: "Dockerfile", expected: LANGUAGE_DOCKERFILE, supported: true},
+		{filename: "Dockerfile.app", expected: LANGUAGE_DOCKERFILE, supported: true},
+		{filename: "Dockerfile.docs", expected: LANGUAGE_DOCKERFILE, supported: true},
+		{filename: "Vagrantfile.prod", expected: LANGUAGE_VAGRANT, supported: true},
+		{filename: "Makefile", expected: LANGUAGE_MAKE, supported: true},
+		{filename: "script.sh", expected: LANGUAGE_BASH, supported: true},
+		{filename: "script.go", expected: LANGUAGE_INVALID, supported: false},
 	}
 
 	for _, test := range tests {
@@ -51,27 +53,125 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		assert.Equal(test.supported, supported, "Invalid supported status for: "+test.filename)
 	}
 }
-func TestCodeFile_Path(t *testing.T) {
+func TestCodeFile_ShouldGetDataFromGetterFunctions(t *testing.T) {
+	assert := assert.New(t)
+
 	codeFile := &CodeFile{
 		path:      "/path/to",
 		name:      "source.sh",
-		lang:      LanguageShellScript,
+		lang:      LANGUAGE_BASH,
 		supported: true,
 	}
 
 	expectedPath := "/path/to"
 	actualPath := codeFile.Path()
-	assert.Equal(t, expectedPath, actualPath, "Incorrect path")
+	assert.Equal(expectedPath, actualPath, "Incorrect path")
 
 	expectedName := "source.sh"
 	actualName := codeFile.Filename()
-	assert.Equal(t, expectedName, actualName, "Incorrect filename")
+	assert.Equal(expectedName, actualName, "Incorrect filename")
 
-	expectedLang := LanguageShellScript
+	expectedLang := LANGUAGE_BASH
 	actualLang := codeFile.Language()
-	assert.Equal(t, expectedLang, actualLang, "Incorrect path language")
+	assert.Equal(expectedLang, actualLang, "Incorrect path language")
 
 	expectedSupported := true
 	actualSupported := codeFile.IsSupported()
-	assert.Equal(t, expectedSupported, actualSupported, "Incorrect path supported status")
+	assert.Equal(expectedSupported, actualSupported, "Incorrect path supported status")
+}
+
+func TestCodeFile_ShouldReadFileContent(t *testing.T) {
+	assert := assert.New(t)
+
+	codeFile := &CodeFile{
+		path:      filepath.Join(TEST_SOURCE_DIR, "good"),
+		name:      "small-comment.sh",
+		lang:      LANGUAGE_BASH,
+		supported: true,
+	}
+
+	err := codeFile.ReadFileContent()
+	assert.Nil(err, "Error reading file content")
+
+	expectedContent := `#!/bin/bash
+## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+## ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+## Not part of the header comment
+`
+	actualContent := codeFile.FileContent()
+	assert.Equal(expectedContent, actualContent, "Incorrect file content")
+}
+
+func TestCodeFile_ShouldParseDocumentation(t *testing.T) {
+	assert := assert.New(t)
+
+	codeFile := &CodeFile{
+		path:      filepath.Join(TEST_SOURCE_DIR, "good"),
+		name:      "small-comment.sh",
+		lang:      LANGUAGE_BASH,
+		supported: true,
+		fileContent: `#!/bin/bash
+## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+# ignore me because I do not follow the comment convention. Maybe I am a typo.
+## ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+## Not part of the header comment
+`,
+		documentationParts: []DocumentationPart{},
+	}
+
+	expectedDocs := `= small-comment.sh
+
+[cols="1,5"]
+|===
+|Path |` + TEST_SOURCE_DIR + `/good/small-comment.sh
+|===
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.
+`
+
+	err := codeFile.Parse()
+	assert.Nil(err, "Error parsing documentation")
+
+	docs := codeFile.parsedDocumentation()
+	assert.Equal(expectedDocs, docs, "Incorrect parsed documentation")
+}
+func TestCodeFile_ShouldTranslateDocumentationFileName(t *testing.T) {
+	codeFile := &CodeFile{
+		path: filepath.Join(TEST_SOURCE_DIR, "good"),
+		name: "small-comment.sh",
+	}
+
+	expectedFileName := "small-comment-sh.adoc"
+	actualFileName := codeFile.documentationFileName()
+	assert.Equal(t, expectedFileName, actualFileName, "Incorrect documentation file name")
+}
+
+func TestCodeFile_ShouldWriteDocumentationFile(t *testing.T) {
+	assert := assert.New(t)
+
+	codeFile := &CodeFile{
+		path:      "some/path",
+		name:      "unittest.sh",
+		lang:      LANGUAGE_BASH,
+		supported: true,
+		documentationParts: []DocumentationPart{
+			{
+				sectionType:    DOCUMENTATION_PART_HEADER,
+				sectionContent: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr",
+			},
+		},
+	}
+
+	expectedAdocFile := TEST_OUTPUT_DIR + "/" + codeFile.Path() + "/unittest-sh.adoc"
+
+	err := codeFile.WriteDocumentationFile(TEST_OUTPUT_DIR)
+	assert.Nil(err, "Error writing documentation file")
+
+	_, err = os.Stat(expectedAdocFile)
+	assert.False(os.IsNotExist(err), "Documentation file does not exist")
+
+	os.Remove(expectedAdocFile)
 }

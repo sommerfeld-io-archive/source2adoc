@@ -40,6 +40,15 @@ services:
     command: .
     tty: true
 
+  lint-go:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-go
+    image: golangci/golangci-lint:v1.59.1
+    volumes:
+      - ./components/app:/workspaces/source2adoc/components/app
+    working_dir: /workspaces/source2adoc/components/app
+    command: golangci-lint run -v
+    tty: true
+
   lint-dockerfile-app:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
     image: hadolint/hadolint:latest
@@ -57,8 +66,8 @@ services:
     entrypoint: hadolint Dockerfile.docs
 
   app-test:
-    image: golang:1.22.3-alpine3.19
     container_name: ${COMPOSE_PROJECT_NAME}-app-test
+    image: golang:1.22.3-alpine3.19
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -68,29 +77,29 @@ services:
       - /bin/sh
       - -c
       - |
+        rm -rf target
+
         go mod download
         go mod tidy
         go fmt ./...
         go vet ./...
         go test -coverprofile=go-code-coverage.out ./...
-        chown 1000:1000 /workspaces/source2adoc/components/app/go.sum
-    depends_on: &depends_on
-      lint-dockerfile-app:
-        condition: service_completed_successfully
-      lint-filenames:
-        condition: service_completed_successfully
-      lint-folders:
-        condition: service_completed_successfully
-      lint-yaml:
-        condition: service_completed_successfully
+
+        chown 1000:1000 go.sum
+        chown -R 1000:1000 target
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+    user: 1000:1000
     build:
       context: .
       dockerfile: Dockerfile.app
-    command: --help
+    volumes:
+      - .:/workspaces/source2adoc:rw
+    working_dir: /workspaces/source2adoc
+    # command: --help
+    command: --source-dir . --output-dir ./target
     depends_on:
       app-test:
         condition: service_completed_successfully
@@ -103,4 +112,3 @@ services:
       dockerfile: Dockerfile.docs
     ports:
       - 3080:3000
-    depends_on: *depends_on

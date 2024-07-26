@@ -14,7 +14,9 @@
     "components/app/cmd/**",
     "components/app/internal/**",
     "components/app/pkg/**",
+    "components/app/test/**",
     "components/app/testdata/**",
+    "components/app/target/**",
 
     "config",
     "config/dist",

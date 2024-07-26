@@ -1,5 +1,8 @@
 = Development Guide
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
+:github-org: sommerfeld-io
+:project-name: source2adoc
+:url-project: https://github.com/{github-org}/{project-name}
 
 This section outlines the way we develop the source2adoc project, focusing on development, tooling, deployment, and support considerations. It outlines the practices and principles we value.
 
@@ -97,15 +100,15 @@ Each developer is streaming small commits either into a short-lived branch with 
 
 Basically we follow most recommendations from link:https://trunkbaseddevelopment.com[trunkbaseddevelopment.com].
 
-== Branch Protection
-Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that potential issues are caught and resolved early. This ensures that modifications are reviewed before they are integrated into the `main` codebase
+// == Branch Protection
+// Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that potential issues are caught and resolved early. This ensures that modifications are reviewed before they are integrated into the `main` codebase
 
-The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] on GitHub come with these settings (plus the default settings):
+// The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] on GitHub come with these settings (plus the default settings):
 
-* Required approvals = 0
-* Require a pull request before merging
-** Dismiss stale pull request approvals when new commits are pushed
-** Require approval of the most recent reviewable push
+// * Required approvals = 0
+// * Require a pull request before merging
+// ** Dismiss stale pull request approvals when new commits are pushed
+// ** Require approval of the most recent reviewable push
 
 == Continuous Integration
 We integrate code changes from all developers at least once per day. This frequent integration ensures that our software is thoroughly tested and checked with everyone's changes on a daily basis.
@@ -156,11 +159,6 @@ The Docker tag strategy follows Semantic Versioning for our releases.
 == Artifacts are immutable
 We are validating the delivered artifact with the pipeline. It is built once and deployed to all environments. A common anti-pattern is building an artifact for each environment. Each build is a possibility to introduce unintended changes. By promoting a single artifact through the stages we ensure that the deployed artifact is exactly the one that was tested.
 
-== User Stories
-We want requirements to define small focused needs rather than vast vague projects. We use user stories to describe our requirements. We try to finish a user story within a couple of days at most. We need to keep in mind, that we integrate our changes daily, so we must design our user stories accordingly.
-
-If we can't think of user need in terms of a story, we don't understand what our software is meant to achieve yet. If we can't think of an example, that would demonstrate that the need is fullfilled, we don't really understand the problem (domain) yet.
-
 == Application Language and Build Tool
 The application will be developed using link:https://go.dev[Go].
 
@@ -184,6 +182,18 @@ The pipeline and workflow engine of choice is GitHub Actions.
 
 == Development Support
 Development efforts will be supported by GitHub Copilot, with the potential for heavy reliance on this AI-assistant as its usefulness is validated over time.
+
+== User Stories
+We want requirements to define small focused needs rather than vast vague projects. We use user stories to describe our requirements. We try to finish a user story within a couple of days at most. We need to keep in mind, that we integrate our changes daily, so we must design our user stories accordingly.
+
+If we can't think of user need in terms of a story, we don't understand what our software is meant to achieve yet. If we can't think of an example, that would demonstrate that the need is fulfilled, we don't really understand the problem (domain) yet.
+
+== Architecture Decisions
+We use architecture decision records (ADRs) to document the key decisions made during the development of the CLI documentation tool. ADRs help us track the context, considerations, and outcomes of each decision, providing a clear rationale for future reference.
+
+We treat ADRs as working items, updating them as necessary to reflect the current state of the issue. Thats why we manage and track ADRs as GitHub issues. This approach allows us to easily reference and link to ADRs from other parts of the documentation and use the GitHub issue for collaboration and discussion.
+
+See link:{url-project}/issues?q=is%3Aissue+label%3AADR[all issues labeled as ADR] for a list of all ADRs.
 
 == Task and Todo Tracking
 All task and todo tracking will be done through a GitHub project.

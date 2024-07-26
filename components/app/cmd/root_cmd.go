@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -52,27 +51,64 @@ var rootCmd = &cobra.Command{
 	Args: cobra.ExactArgs(0),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for _, file := range sourceCodeFiles {
-			fmt.Println(file)
-		}
+		sourceCodeFiles := findCodeFiles()
+		sourceCodeFiles = readCodeFiles(sourceCodeFiles)
+		sourceCodeFiles = parseFileContent(sourceCodeFiles)
+		writeDocsFiles(sourceCodeFiles)
 	},
 }
 
-func init() {
-	var sourceParam = "source-dir"
-	var sourceParamShort = "s"
-	rootCmd.Flags().StringVarP(&sourceDir, sourceParam, sourceParamShort, "", "Directory containing the source code files")
-	rootCmd.MarkFlagRequired(sourceParam)
+func findCodeFiles() []*codefiles.CodeFile {
+	sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	var outputParam = "output-dir"
-	var outputParamShort = "o"
-	rootCmd.Flags().StringVarP(&outputDir, outputParam, outputParamShort, "", "Directory to write the generated documentation to")
-	rootCmd.MarkFlagRequired(outputParam)
+	return sourceCodeFiles
+}
+
+// readCodeFiles reads the code files from the source directory.
+func readCodeFiles(files []*codefiles.CodeFile) []*codefiles.CodeFile {
+	for _, file := range files {
+		err := file.ReadFileContent()
+		handleError(err)
+	}
+	return files
+}
+
+// parseFileContent parses the content of the code files for comments.
+func parseFileContent(files []*codefiles.CodeFile) []*codefiles.CodeFile {
+	for _, file := range files {
+		err := file.Parse()
+		handleError(err)
+	}
+	return files
+}
+
+// writeDocsFiles writes the documentation files to the output directory.
+func writeDocsFiles(files []*codefiles.CodeFile) {
+	for _, file := range files {
+		err := file.WriteDocumentationFile(outputDir)
+		handleError(err)
+	}
+}
+
+func init() {
+	var params = []struct {
+		name     string
+		short    string
+		variable *string
+		desc     string
+	}{
+		{name: "source-dir", short: "s", variable: &sourceDir, desc: "Directory containing the source code files"},
+		{name: "output-dir", short: "o", variable: &outputDir, desc: "Directory to write the generated documentation to"},
+	}
+
+	for _, param := range params {
+		rootCmd.Flags().StringVarP(param.variable, param.name, param.short, "", param.desc)
+		err := rootCmd.MarkFlagRequired(param.name)
+		handleError(err)
+	}
 
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
