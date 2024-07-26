@@ -16,12 +16,12 @@ type CodeFile struct {
 
 // SupportedCodeFilenames maps supported file extensions to their corresponding languages.
 var SupportedCodeFilenames = map[string]string{
-	".yml":        LanguageYML,
-	".yaml":       LanguageYML,
-	"Dockerfile":  LanguageDockerfile,
-	"Vagrantfile": LanguageVagrantfile,
-	"Makefile":    LanguageMakefile,
-	".sh":         LanguageShellScript,
+	".yml":        LANGUAGE_YML,
+	".yaml":       LANGUAGE_YML,
+	"Dockerfile":  LANGUAGE_DOCKERFILE,
+	"Vagrantfile": LANGUAGE_VAGRANT,
+	"Makefile":    LANGUAGE_MAKE,
+	".sh":         LANGUAGE_BASH,
 }
 
 // New creates a new CodeFile instance.

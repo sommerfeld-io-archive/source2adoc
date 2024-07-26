@@ -1,11 +1,11 @@
 package codefiles
 
 const (
-	LanguageYML         = "yml"
-	LanguageDockerfile  = "Dockerfile"
-	LanguageVagrantfile = "Vagrantfile"
-	LanguageMakefile    = "Makefile"
-	LanguageShellScript = "sh"
+	LANGUAGE_YML        = "yml"
+	LANGUAGE_DOCKERFILE = "Dockerfile"
+	LANGUAGE_VAGRANT    = "Vagrantfile"
+	LANGUAGE_MAKE       = "Makefile"
+	LANGUAGE_BASH       = "sh"
 	LanguageInvalid     = "invalid"
 )
 

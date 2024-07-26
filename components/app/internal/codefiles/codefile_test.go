@@ -35,14 +35,14 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		expected  string
 		supported bool
 	}{
-		{filename: "config.yml", expected: LanguageYML, supported: true},
-		{filename: "config.yaml", expected: LanguageYML, supported: true},
-		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
-		{filename: "Dockerfile.app", expected: LanguageDockerfile, supported: true},
-		{filename: "Dockerfile.docs", expected: LanguageDockerfile, supported: true},
-		{filename: "Vagrantfile.prod", expected: LanguageVagrantfile, supported: true},
-		{filename: "Makefile", expected: LanguageMakefile, supported: true},
-		{filename: "script.sh", expected: LanguageShellScript, supported: true},
+		{filename: "config.yml", expected: LANGUAGE_YML, supported: true},
+		{filename: "config.yaml", expected: LANGUAGE_YML, supported: true},
+		{filename: "Dockerfile", expected: LANGUAGE_DOCKERFILE, supported: true},
+		{filename: "Dockerfile.app", expected: LANGUAGE_DOCKERFILE, supported: true},
+		{filename: "Dockerfile.docs", expected: LANGUAGE_DOCKERFILE, supported: true},
+		{filename: "Vagrantfile.prod", expected: LANGUAGE_VAGRANT, supported: true},
+		{filename: "Makefile", expected: LANGUAGE_MAKE, supported: true},
+		{filename: "script.sh", expected: LANGUAGE_BASH, supported: true},
 		{filename: "script.go", expected: LanguageInvalid, supported: false},
 	}
 
@@ -58,7 +58,7 @@ func TestCodeFile_Path(t *testing.T) {
 	codeFile := &CodeFile{
 		path:      "/path/to",
 		name:      "source.sh",
-		lang:      LanguageShellScript,
+		lang:      LANGUAGE_BASH,
 		supported: true,
 	}
 
@@ -70,7 +70,7 @@ func TestCodeFile_Path(t *testing.T) {
 	actualName := codeFile.Filename()
 	assert.Equal(expectedName, actualName, "Incorrect filename")
 
-	expectedLang := LanguageShellScript
+	expectedLang := LANGUAGE_BASH
 	actualLang := codeFile.Language()
 	assert.Equal(expectedLang, actualLang, "Incorrect path language")
 
@@ -85,7 +85,7 @@ func TestCodeFile_ReadFileContent(t *testing.T) {
 	codeFile := &CodeFile{
 		path:      filepath.Join(TestDataDir, "good"),
 		name:      "small-comment.sh",
-		lang:      LanguageShellScript,
+		lang:      LANGUAGE_BASH,
 		supported: true,
 	}
 
