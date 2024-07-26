@@ -84,7 +84,10 @@ func readCodeFiles(files []*codefiles.CodeFile) []*codefiles.CodeFile {
 
 // parseFileContent parses the content of the code files for comments.
 func parseFileContent(files []*codefiles.CodeFile) []*codefiles.CodeFile {
-	// TODO: Implement parsing the content for comments
+	for _, file := range files {
+		err := file.ParseHeaderDocsSection()
+		helper.HandleError(err)
+	}
 	return files
 }
 

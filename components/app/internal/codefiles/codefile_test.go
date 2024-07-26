@@ -52,7 +52,7 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		assert.Equal(test.supported, supported, "Invalid supported status for: "+test.filename)
 	}
 }
-func TestCodeFile_Path(t *testing.T) {
+func TestCodeFile_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
@@ -79,7 +79,7 @@ func TestCodeFile_Path(t *testing.T) {
 	assert.Equal(expectedSupported, actualSupported, "Incorrect path supported status")
 }
 
-func TestCodeFile_ReadFileContent(t *testing.T) {
+func TestCodeFile_ShouldReadFileContent(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
@@ -95,7 +95,38 @@ func TestCodeFile_ReadFileContent(t *testing.T) {
 	expectedContent := `#!/bin/bash
 ## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 ## ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+## Not part of the header comment
 `
 	actualContent := codeFile.Content()
 	assert.Equal(expectedContent, actualContent, "Incorrect file content")
+}
+
+func TestCodeFile_ShouldParseHeaderDocsSection(t *testing.T) {
+	assert := assert.New(t)
+
+	codeFile := &CodeFile{
+		path:      filepath.Join(TEST_DATA_DIR, "good"),
+		name:      "small-comment.sh",
+		lang:      LANGUAGE_BASH,
+		supported: true,
+		content: `#!/bin/bash
+## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+# ignore me because I do not follow the comment convention. Maybe I am a typo.
+## ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+## Not part of the header comment
+`,
+		headerDocsSection: "",
+	}
+
+	expectedHeaderDocsSection := `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+ut labore et dolore magna aliquyam erat, sed diam voluptua.
+`
+
+	err := codeFile.ParseHeaderDocsSection()
+	assert.Nil(err, "Error parsing header comment")
+
+	actualHeaderDocsSection := codeFile.HeaderDocsSection()
+	assert.Equal(expectedHeaderDocsSection, actualHeaderDocsSection, "Incorrect content from file header comment")
 }

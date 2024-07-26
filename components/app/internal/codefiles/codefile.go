@@ -7,11 +7,12 @@ import (
 
 // CodeFile represents a source code file in the file system.
 type CodeFile struct {
-	path      string
-	name      string
-	lang      string
-	supported bool
-	content   string
+	path              string
+	name              string
+	lang              string
+	supported         bool
+	content           string
+	headerDocsSection string
 }
 
 // SupportedCodeFilenames maps supported file extensions to their corresponding languages.
@@ -69,6 +70,29 @@ func (cf *CodeFile) ReadFileContent() error {
 		return err
 	}
 	cf.content = string(content)
+	return nil
+}
+
+// HeaderDocsSection returns the header comment of the CodeFile.
+func (cf *CodeFile) HeaderDocsSection() string {
+	return cf.headerDocsSection
+}
+
+// ParseHeaderDocsSection finds all relevant comments (marked with `##`) at the beginning of the file
+// and stores them in the CodeFile.
+//
+// See "Rules for the header documentation" in `docs/modules/ROOT/pages/index.adoc`.
+func (cf *CodeFile) ParseHeaderDocsSection() error {
+	lines := strings.Split(cf.content, "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "##") {
+			trimmedLine := strings.TrimPrefix(line, "##")
+			trimmedLine = strings.TrimSpace(trimmedLine)
+			cf.headerDocsSection += trimmedLine + "\n"
+		} else if line == "" {
+			break
+		}
+	}
 	return nil
 }
 
