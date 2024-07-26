@@ -43,7 +43,7 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		{filename: "Vagrantfile.prod", expected: LANGUAGE_VAGRANT, supported: true},
 		{filename: "Makefile", expected: LANGUAGE_MAKE, supported: true},
 		{filename: "script.sh", expected: LANGUAGE_BASH, supported: true},
-		{filename: "script.go", expected: LanguageInvalid, supported: false},
+		{filename: "script.go", expected: LANGUAGE_INVALID, supported: false},
 	}
 
 	for _, test := range tests {

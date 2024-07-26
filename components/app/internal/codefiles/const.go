@@ -6,7 +6,7 @@ const (
 	LANGUAGE_VAGRANT    = "Vagrantfile"
 	LANGUAGE_MAKE       = "Makefile"
 	LANGUAGE_BASH       = "sh"
-	LanguageInvalid     = "invalid"
+	LANGUAGE_INVALID    = "invalid"
 )
 
 // TestDataDir is the path to the test data directory for use in testcases.

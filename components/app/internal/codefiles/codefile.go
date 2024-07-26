@@ -92,5 +92,5 @@ func identifyLanguage(filename string) (string, bool) {
 			return value, true
 		}
 	}
-	return LanguageInvalid, false
+	return LANGUAGE_INVALID, false
 }
