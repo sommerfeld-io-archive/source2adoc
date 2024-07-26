@@ -83,7 +83,7 @@ func TestCodeFile_ShouldReadFileContent(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      filepath.Join(TEST_DATA_DIR, "good"),
+		path:      filepath.Join(TEST_SOURCE_DIR, "good"),
 		name:      "small-comment.sh",
 		lang:      LANGUAGE_BASH,
 		supported: true,
@@ -98,35 +98,35 @@ func TestCodeFile_ShouldReadFileContent(t *testing.T) {
 
 ## Not part of the header comment
 `
-	actualContent := codeFile.Content()
+	actualContent := codeFile.FileContent()
 	assert.Equal(expectedContent, actualContent, "Incorrect file content")
 }
 
-func TestCodeFile_ShouldParseHeaderDocsSection(t *testing.T) {
+func TestCodeFile_ShouldParseDocumentation(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      filepath.Join(TEST_DATA_DIR, "good"),
+		path:      filepath.Join(TEST_SOURCE_DIR, "good"),
 		name:      "small-comment.sh",
 		lang:      LANGUAGE_BASH,
 		supported: true,
-		content: `#!/bin/bash
+		fileContent: `#!/bin/bash
 ## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 # ignore me because I do not follow the comment convention. Maybe I am a typo.
 ## ut labore et dolore magna aliquyam erat, sed diam voluptua.
 
 ## Not part of the header comment
 `,
-		headerDocsSection: "",
+		documentationParts: []DocumentationPart{},
 	}
 
-	expectedHeaderDocsSection := `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+	expectedHeaderDocs := `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 ut labore et dolore magna aliquyam erat, sed diam voluptua.
 `
 
-	err := codeFile.ParseHeaderDocsSection()
-	assert.Nil(err, "Error parsing header comment")
+	err := codeFile.Parse()
+	assert.Nil(err, "Error parsing documentation")
 
-	actualHeaderDocsSection := codeFile.HeaderDocsSection()
-	assert.Equal(expectedHeaderDocsSection, actualHeaderDocsSection, "Incorrect content from file header comment")
+	docs := codeFile.parsedDocumentation()
+	assert.Equal(expectedHeaderDocs, docs, "Incorrect parsed documentation")
 }

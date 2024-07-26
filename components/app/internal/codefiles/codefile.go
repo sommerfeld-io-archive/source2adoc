@@ -5,16 +5,6 @@ import (
 	"strings"
 )
 
-// CodeFile represents a source code file in the file system.
-type CodeFile struct {
-	path              string
-	name              string
-	lang              string
-	supported         bool
-	content           string
-	headerDocsSection string
-}
-
 // SupportedCodeFilenames maps supported file extensions to their corresponding languages.
 var SupportedCodeFilenames = map[string]string{
 	".yml":        LANGUAGE_YML,
@@ -23,6 +13,16 @@ var SupportedCodeFilenames = map[string]string{
 	"Vagrantfile": LANGUAGE_VAGRANT,
 	"Makefile":    LANGUAGE_MAKE,
 	".sh":         LANGUAGE_BASH,
+}
+
+// CodeFile represents a source code file in the file system.
+type CodeFile struct {
+	path               string
+	name               string
+	lang               string
+	supported          bool
+	fileContent        string
+	documentationParts []DocumentationPart
 }
 
 // New creates a new CodeFile instance.
@@ -58,9 +58,9 @@ func (cf *CodeFile) IsSupported() bool {
 	return cf.supported
 }
 
-// Content returns the content of the CodeFile.
-func (cf *CodeFile) Content() string {
-	return cf.content
+// FileContent returns the content of the CodeFile.
+func (cf *CodeFile) FileContent() string {
+	return cf.fileContent
 }
 
 // ReadFileContent reads the content of the CodeFile from the file system.
@@ -69,30 +69,50 @@ func (cf *CodeFile) ReadFileContent() error {
 	if err != nil {
 		return err
 	}
-	cf.content = string(content)
+	cf.fileContent = string(content)
 	return nil
 }
 
-// HeaderDocsSection returns the header comment of the CodeFile.
-func (cf *CodeFile) HeaderDocsSection() string {
-	return cf.headerDocsSection
+// Parse parses the CodeFile and extracts the documentation parts.
+func (cf *CodeFile) Parse() error {
+	// TODO err := cf.parseMetadata()
+	err := cf.parseHeaderDocs()
+	return err
 }
 
-// ParseHeaderDocsSection finds all relevant comments (marked with `##`) at the beginning of the file
+// parsedDocumentation returns the parsed documentation of the CodeFile. The parsed documentation
+// is ready to be written to a file.
+func (cf *CodeFile) parsedDocumentation() string {
+	parsedDocs := ""
+	for _, part := range cf.documentationParts {
+		parsedDocs += part.sectionContent
+	}
+	return parsedDocs
+}
+
+// parseHeaderDocs finds all relevant comments (marked with `##`) at the beginning of the file
 // and stores them in the CodeFile.
 //
 // See "Rules for the header documentation" in `docs/modules/ROOT/pages/index.adoc`.
-func (cf *CodeFile) ParseHeaderDocsSection() error {
-	lines := strings.Split(cf.content, "\n")
+func (cf *CodeFile) parseHeaderDocs() error {
+	headerDocs := ""
+	lines := strings.Split(cf.fileContent, "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, "##") {
 			trimmedLine := strings.TrimPrefix(line, "##")
 			trimmedLine = strings.TrimSpace(trimmedLine)
-			cf.headerDocsSection += trimmedLine + "\n"
+			headerDocs += trimmedLine + "\n"
 		} else if line == "" {
 			break
 		}
 	}
+
+	part := DocumentationPart{
+		sectionType:    DOCUMENTATION_PART_HEADER,
+		sectionContent: headerDocs,
+	}
+	cf.documentationParts = append(cf.documentationParts, part)
+
 	return nil
 }
 

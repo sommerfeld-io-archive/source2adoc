@@ -1,8 +1,8 @@
-package helper
+package cmd
 
 import "log"
 
-func HandleError(err error) {
+func handleError(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}

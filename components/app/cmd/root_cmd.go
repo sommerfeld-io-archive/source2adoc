@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/sommerfeld-io/source2adoc/internal/codefiles"
-	"github.com/sommerfeld-io/source2adoc/internal/helper"
 	"github.com/spf13/cobra"
 )
 
@@ -77,7 +76,7 @@ func findCodeFiles() []*codefiles.CodeFile {
 func readCodeFiles(files []*codefiles.CodeFile) []*codefiles.CodeFile {
 	for _, file := range files {
 		err := file.ReadFileContent()
-		helper.HandleError(err)
+		handleError(err)
 	}
 	return files
 }
@@ -85,8 +84,8 @@ func readCodeFiles(files []*codefiles.CodeFile) []*codefiles.CodeFile {
 // parseFileContent parses the content of the code files for comments.
 func parseFileContent(files []*codefiles.CodeFile) []*codefiles.CodeFile {
 	for _, file := range files {
-		err := file.ParseHeaderDocsSection()
-		helper.HandleError(err)
+		err := file.Parse()
+		handleError(err)
 	}
 	return files
 }
@@ -110,7 +109,7 @@ func init() {
 	for _, param := range params {
 		rootCmd.Flags().StringVarP(param.variable, param.name, param.short, "", param.desc)
 		err := rootCmd.MarkFlagRequired(param.name)
-		helper.HandleError(err)
+		handleError(err)
 	}
 
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
