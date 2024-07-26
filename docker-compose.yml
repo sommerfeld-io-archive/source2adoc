@@ -77,6 +77,9 @@ services:
       - /bin/sh
       - -c
       - |
+        rm -rf target
+        mkdir target
+
         go mod download
         go mod tidy
         go fmt ./...
