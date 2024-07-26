@@ -1,9 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"github.com/sommerfeld-io/source2adoc/cmd"
+	"github.com/sommerfeld-io/source2adoc/internal/helper"
 )
 
 // func init() {
@@ -11,8 +10,5 @@ import (
 
 func main() {
 	err := cmd.Execute()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	helper.HandleError(err)
 }

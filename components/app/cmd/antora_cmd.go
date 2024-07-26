@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
+	"github.com/sommerfeld-io/source2adoc/internal/helper"
 	"github.com/spf13/cobra"
 )
 
@@ -49,9 +49,7 @@ func init() {
 	for _, param := range params {
 		antoraCmd.Flags().StringVarP(param.variable, param.name, param.short, "", param.desc)
 		err := antoraCmd.MarkFlagRequired(param.name)
-		if err != nil {
-			log.Fatal(err)
-		}
+		helper.HandleError(err)
 	}
 
 	RegisterSubCommand(antoraCmd)

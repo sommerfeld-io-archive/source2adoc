@@ -83,17 +83,6 @@ services:
         go vet ./...
         go test -coverprofile=go-code-coverage.out ./...
         chown 1000:1000 /workspaces/source2adoc/components/app/go.sum
-    depends_on: &depends_on
-      lint-dockerfile-app:
-        condition: service_completed_successfully
-      lint-filenames:
-        condition: service_completed_successfully
-      lint-folders:
-        condition: service_completed_successfully
-      lint-yaml:
-        condition: service_completed_successfully
-      lint-go:
-        condition: service_completed_successfully
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
@@ -114,4 +103,3 @@ services:
       dockerfile: Dockerfile.docs
     ports:
       - 3080:3000
-    depends_on: *depends_on

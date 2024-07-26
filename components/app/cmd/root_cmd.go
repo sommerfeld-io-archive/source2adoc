@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/sommerfeld-io/source2adoc/internal/codefiles"
+	"github.com/sommerfeld-io/source2adoc/internal/helper"
 	"github.com/spf13/cobra"
 )
 
@@ -75,7 +76,8 @@ func findCodeFiles() []*codefiles.CodeFile {
 // readCodeFiles reads the code files from the source directory.
 func readCodeFiles(files []*codefiles.CodeFile) []*codefiles.CodeFile {
 	for _, file := range files {
-		file.ReadFileContent()
+		err := file.ReadFileContent()
+		helper.HandleError(err)
 	}
 	return files
 }
@@ -105,9 +107,7 @@ func init() {
 	for _, param := range params {
 		rootCmd.Flags().StringVarP(param.variable, param.name, param.short, "", param.desc)
 		err := rootCmd.MarkFlagRequired(param.name)
-		if err != nil {
-			log.Fatal(err)
-		}
+		helper.HandleError(err)
 	}
 
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
