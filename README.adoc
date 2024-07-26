@@ -68,11 +68,8 @@ To generate documentation into an Antora module, execute the following commands:
 [source, bash]
 ....
 mkdir -p docs/modules/source2adoc/pages
-
-docker run --volume "$(pwd):$(pwd)" --workdir $(pwd) sommerfeldio/source2adoc:latest --source-dir ./src --output-dir ./docs/modules/source2adoc/pages
-
-docker run --volume "$(pwd):$(pwd)" --workdir $(pwd) sommerfeldio/source2adoc:latest antora --module docs/modules/source2adoc
-
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest --source-dir ./src --output-dir ./docs/modules/source2adoc/pages
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest antora --module docs/modules/source2adoc
 echo "  - modules/source2adoc/nav.adoc" >> docs/antora.yml
 ....
 
