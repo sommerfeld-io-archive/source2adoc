@@ -88,9 +88,14 @@ func (cf *CodeFile) FileContent() string {
 
 // ReadFileContent reads the content of the CodeFile from the file system.
 func (cf *CodeFile) ReadFileContent() error {
-	content, err := os.ReadFile(cf.path + "/" + cf.name)
+	fullPath := cf.path + "/" + cf.name
+	if cf.path == "" {
+		fullPath = cf.name
+	}
+
+	content, err := os.ReadFile(fullPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read code file: %v", err)
 	}
 	cf.fileContent = string(content)
 	return nil
@@ -100,7 +105,10 @@ func (cf *CodeFile) ReadFileContent() error {
 func (cf *CodeFile) Parse() error {
 	// TODO err := cf.parseMetadata()
 	err := cf.parseHeaderDocs()
-	return err
+	if err != nil {
+		return fmt.Errorf("failed to parse code file: %v", err)
+	}
+	return nil
 }
 
 // parsedDocumentation returns the parsed documentation of the CodeFile. The parsed documentation
@@ -154,18 +162,18 @@ func (cf *CodeFile) WriteDocumentationFile(outputDir string) error {
 
 	err := os.MkdirAll(filepath.Dir(adocFile), 0755)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create directory: %v", err)
 	}
 
 	file, err := os.OpenFile(adocFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write file: %v", err)
 	}
 	defer file.Close()
 
 	_, err = file.WriteString(parsedDocs)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write content to file: %v", err)
 	}
 
 	fmt.Println(codeFile + "    ==>    " + adocFile)

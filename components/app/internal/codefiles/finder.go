@@ -24,7 +24,7 @@ func (finder *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
 
 	err := filepath.Walk(finder.srcDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to walk the filesystem: %v", err)
 		}
 
 		code := NewCodeFile(path)
