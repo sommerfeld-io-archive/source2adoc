@@ -78,7 +78,6 @@ services:
       - -c
       - |
         rm -rf target
-        mkdir target
 
         go mod download
         go mod tidy

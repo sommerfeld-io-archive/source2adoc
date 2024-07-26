@@ -130,3 +130,13 @@ ut labore et dolore magna aliquyam erat, sed diam voluptua.
 	docs := codeFile.parsedDocumentation()
 	assert.Equal(expectedHeaderDocs, docs, "Incorrect parsed documentation")
 }
+func TestCodeFile_DocumentationFileName(t *testing.T) {
+	codeFile := &CodeFile{
+		path: filepath.Join(TEST_SOURCE_DIR, "good"),
+		name: "small-comment.sh",
+	}
+
+	expectedFileName := "small-comment-sh.adoc"
+	actualFileName := codeFile.documentationFileName()
+	assert.Equal(t, expectedFileName, actualFileName, "Incorrect documentation file name")
+}

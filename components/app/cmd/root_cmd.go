@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -56,10 +55,6 @@ var rootCmd = &cobra.Command{
 		sourceCodeFiles = readCodeFiles(sourceCodeFiles)
 		sourceCodeFiles = parseFileContent(sourceCodeFiles)
 		writeDocsFiles(sourceCodeFiles)
-
-		for _, file := range sourceCodeFiles {
-			fmt.Println(file)
-		}
 	},
 }
 
@@ -92,7 +87,10 @@ func parseFileContent(files []*codefiles.CodeFile) []*codefiles.CodeFile {
 
 // writeDocsFiles writes the documentation files to the output directory.
 func writeDocsFiles(files []*codefiles.CodeFile) {
-	// TODO Implement writing the documentation files
+	for _, file := range files {
+		err := file.WriteDocumentationFile(outputDir)
+		handleError(err)
+	}
 }
 
 func init() {

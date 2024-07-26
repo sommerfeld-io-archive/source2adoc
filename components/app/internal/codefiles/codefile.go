@@ -1,7 +1,9 @@
 package codefiles
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -113,6 +115,39 @@ func (cf *CodeFile) parseHeaderDocs() error {
 	}
 	cf.documentationParts = append(cf.documentationParts, part)
 
+	return nil
+}
+
+// documentationFileName returns the name of the documentation file for the CodeFile in kebab-case.
+func (cf *CodeFile) documentationFileName() string {
+	name := strings.ReplaceAll(cf.Filename(), ".", "-")
+	name = strings.ToLower(name)
+	return name + ".adoc"
+}
+
+// WriteDocumentationFile writes the parsed documentation of the CodeFile to a file.
+func (cf *CodeFile) WriteDocumentationFile(outputDir string) error {
+	parsedDocs := cf.parsedDocumentation()
+	codeFile := cf.Path() + "/" + cf.Filename()
+	adocFile := outputDir + "/" + cf.Path() + "/" + cf.documentationFileName()
+
+	err := os.MkdirAll(filepath.Dir(adocFile), 0755)
+	if err != nil {
+		return err
+	}
+
+	file, err := os.OpenFile(adocFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(parsedDocs)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(codeFile + "    ==>    " + adocFile)
 	return nil
 }
 
