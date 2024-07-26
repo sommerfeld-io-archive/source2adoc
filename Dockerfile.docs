@@ -42,6 +42,14 @@ RUN antora playbooks/public.yml --stacktrace --clean --fetch
 ## The webserver exposes his status information through http://localhost:3000/server-status.
 FROM httpd:2.4.59-alpine3.19 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
+LABEL org.opencontainers.image.title=source2adoc-docs \
+      org.opencontainers.image.description="Streamline the process of generating documentation from inline comments within source code files." \
+      org.opencontainers.image.authors="source2adoc open source project" \
+      org.opencontainers.image.url="https://source2adoc.sommerfeld.io" \
+      org.opencontainers.image.documentation="https://source2adoc.sommerfeld.io" \
+      org.opencontainers.image.source="https://github.com/sommerfeld-io/source2adoc" \
+      org.opencontainers.image.vendor="source2adoc open source project" \
+      org.opencontainers.image.licenses="MIT License"
 
 ARG USER=www-data
 RUN chown -hR "$USER:$USER" /usr/local/apache2 \
