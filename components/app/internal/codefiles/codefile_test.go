@@ -83,7 +83,7 @@ func TestCodeFile_ReadFileContent(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      filepath.Join(TestDataDir, "good"),
+		path:      filepath.Join(TEST_DATA_DIR, "good"),
 		name:      "small-comment.sh",
 		lang:      LANGUAGE_BASH,
 		supported: true,

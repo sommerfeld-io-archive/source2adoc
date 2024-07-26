@@ -9,5 +9,5 @@ const (
 	LANGUAGE_INVALID    = "invalid"
 )
 
-// TestDataDir is the path to the test data directory for use in testcases.
-const TestDataDir = "/workspaces/source2adoc/components/app/testdata"
+// TEST_DATA_DIR is the path to the test data directory for use in testcases.
+const TEST_DATA_DIR = "/workspaces/source2adoc/components/app/testdata"
