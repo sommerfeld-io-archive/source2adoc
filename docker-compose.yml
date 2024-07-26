@@ -66,8 +66,8 @@ services:
     entrypoint: hadolint Dockerfile.docs
 
   app-test:
-    image: golang:1.22.3-alpine3.19
     container_name: ${COMPOSE_PROJECT_NAME}-app-test
+    image: golang:1.22.3-alpine3.19
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -84,15 +84,22 @@ services:
         go fmt ./...
         go vet ./...
         go test -coverprofile=go-code-coverage.out ./...
-        chown 1000:1000 /workspaces/source2adoc/components/app/go.sum
+
+        chown 1000:1000 go.sum
+        chown -R 1000:1000 target
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+    user: 1000:1000
     build:
       context: .
       dockerfile: Dockerfile.app
-    command: --help
+    volumes:
+      - .:/workspaces/source2adoc:rw
+    working_dir: /workspaces/source2adoc
+    # command: --help
+    command: --source-dir . --output-dir ./target
     depends_on:
       app-test:
         condition: service_completed_successfully
