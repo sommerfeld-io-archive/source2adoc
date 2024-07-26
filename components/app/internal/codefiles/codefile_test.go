@@ -1,6 +1,7 @@
 package codefiles
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -130,7 +131,7 @@ ut labore et dolore magna aliquyam erat, sed diam voluptua.
 	docs := codeFile.parsedDocumentation()
 	assert.Equal(expectedHeaderDocs, docs, "Incorrect parsed documentation")
 }
-func TestCodeFile_DocumentationFileName(t *testing.T) {
+func TestCodeFile_ShouldTranslateDocumentationFileName(t *testing.T) {
 	codeFile := &CodeFile{
 		path: filepath.Join(TEST_SOURCE_DIR, "good"),
 		name: "small-comment.sh",
@@ -139,4 +140,31 @@ func TestCodeFile_DocumentationFileName(t *testing.T) {
 	expectedFileName := "small-comment-sh.adoc"
 	actualFileName := codeFile.documentationFileName()
 	assert.Equal(t, expectedFileName, actualFileName, "Incorrect documentation file name")
+}
+
+func TestCodeFile_ShouldWriteDocumentationFile(t *testing.T) {
+	assert := assert.New(t)
+
+	codeFile := &CodeFile{
+		path:      "some/path",
+		name:      "unittest.sh",
+		lang:      LANGUAGE_BASH,
+		supported: true,
+		documentationParts: []DocumentationPart{
+			{
+				sectionType:    DOCUMENTATION_PART_HEADER,
+				sectionContent: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr",
+			},
+		},
+	}
+
+	expectedAdocFile := TEST_OUTPUT_DIR + "/" + codeFile.Path() + "/unittest-sh.adoc"
+
+	err := codeFile.WriteDocumentationFile(TEST_OUTPUT_DIR)
+	assert.Nil(err, "Error writing documentation file")
+
+	_, err = os.Stat(expectedAdocFile)
+	assert.False(os.IsNotExist(err), "Documentation file does not exist")
+
+	os.Remove(expectedAdocFile)
 }
