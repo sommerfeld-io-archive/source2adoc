@@ -96,9 +96,13 @@ jobs:
           go-version-file: components/app/go.mod
       - name: Scan licenses of Go dependencies
         run: |
-          go install github.com/google/go-licenses@latest
-          go-licenses check --include_tests github.com/sommerfeld-io/source2adoc
-          go-licenses report --include_tests github.com/sommerfeld-io/source2adoc
+          (
+            cd components/app || exit
+            
+            go install github.com/google/go-licenses@latest
+            go-licenses check --include_tests github.com/sommerfeld-io/source2adoc
+            go-licenses report --include_tests github.com/sommerfeld-io/source2adoc
+          )
         shell: bash
 
   shellcheck:
