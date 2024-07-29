@@ -85,6 +85,22 @@ jobs:
         run: docker compose up lint-go --exit-code-from lint-go
         shell: bash
 
+  go-licenses:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: components/app/go.mod
+      - name: Scan licenses of Go dependencies
+        run: |
+          go install github.com/google/go-licenses@latest
+          go-licenses check --include_tests github.com/sommerfeld-io/source2adoc
+          go-licenses report --include_tests github.com/sommerfeld-io/source2adoc
+        shell: bash
+
   shellcheck:
     runs-on: ubuntu-latest
     steps:
@@ -149,6 +165,7 @@ jobs:
         run: |
           cp docs/modules/ROOT/pages/index.adoc README.adoc
           cp docs/modules/ROOT/pages/license.adoc LICENSE.adoc
+          cp docs/modules/ROOT/pages/license.adoc components/app/LICENSE.adoc
           cp docs/modules/ROOT/pages/contribute.adoc CONTRIBUTING.adoc
           cp docs/modules/ROOT/pages/security.adoc SECURITY.adoc
         shell: bash
@@ -202,6 +219,7 @@ jobs:
     needs: [
       'docs',
       'lint-go',
+      'go-licenses',
     ]
     permissions:
       contents: read
