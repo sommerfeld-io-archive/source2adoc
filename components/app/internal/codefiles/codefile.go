@@ -9,12 +9,12 @@ import (
 
 // SupportedCodeFilenames maps supported file extensions to their corresponding languages.
 var SupportedCodeFilenames = map[string]string{
-	".yml":        LANGUAGE_YML,
-	".yaml":       LANGUAGE_YML,
-	"Dockerfile":  LANGUAGE_DOCKERFILE,
-	"Vagrantfile": LANGUAGE_VAGRANT,
-	"Makefile":    LANGUAGE_MAKE,
-	".sh":         LANGUAGE_BASH,
+	".yml":        LanguageYml,
+	".yaml":       LanguageYml,
+	"Dockerfile":  LanguageDockerfile,
+	"Vagrantfile": LanguageVagrant,
+	"Makefile":    LanguageMake,
+	".sh":         LanguageBash,
 }
 
 // CodeFile represents a source code file in the file system.
@@ -58,7 +58,7 @@ func identifyLanguage(filename string) (string, bool) {
 			return value, true
 		}
 	}
-	return LANGUAGE_INVALID, false
+	return LanguageNotSupported, false
 }
 
 // Path returns the path of the CodeFile.
@@ -135,7 +135,7 @@ func (cf *CodeFile) parseMetadata() {
 	asciidoc += "\n"
 
 	part := DocumentationPart{
-		sectionType:    DOCUMENTATION_PART_METADATA,
+		sectionType:    DocumentationPartMetadata,
 		sectionContent: asciidoc,
 	}
 	cf.documentationParts = append(cf.documentationParts, part)
@@ -159,7 +159,7 @@ func (cf *CodeFile) parseHeaderDocs() error {
 	}
 
 	part := DocumentationPart{
-		sectionType:    DOCUMENTATION_PART_HEADER,
+		sectionType:    DocumentationPartHeader,
 		sectionContent: headerDocs,
 	}
 	cf.documentationParts = append(cf.documentationParts, part)

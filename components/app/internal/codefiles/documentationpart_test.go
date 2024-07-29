@@ -10,7 +10,7 @@ func TestDocumentationPart_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	assert := assert.New(t)
 
 	part := &DocumentationPart{
-		sectionType:    DOCUMENTATION_PART_HEADER,
+		sectionType:    DocumentationPartHeader,
 		sectionContent: "Lorem ipsum dolor sit amet",
 	}
 
@@ -18,7 +18,7 @@ func TestDocumentationPart_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	actualContent := part.SectionContent()
 	assert.Equal(expectedContent, actualContent, "Incorrect section content")
 
-	expectedType := DOCUMENTATION_PART_HEADER
+	expectedType := DocumentationPartHeader
 	actualType := part.SectionType()
 	assert.Equal(expectedType, actualType, "Incorrect section type")
 }

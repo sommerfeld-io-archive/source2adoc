@@ -87,6 +87,9 @@ Similarly, a Deprecation section should start with "DEPRECATED: " followed by a 
 
 We use link:@commitlint/config-conventional[commitlint] to lint our commit messages. This ensures that all commit messages follow a consistent format and adhere to the guidelines outlined above.
 
+== Go Code Style
+The Go code style guide we follow is based on the link:https://github.com/google/styleguide/blob/gh-pages/go/index.md[Go Style Guide from Google]. The guide provides a comprehensive set of rules and recommendations for writing clean, idiomatic Go code. We adhere to these guidelines to ensure that our code is consistent, readable, and maintainable.
+
 == Trunk-Based Development
 We follow a trunk-based development approach, which means that we primarily focus our development efforts on the `main` branch of our repository. This approach encourages frequent and continuous integration of code changes into the `main` branch, allowing us to avoid long-lived feature branches and promote a fast-paced development cycle. We still rely on branching and Pull Requests, but our branches do not live for longer than one day (more on that in the coming sections).
 
