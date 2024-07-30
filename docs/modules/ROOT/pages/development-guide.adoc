@@ -6,17 +6,20 @@ Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 This section outlines the way we develop the source2adoc project, focusing on development, tooling, deployment, and support considerations. It outlines the practices and principles we value.
 
-== Everything as Code
+== Development Principles
+We follow a set of development principles that guide our work on the source2adoc project. These principles are designed to ensure that our development process is efficient, effective, and aligned with best practices.
+
+=== Everything as Code
 We embrace treating as much as possible as code, incorporating best practices from software development in every aspect of our work. We prioritize utilizing technologies and tools that allow us to leverage version control and adhere to established development practices like branching and code reviews. This applies to source code, infrastructure code, utility scripts and basically everything that can be depicted as some sort of code.
 
 When it comes to configuration management, we opt for approaches that align with software development principles. If there are multiple ways to apply a configuration, such as through a web UI or an API, we prioritize the API method. This preference is due to its reproducibility, (hopefully) idempotence and potential for automation, ensuring consistency and facilitating efficient management of configurations.
 
 By treating various aspects of our work as code, we can leverage the benefits of version control, automation, and reproducibility.
 
-== Test Driven Development
+=== Test Driven Development
 We follow Test-Driven Development (TDD) principles, using TDD to design our systems.
 
-== Version Control
+=== Version Control
 We make all changes to code, test, infrastructure, configuration, and ultimately production via version control.
 
 Version control extends beyond just managing code repositories like Git. It encompasses a broader scope that includes controlling the versions of tools and third-party software utilized within our environments. By actively managing these dependencies, we ensure that our software remains stable, consistent, and immune to uncontrolled changes originating from external sources.
@@ -25,7 +28,51 @@ We employ version control to manage and track changes made to our production sys
 
 By extending version control to encompass the management of tools, third-party software and production environment, we maintain a firm grip on the external factors that can impact our software development and our runtime environments. This approach allows us to minimize the risk of uncontrolled changes.
 
-== Commit Messages
+=== Trunk-Based Development
+We follow a trunk-based development approach, which means that we primarily focus our development efforts on the `main` branch of our repository. This approach encourages frequent and continuous integration of code changes into the `main` branch, allowing us to avoid long-lived feature branches and promote a fast-paced development cycle. We still rely on branching and Pull Requests, but our branches do not live for longer than one day (more on that in the coming sections).
+
+The `main` branch represents the releasable state of the software. It serves as the mainline branch from which stable releases are made.
+
+Any branch other than `main` is considered a short-lived branch. These branches are used for feature development, bug fixing, and any other updates. There are no specific naming conventions for these branches. These branches do not live for longer than one day.
+
+Git tags are always created from the `main` branch, ensuring that they represent stable and release-worthy versions of the software. The creation of tags is done exclusively through our deployment pipeline without manual interaction, ensuring consistent and reproducible release processes.
+
+Each developer is streaming small commits either into a short-lived branch with a pre-integration step of running the build first (which must pass) and integrates into the `main` branch through a Pull-Request.
+
+Basically we follow most recommendations from link:https://trunkbaseddevelopment.com[trunkbaseddevelopment.com].
+
+// == Branch Protection
+// Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that potential issues are caught and resolved early. This ensures that modifications are reviewed before they are integrated into the `main` codebase
+
+// The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] on GitHub come with these settings (plus the default settings):
+
+// * Required approvals = 0
+// * Require a pull request before merging
+// ** Dismiss stale pull request approvals when new commits are pushed
+// ** Require approval of the most recent reviewable push
+
+=== Continuous Integration
+We integrate code changes from all developers at least once per day. This frequent integration ensures that our software is thoroughly tested and checked with everyone's changes on a daily basis.
+
+We work with short lived (feature) branches. But we won't hide work on separate branches for longer than a working day before integrating them together.
+
+We don't merge the `main` branch into our feature branches to make them live longer! This is not a way to integrate everyone's changes into a single source of truth and prevents us from determining the releasability of our software.
+
+We grow our code incrementally, making frequent small changes to our code - leaving our code in a working state after each small change.
+
+We get feedback on the quality of our work after every small change through the use of automated tests in pipelines.
+
+=== Automated tests determine the releasability
+We automate almost everything in our pipeline, and have enough automated testing to in place to validate and release our changes without dependence on manual regression testing, or approval QA and approval processes.
+
+Manual tests are not forbidden. But since they only make us feel better and more save instead of providing a real judgement on the releasability of our software, the make-it-or-break-it desicion always comes from our pipeline.
+
+When we identify manual tests that are performed repeatedly, we actively work on transforming them into automated tests and integrate them into our pipelines.
+
+=== Keep the software always in a releasable state
+While we may not release our software daily, our goal is to have the capability to release changes every day if required. That means we aim to ship a release-candidate at least once per day. To achieve this goal we have to keep our software in a releasable state all the time!
+
+=== Commit Messages
 We use link:https://github.com/semantic-release/semantic-release[semantic-release] to create Git tags and GitHub releases.It uses the latest Git tag to determine the current version of your project. When you run semantic-release, it analyzes your commit messages since the last release to determine the next version number.
 
 Each commit message consists of a header, a body, and a footer (each separated by a blank line). This specification is inspired by the AngularJS commit message format. The `header` is mandatory. The `body` and `footer` are optional.
@@ -87,61 +134,7 @@ Similarly, a Deprecation section should start with "DEPRECATED: " followed by a 
 
 We use link:@commitlint/config-conventional[commitlint] to lint our commit messages. This ensures that all commit messages follow a consistent format and adhere to the guidelines outlined above.
 
-== Go Code Style
-The Go code style guide we follow is based on the link:https://github.com/google/styleguide/blob/gh-pages/go/index.md[Go Style Guide from Google]. The guide provides a comprehensive set of rules and recommendations for writing clean, idiomatic Go code. We adhere to these guidelines to ensure that our code is consistent, readable, and maintainable.
-
-== Trunk-Based Development
-We follow a trunk-based development approach, which means that we primarily focus our development efforts on the `main` branch of our repository. This approach encourages frequent and continuous integration of code changes into the `main` branch, allowing us to avoid long-lived feature branches and promote a fast-paced development cycle. We still rely on branching and Pull Requests, but our branches do not live for longer than one day (more on that in the coming sections).
-
-The `main` branch represents the releasable state of the software. It serves as the mainline branch from which stable releases are made.
-
-Any branch other than `main` is considered a short-lived branch. These branches are used for feature development, bug fixing, and any other updates. There are no specific naming conventions for these branches. These branches do not live for longer than one day.
-
-Git tags are always created from the `main` branch, ensuring that they represent stable and release-worthy versions of the software. The creation of tags is done exclusively through our deployment pipeline without manual interaction, ensuring consistent and reproducible release processes.
-
-Each developer is streaming small commits either into a short-lived branch with a pre-integration step of running the build first (which must pass) and integrates into the `main` branch through a Pull-Request.
-
-Basically we follow most recommendations from link:https://trunkbaseddevelopment.com[trunkbaseddevelopment.com].
-
-// == Branch Protection
-// Our `main` branch is protected, meaning that no direct pushes to this branch are allowed. All changes to the `main` branch must be made through Pull Requests. The purpose of this is to allow an AI assistant to review the changes before they are merged, ensuring that potential issues are caught and resolved early. This ensures that modifications are reviewed before they are integrated into the `main` codebase
-
-// The link:https://github.com/sommerfeld-io/source2adoc/settings/rules[Rulesets] on GitHub come with these settings (plus the default settings):
-
-// * Required approvals = 0
-// * Require a pull request before merging
-// ** Dismiss stale pull request approvals when new commits are pushed
-// ** Require approval of the most recent reviewable push
-
-== Continuous Integration
-We integrate code changes from all developers at least once per day. This frequent integration ensures that our software is thoroughly tested and checked with everyone's changes on a daily basis.
-
-We work with short lived (feature) branches. But we won't hide work on separate branches for longer than a working day before integrating them together.
-
-We don't merge the `main` branch into our feature branches to make them live longer! This is not a way to integrate everyone's changes into a single source of truth and prevents us from determining the releasability of our software.
-
-We grow our code incrementally, making frequent small changes to our code - leaving our code in a working state after each small change.
-
-We get feedback on the quality of our work after every small change through the use of automated tests in pipelines.
-
-== Automated tests determine the releasability
-We automate almost everything in our pipeline, and have enough automated testing to in place to validate and release our changes without dependence on manual regression testing, or approval QA and approval processes.
-
-Manual tests are not forbidden. But since they only make us feel better and more save instead of providing a real judgement on the releasability of our software, the make-it-or-break-it desicion always comes from our pipeline.
-
-When we identify manual tests that are performed repeatedly, we actively work on transforming them into automated tests and integrate them into our pipelines.
-
-== Keep the software always in a releasable state
-While we may not release our software daily, our goal is to have the capability to release changes every day if required. That means we aim to ship a release-candidate at least once per day. To achieve this goal we have to keep our software in a releaseable state all the time!
-
-== Releases and Deployments always are done through a pipeline
-We deploy our changes into production, or any test environment, "at the touch of a button" at most. The goal is to trigger everything from a push to the `main` branch (either directly or through a Pull Request).
-
-This means that all deployments to any test environment, whether it's a software version to some test environment or to production or a Docker image to DockerHub or any other kind of deployment, are carried out automatically via our deployment pipeline.
-
-This pipeline includes all steps and tests that are sufficient to determine the releasability of our software. When a change has completed its transit through the pipeline, there is no more work to do for the software to be released into production other than (at most) triggering the release itself. Deployments are never done manually!
-
-== Semantic Versioning for our Releases
+=== Semantic Versioning for our Releases
 At our organization, we adhere to link:https://semver.org[Semantic Versioning (SemVer)] principles when releasing artifacts. This means that we follow a structured versioning format, consisting of major, minor, and patch numbers, to indicate changes and updates in our software. Unstable versions are marked as Alpha or Beta version.
 
 Key definitions of Semantic Versioning:
@@ -156,47 +149,70 @@ Key definitions of Semantic Versioning:
 
 Our Git tags always include a leading "v" before the version number.
 
-== Docker Tag Strategy
+=== Releases and Deployments always are done through a pipeline
+This means that all deployments to any test or production environment, whether it's a software version to some test environment or to production or a Docker image to DockerHub or any other kind of deployment, are carried out automatically via our deployment pipeline.
+
+We deploy our changes into production based on the commit messages. We automate the deployment process as much as possible, so (according to the commit message) we create tags based on the commit message and trigger the deployment pipeline. Commit messages with the type `fix` or `feat` will trigger a new bugfix or minor release, respectively. A commit message with the type `BREAKING CHANGE` will trigger a major release. Releases are always based on the `main` branch.
+
+=== Docker Tag Strategy
 The Docker tag strategy follows Semantic Versioning for our releases.
 
-== Artifacts are immutable
+=== Artifacts are immutable
 We are validating the delivered artifact with the pipeline. It is built once and deployed to all environments. A common anti-pattern is building an artifact for each environment. Each build is a possibility to introduce unintended changes. By promoting a single artifact through the stages we ensure that the deployed artifact is exactly the one that was tested.
 
-== Application Language and Build Tool
+== Ecosystem
+Our development ecosystem consists of a set of tools, technologies, and practices that support our development process. This ecosystem is designed to provide a consistent, efficient, and effective environment for developing, testing, and deploying our software.
+
+=== Application Language and Build Tool
 The application will be developed using link:https://go.dev[Go].
 
-== Packaging and Distribution
+=== Packaging and Distribution
 The application will be packaged and published solely as a Docker image. No other package format will be supported.
 
-== Development Environment
-Development will primarily occur on Ubuntu workstations.
+=== Development Environment
+Development primarily occurs on Ubuntu workstations. The IDE of choice for development is Visual Studio Code (VSCode). VSCode is preferred due to its support for DevContainers (an essential requirement) and GitHub Copilot.
 
-== Integrated Development Environment (IDE)
-The IDE of choice for development is Visual Studio Code (VSCode). VSCode is preferred due to its support for DevContainers (an essential requirement) and GitHub Copilot.
-
-== Source Code Hosting
-All source2adoc projects will be hosted on GitHub.
-
-== Pipelines and Workflows
-The pipeline and workflow engine of choice is GitHub Actions.
-
-// == Deployment of Documentation Website
-// The deployment strategy for the "source2adoc.sommerfeld.io" website is still under consideration. While a container running in a public cloud provider like AWS, Google Cloud, Linode, or BlueOcean is preferred, uploading the website to a classic web hosting solution via FTP might serve as a simpler (initial) solution.
-
-== Development Support
+=== AI Support
 Development efforts will be supported by GitHub Copilot, with the potential for heavy reliance on this AI-assistant as its usefulness is validated over time.
 
-== User Stories
+=== Source Code Hosting
+All source2adoc projects will be hosted on GitHub.
+
+=== Pipelines and Workflows
+The pipeline and workflow engine of choice is GitHub Actions.
+
+== Coding Style Guide
+We follow a set of coding style guidelines to ensure that our code is consistent, readable, and maintainable. These guidelines cover various aspects of coding, including naming conventions, formatting, and documentation.
+
+=== Go Code Style
+The Go code style guide we follow is based on the link:https://github.com/google/styleguide/blob/gh-pages/go/index.md[Go Style Guide from Google]. The guide provides a comprehensive set of rules and recommendations for writing clean, idiomatic Go code. We adhere to these guidelines to ensure that our code is consistent, readable, and maintainable.
+
+=== Go Code Complexity
+We use link:https://github.com/fzipp/gocyclo[gocyclo] as part of our pipeline to calculate the link:https://en.wikipedia.org/wiki/Cyclomatic_complexity#Interpretation[cyclomatic complexity] of our Go code. The cyclomatic complexity is a software metric used to measure the complexity of a program. It directly measures the number of linearly independent paths through a program's source code. The higher the cyclomatic complexity, the more complex the code is.
+
+In his presentation "Software Quality Metrics to Identify Risk" for the Department of Homeland Security, Tom McCabe introduced the following categorization of cyclomatic complexity:
+
+* 1 - 10: Simple procedure, little risk
+* 11 - 20: More complex, moderate risk
+* 21 - 50: Complex, high risk
+* greater than 50: Untestable code, very high risk
+
+He recommended that programmers should count the complexity of the modules they are developing, and split them into smaller modules whenever the cyclomatic complexity of the module exceeded 10. Whenever the complexity of a module exceeded 10, out build pipeline will fail.
+
+== Task Management
+To ensure that our development process is organized and efficient, we use a task management system to track and manage our work. This system helps us prioritize tasks, assign work, and track progress throughout the development lifecycle.
+
+=== Task and Todo Tracking
+All task and todo tracking will be done through a GitHub project.
+
+=== User Stories
 We want requirements to define small focused needs rather than vast vague projects. We use user stories to describe our requirements. We try to finish a user story within a couple of days at most. We need to keep in mind, that we integrate our changes daily, so we must design our user stories accordingly.
 
 If we can't think of user need in terms of a story, we don't understand what our software is meant to achieve yet. If we can't think of an example, that would demonstrate that the need is fulfilled, we don't really understand the problem (domain) yet.
 
-== Architecture Decisions
+=== Architecture Decisions
 We use architecture decision records (ADRs) to document the key decisions made during the development of the CLI documentation tool. ADRs help us track the context, considerations, and outcomes of each decision, providing a clear rationale for future reference.
 
 We treat ADRs as working items, updating them as necessary to reflect the current state of the issue. Thats why we manage and track ADRs as GitHub issues. This approach allows us to easily reference and link to ADRs from other parts of the documentation and use the GitHub issue for collaboration and discussion.
 
 See link:{url-project}/issues?q=is%3Aissue+label%3AADR[all issues labeled as ADR] for a list of all ADRs.
-
-== Task and Todo Tracking
-All task and todo tracking will be done through a GitHub project.
