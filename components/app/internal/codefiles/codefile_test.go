@@ -125,6 +125,7 @@ func TestCodeFile_ShouldParseDocumentation(t *testing.T) {
 
 [cols="1,5"]
 |===
+|Language |` + LanguageBash + `
 |Path |` + TestSourceDir + `/good/small-comment.sh
 |===
 
