@@ -43,11 +43,8 @@ func NewCodeFile(fullPath string) *CodeFile {
 // Split the path and filename
 // If no "/" is found, return the entire path as the filename
 func splitPathAndFilename(path string) (string, string) {
-	lastIndex := strings.LastIndex(path, "/")
-	if lastIndex == -1 {
-		return "", path
-	}
-	return path[:lastIndex], path[lastIndex+1:]
+	dir, file := filepath.Split(path)
+	return strings.TrimSuffix(dir, "/"), file
 }
 
 // Identify the language of the file based on the filename or extension
@@ -126,10 +123,11 @@ func (cf *CodeFile) parseMetadata() {
 	asciidoc += "\n"
 	asciidoc += "[cols=\"1,5\"]\n"
 	asciidoc += "|===\n"
+	asciidoc += "|Language |" + cf.Language() + "\n"
 	if cf.path == "" {
-		asciidoc += "|Path |" + cf.name + "\n"
+		asciidoc += "|Path |" + cf.Filename() + "\n"
 	} else {
-		asciidoc += "|Path |" + cf.path + "/" + cf.name + "\n"
+		asciidoc += "|Path |" + cf.Path() + "/" + cf.Filename() + "\n"
 	}
 	asciidoc += "|===\n"
 	asciidoc += "\n"
