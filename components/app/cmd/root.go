@@ -112,8 +112,9 @@ func init() {
 }
 
 // Execute acts as the entrypoint for the CLI app.
-func Execute() error {
-	return rootCmd.Execute()
+func Execute() {
+	err := rootCmd.Execute()
+	handleError(err)
 }
 
 // RegisterSubCommand adds a subcommand to the root command.

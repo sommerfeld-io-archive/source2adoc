@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/sommerfeld-io/source2adoc/cmd"
 )
 
@@ -10,8 +8,5 @@ import (
 // }
 
 func main() {
-	err := cmd.Execute()
-	if err != nil {
-		log.Fatal(err)
-	}
+	cmd.Execute()
 }
