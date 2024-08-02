@@ -3,7 +3,7 @@ package cmd
 import "log"
 
 // handleError handles all Errors of this application. This function is
-// exuse assertions from "github.com/strclusively called from the CLI commands from this package. This is why
+// exclusively called from the CLI commands from this package. This is why
 // this function is placed in the `cmd` package and is not exported.
 //
 // No other function or structure from any other package is allowed handle
