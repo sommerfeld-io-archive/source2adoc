@@ -15,7 +15,7 @@ import "log"
 // tests that are not directly related to a go code file.
 //
 // TODO:	somehow ensure this as a unit test in the test package (e.g. the
-// TODO:	signatures of all other methods).
+// TODO:	signatures of all other methods). If possible ...
 func handleError(err error) {
 	if err != nil {
 		log.Fatal(err)
