@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"log"
 	"strings"
 
 	"github.com/sommerfeld-io/source2adoc/internal/codefiles"
@@ -61,9 +60,8 @@ var rootCmd = &cobra.Command{
 func findCodeFiles() []*codefiles.CodeFile {
 	sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
 	if err != nil {
-		log.Fatal(err)
+		handleError(err)
 	}
-
 	return sourceCodeFiles
 }
 
