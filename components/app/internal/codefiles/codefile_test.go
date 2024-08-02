@@ -57,10 +57,10 @@ func TestCodeFile_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      "/path/to",
-		name:      "source.sh",
-		lang:      LanguageBash,
-		supported: true,
+		path:          "/path/to",
+		name:          "source.sh",
+		lang:          LanguageBash,
+		supportedLang: true,
 	}
 
 	expectedPath := "/path/to"
@@ -76,7 +76,7 @@ func TestCodeFile_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	assert.Equal(expectedLang, actualLang, "Incorrect path language")
 
 	expectedSupported := true
-	actualSupported := codeFile.IsSupported()
+	actualSupported := codeFile.IsSupportedLanguage()
 	assert.Equal(expectedSupported, actualSupported, "Incorrect path supported status")
 }
 
@@ -84,10 +84,10 @@ func TestCodeFile_ShouldReadFileContent(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      filepath.Join(TestSourceDir, "good"),
-		name:      "small-comment.sh",
-		lang:      LanguageBash,
-		supported: true,
+		path:          filepath.Join(TestSourceDir, "good"),
+		name:          "small-comment.sh",
+		lang:          LanguageBash,
+		supportedLang: true,
 	}
 
 	err := codeFile.ReadFileContent()
@@ -107,10 +107,10 @@ func TestCodeFile_ShouldParseDocumentation(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      filepath.Join(TestSourceDir, "good"),
-		name:      "small-comment.sh",
-		lang:      LanguageBash,
-		supported: true,
+		path:          filepath.Join(TestSourceDir, "good"),
+		name:          "small-comment.sh",
+		lang:          LanguageBash,
+		supportedLang: true,
 		fileContent: `#!/bin/bash
 ## Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
 # ignore me because I do not follow the comment convention. Maybe I am a typo.
@@ -154,10 +154,10 @@ func TestCodeFile_ShouldWriteDocumentationFile(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
-		path:      "some/path",
-		name:      "unittest.sh",
-		lang:      LanguageBash,
-		supported: true,
+		path:          "some/path",
+		name:          "unittest.sh",
+		lang:          LanguageBash,
+		supportedLang: true,
 		documentationParts: []DocumentationPart{
 			{
 				sectionType:    DocumentationPartHeader,

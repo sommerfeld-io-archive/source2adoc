@@ -28,7 +28,7 @@ func (finder *CodeFileFinder) FindSourceCodeFiles() ([]*CodeFile, error) {
 		}
 
 		code := NewCodeFile(path)
-		if !info.IsDir() && code.IsSupported() {
+		if !info.IsDir() && code.IsSupportedLanguage() {
 			files = append(files, code)
 		}
 

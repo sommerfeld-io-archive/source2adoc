@@ -22,21 +22,21 @@ type CodeFile struct {
 	path               string
 	name               string
 	lang               string
-	supported          bool
+	supportedLang      bool
 	fileContent        string
 	documentationParts []DocumentationPart
 }
 
-// New creates a new CodeFile instance.
+// New acts as a constructor for a new CodeFile instance.
 func NewCodeFile(fullPath string) *CodeFile {
 	path, name := splitPathAndFilename(fullPath)
 	lang, supported := identifyLanguage(name)
 
 	return &CodeFile{
-		path:      path,
-		name:      name,
-		lang:      lang,
-		supported: supported,
+		path:          path,
+		name:          name,
+		lang:          lang,
+		supportedLang: supported,
 	}
 }
 
@@ -73,9 +73,9 @@ func (cf *CodeFile) Language() string {
 	return cf.lang
 }
 
-// IsSupported returns true if the CodeFile is supported.
-func (cf *CodeFile) IsSupported() bool {
-	return cf.supported
+// IsSupportedLanguage returns true if the CodeFile is supported.
+func (cf *CodeFile) IsSupportedLanguage() bool {
+	return cf.supportedLang
 }
 
 // FileContent returns the content of the CodeFile.
