@@ -14,4 +14,10 @@
 ## invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
 ## justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est.
 
-FROM scratch
+Vagrant.configure("2") do |config|
+    config.vm.box = "ubuntu/focal64"
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+        vb.cpus = "1"
+    end
+end
