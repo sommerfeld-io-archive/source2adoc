@@ -23,6 +23,15 @@ services:
     working_dir: /workspaces/source2adoc
     command: .
     tty: true
+  
+  lint-workflows:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
+    image: rhysd/actionlint:latest
+    volumes:
+      - .:/workspaces/source2adoc
+    working_dir: /workspaces/source2adoc
+    command: -color
+    tty: true
 
   lint-filenames:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames

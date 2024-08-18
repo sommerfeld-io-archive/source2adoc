@@ -32,6 +32,12 @@ repos:
         entry: /bin/bash -c 'docker compose up lint-yaml --exit-code-from lint-yaml'
   - repo: local
     hooks:
+      - id: lint-workflows
+        name: lint-workflows
+        language: script
+        entry: /bin/bash -c 'docker compose up lint-workflows --exit-code-from lint-workflows'
+  - repo: local
+    hooks:
       - id: lint-folders
         name: lint-folders
         language: script
