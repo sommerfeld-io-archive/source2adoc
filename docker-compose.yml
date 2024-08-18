@@ -23,7 +23,7 @@ services:
     working_dir: /workspaces/source2adoc
     command: .
     tty: true
-  
+
   lint-workflows:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
     image: rhysd/actionlint:latest
