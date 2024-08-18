@@ -190,6 +190,7 @@ jobs:
           cp docs/modules/ROOT/pages/index.adoc README.adoc
           cp docs/modules/ROOT/pages/license.adoc LICENSE.adoc
           cp docs/modules/ROOT/pages/license.adoc components/app/LICENSE.adoc
+          cp docs/modules/ROOT/pages/code-of-conduct.adoc CODE_OF_CONDUCT.adoc
           cp docs/modules/ROOT/pages/contribute.adoc CONTRIBUTING.adoc
           cp docs/modules/ROOT/pages/security.adoc SECURITY.adoc
         shell: bash
