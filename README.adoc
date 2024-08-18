@@ -41,8 +41,8 @@ The following section outlines the basic requirements and features of the `sourc
 ** When generating documentation, the file path should be preserved. For instance, the source code file `src/main/Dockerfile` should result in the AsciiDoc file `<output-dir>/src/main/Dockerfile.adoc`.
 * *File Metadata*
 ** The caption of the documentation file should automatically be set from the source code file's name.
-** Additionally, the path of the source code file and the author (if specified within the code file) should be included in the generated docs file file.
-** The actual text of the header docs should be rendered into the file as well. This text will not be translated any further, it is taken as is, thus allowing to write markup like AsciiDoc directly into the source code docs.
+** Additionally, the path of the source code file should be included in the generated docs file file.
+** The actual text of the header docs should be rendered into the file as well. This text will not be translated any further (except for JavDoc-style metadata, see below), it is taken as is, thus allowing to write AsciiDoc markup directly into the source code docs.
 * *Comment Style*
 ** The code comment style should resemble JavaDoc but a double hash-symbol (`##`) as the marker for commented lines.
 ** That means the comment is different from "regular" comments and still allows to use metadata similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc).
@@ -56,11 +56,11 @@ For detailed information on how to use the `source2adoc` application, take a loo
 docker run sommerfeldio/source2adoc:latest --help
 ....
 
-To generate documentation based on the inline comments in a source code file, execute the following command: `--source-dir` and `--output-dir` are relative to `--workdir`.
+To generate documentation based on the inline comments in a source code file, execute the following command (the `--source-dir` and `--output-dir` flags are relative to `--workdir`): 
 
 [source, bash]
 ....
-docker run --volume "$(pwd):$(pwd)" --workdir $(pwd) sommerfeldio/source2adoc:latest --source-dir ./src --output-dir ./docs
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest --source-dir ./src --output-dir ./docs
 ....
 
 To generate documentation into an Antora module, execute the following commands:
@@ -73,12 +73,12 @@ docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:
 echo "  - modules/source2adoc/nav.adoc" >> docs/antora.yml
 ....
 
-NOTE: `source2adoc` is distributed as a Docker image only, so remember to always use a complete Docker command to run the application.
+IMPORTANT: `source2adoc` is distributed as a Docker image only, so remember to always use a complete Docker command to run the application, even if `--help` does not explicitly mentions it.
 
 == How to write inline documentation
 To generate documentation using `source2adoc`, it is important to follow a specific syntax for relevant comments. In this syntax, all comments that are considered part of the documentation should be marked with `##` at the beginning of each line. These comments will be parsed and included in the generated documentation.
 
-The test data for the `source2adoc` project (which is used for our unit tests) is a good example of how to write inline documentation. See https://github.com/sommerfeld-io/source2adoc/tree/main/components/app/testdata for complete examples for all supported languages.
+The test data for the `source2adoc` project (which is used for our unit tests) is a good example of how to write inline documentation. See https://github.com/sommerfeld-io/source2adoc/tree/main/components/app/testdata/good for complete examples for all supported languages.
 
 * *Rules for the header documentation*
 ** Files can start with any content they like (allowing e.g. to start bash scripts with a shebang line or yaml files with `---`).
