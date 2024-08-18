@@ -22,9 +22,7 @@ Here are a few things you can do that will increase the likelihood of your pull 
 . Write a link:https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[good commit message]
 
 == Bug Reports
-We'd love to hear your feedback on this project. Please feel free to submit an issue explaining your feature request. We're also open to ideas and suggestions for improvements.
-
-To increase the likelihood of your feature request being accepted, please write your request in the form of a user story and add some acceptance criteria (which ideally can be turned into automated tests).
+We'd love to hear your feedback on this project. Please feel free to submit an issue explaining the bug you've found. Please use the issue template for Bug Reports to ensure that we have all the necessary information to reproduce the bug.
 
 == Feature Requests
 We'd love to hear your feedback on this project. Please feel free to submit an issue explaining your feature request. We're also open to ideas and suggestions for improvements.
