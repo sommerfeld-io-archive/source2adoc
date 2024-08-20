@@ -431,18 +431,19 @@ jobs:
   inspec-baselines-rc:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
-    name: ${{ matrix.image-name }}-${{ matrix.baseline }}
+    name: "${{ matrix.image-name }}-${{ matrix.baseline }}"
     needs: ['publish-rc']
     permissions:
       contents: read
     strategy: # see build-image (duplicated because github actions does not support anchors)
       matrix:
-        baseline: [linux-baseline]
         include:
           - registry: docker.io
             image-name: source2adoc
+            baseline: linux-baseline
           - registry: docker.io
             image-name: source2adoc-docs
+            baseline: linux-baseline
     steps:
       - name: Checkout Inspec baseline
         uses: actions/checkout@v4
@@ -450,7 +451,7 @@ jobs:
           repository: dev-sec/${{ matrix.baseline }}
       - name: Test image ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         run: |
-          readlony IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
+          readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
           export IMAGE
 
           docker pull "$IMAGE"
