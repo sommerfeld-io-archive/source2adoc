@@ -51,6 +51,12 @@ LABEL org.opencontainers.image.title=source2adoc-docs \
       org.opencontainers.image.vendor="source2adoc open source project" \
       org.opencontainers.image.licenses="MIT License"
 
+# Hardening
+COPY config/etc/login.defs /etc/login.defs
+RUN chmod og-r /etc/shadow \
+    && chmod 0444 /etc/login.defs
+
+# App setup
 ARG USER=www-data
 RUN chown -hR "$USER:$USER" /usr/local/apache2 \
     && chmod g-w /usr/local/apache2/conf/httpd.conf \

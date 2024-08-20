@@ -14,7 +14,7 @@
 FROM golang:1.22.6-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
-COPY /components/app /workspaces/source2adoc/components/app
+COPY components/app /workspaces/source2adoc/components/app
 WORKDIR /workspaces/source2adoc/components/app
 
 RUN pwd && ls -alF \
@@ -35,6 +35,12 @@ LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.vendor="source2adoc open source project" \
       org.opencontainers.image.licenses="MIT License"
 
+# Hardening
+COPY config/etc/login.defs /etc/login.defs
+RUN chmod og-r /etc/shadow \
+    && chmod 0444 /etc/login.defs
+
+# App setup
 ARG USER=source2adoc
 RUN adduser -D "$USER"
 

@@ -428,11 +428,52 @@ jobs:
         run: echo "CHANGE ME"
         shell: bash
 
+  inspec-baselines-rc:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    name: ${{ matrix.image-name }}
+    needs: ['publish-rc']
+    permissions:
+      contents: read
+    strategy: # see build-image (duplicated because github actions does not support anchors)
+      matrix:
+        baseline: [linux-baseline]
+        include:
+          - registry: docker.io
+            image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
+    steps:
+      - name: Checkout Inspec baseline
+        uses: actions/checkout@v4
+        with:
+          repository: https://github.com/dev-sec/${{ matrix.baseline }}.git
+      - name: Test image ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
+        run: |
+          readlony IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
+          export IMAGE
+
+          docker pull "$IMAGE"
+
+          CONTAINER=$(docker run -d --entrypoint tail "$IMAGE" -f /dev/null)
+
+          readonly exclude="/^((?!os-14).)*$/"
+
+          docker run --rm \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume "$(pwd):$(pwd)" \
+            --workdir "$(pwd)" \
+            chef/inspec:5.22.55 exec linux-baseline --target "docker://$container" --controls "$exclude" --chef-license=accept
+
+          docker stop --time 0 "$CONTAINER"
+          docker rm "$CONTAINER"
+        shell: bash
+
   # ----- Tag repository ------------------------
 
   release-code:
     runs-on: ubuntu-latest
-    needs: ['test-rc']
+    needs: ['test-rc', 'inspec-baselines-rc']
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     permissions:
       contents: write
