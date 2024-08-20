@@ -463,13 +463,9 @@ jobs:
           readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
           export IMAGE
 
-          readonly CHEF_LICENSE="accept-no-persist"
-          export CHEF_LICENSE
-
           readonly EXCLUDE="/^((?!os-14).)*$/"
 
           docker pull "$IMAGE"
-
           CONTAINER=$(docker run -d --entrypoint tail "$IMAGE" -f /dev/null)
 
           # docker run --rm \
@@ -478,7 +474,7 @@ jobs:
           #   --workdir "$(pwd)" \
           #   chef/inspec:5.22.55 exec ${{ matrix.baseline }} --target "docker://$container" --controls "$EXCLUDE" --chef-license=accept
 
-          inspec exec ${{ matrix.baseline }} --target "docker://$container" --controls "$EXCLUDE"
+          inspec exec ${{ matrix.baseline }} --target "docker://$container" --controls "$EXCLUDE" --chef-license accept-no-persist
 
           docker stop --time 0 "$CONTAINER"
           docker rm "$CONTAINER"
