@@ -456,8 +456,10 @@ jobs:
       #     username: ${{ secrets.DOCKERHUB_USER }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Install Inspec
-        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
-        shell: bash
+        uses: actionshub/chef-install@3.0.0
+        with:
+          channel: current
+          project: inspec
       - name: Test image ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         run: |
           readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
