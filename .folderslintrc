@@ -21,6 +21,7 @@
     "config",
     "config/dist",
     "config/dist/helm",
+    "config/etc",
 
     "docs",
     "docs/playbooks",
