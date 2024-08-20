@@ -456,28 +456,29 @@ jobs:
       #     username: ${{ secrets.DOCKERHUB_USER }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Install Inspec
-        uses: actionshub/chef-install@3.0.0
-        with:
-          channel: current
-          project: inspec
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+        shell: bash
       - name: Test image ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         run: |
           readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
           export IMAGE
 
+          readonly CHEF_LICENSE="accept-no-persist"
+          export CHEF_LICENSE
+
+          readonly EXCLUDE="/^((?!os-14).)*$/"
+
           docker pull "$IMAGE"
 
           CONTAINER=$(docker run -d --entrypoint tail "$IMAGE" -f /dev/null)
-
-          readonly exclude="/^((?!os-14).)*$/"
 
           # docker run --rm \
           #   --volume /var/run/docker.sock:/var/run/docker.sock \
           #   --volume "$(pwd):$(pwd)" \
           #   --workdir "$(pwd)" \
-          #   chef/inspec:5.22.55 exec ${{ matrix.baseline }} --target "docker://$container" --controls "$exclude" --chef-license=accept
+          #   chef/inspec:5.22.55 exec ${{ matrix.baseline }} --target "docker://$container" --controls "$EXCLUDE" --chef-license=accept
 
-          inspec exec ${{ matrix.baseline }} --target "docker://$container" --controls "$exclude" --chef-license=accept
+          inspec exec ${{ matrix.baseline }} --target "docker://$container" --controls "$EXCLUDE"
 
           docker stop --time 0 "$CONTAINER"
           docker rm "$CONTAINER"
