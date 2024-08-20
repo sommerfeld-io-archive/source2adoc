@@ -536,7 +536,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
-    needs: ['test-rc']
+    needs: ['test-rc', 'inspec-baselines-rc']
     if: always()
     permissions:
       contents: read
