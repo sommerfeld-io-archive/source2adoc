@@ -455,6 +455,9 @@ jobs:
       #     registry: ${{ matrix.registry }}
       #     username: ${{ secrets.DOCKERHUB_USER }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Install Inspec
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+        shell: bash
       - name: Test image ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         run: |
           readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
@@ -466,11 +469,13 @@ jobs:
 
           readonly exclude="/^((?!os-14).)*$/"
 
-          docker run --rm \
-            --volume /var/run/docker.sock:/var/run/docker.sock \
-            --volume "$(pwd):$(pwd)" \
-            --workdir "$(pwd)" \
-            chef/inspec:5.22.55 exec linux-baseline --target "docker://$container" --controls "$exclude" --chef-license=accept
+          # docker run --rm \
+          #   --volume /var/run/docker.sock:/var/run/docker.sock \
+          #   --volume "$(pwd):$(pwd)" \
+          #   --workdir "$(pwd)" \
+          #   chef/inspec:5.22.55 exec ${{ matrix.baseline }} --target "docker://$container" --controls "$exclude" --chef-license=accept
+
+          inspec exec ${{ matrix.baseline }} --target "docker://$container" --controls "$exclude" --chef-license=accept
 
           docker stop --time 0 "$CONTAINER"
           docker rm "$CONTAINER"
