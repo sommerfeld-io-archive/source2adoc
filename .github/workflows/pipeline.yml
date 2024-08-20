@@ -447,7 +447,7 @@ jobs:
       - name: Checkout Inspec baseline
         uses: actions/checkout@v4
         with:
-          repository: https://github.com/dev-sec/${{ matrix.baseline }}.git
+          repository: dev-sec/${{ matrix.baseline }}
       - name: Test image ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         run: |
           readlony IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
