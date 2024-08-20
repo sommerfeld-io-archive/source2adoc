@@ -543,7 +543,8 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
-    needs: ['test-rc', 'inspec-baselines-rc']
+    # needs: ['test-rc', 'inspec-baselines-rc']
+    needs: ['publish-rc']
     if: always()
     permissions:
       contents: read
@@ -557,7 +558,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Remove (:${{ github.sha }}) from ${{ matrix.registry }}
+      - name: Remove :${{ github.sha }} images from ${{ matrix.registry }}
         run: |
           TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
           curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
