@@ -431,7 +431,7 @@ jobs:
   inspec-baselines-rc:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
-    name: ${{ matrix.image-name }}
+    name: ${{ matrix.image-name }}-${{ matrix.baseline }}
     needs: ['publish-rc']
     permissions:
       contents: read
