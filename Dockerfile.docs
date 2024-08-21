@@ -22,7 +22,7 @@ RUN yarn global add @asciidoctor/core@~3.0.2 \
     && yarn global add @antora/lunr-extension@~1.0.0-alpha.8 \
     && yarn global add gulp-cli@3.0.0
 
-COPY . /workspaces/source2adoc
+COPY /workspaces/source2adoc /workspaces/source2adoc
 
 # WORKDIR /workspaces/source2adoc/docs/ui-bundle
 # RUN yarn install && gulp bundle
