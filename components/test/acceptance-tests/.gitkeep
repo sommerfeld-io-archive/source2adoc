@@ -1,0 +1,62 @@
+The idea is to write some BDD style tests here (probably with Go and godog) some time in the future.
+It is not yet clear when this will happen, but it seems like a good idea to keep this directory here for now.
+In the meantime, we can use this directory to store some feature files which should be turned into tests later on.
+
+See https://github.com/sommerfeld-io/source2adoc/issues/108
+
+
+Still to think about:
+    How can I test locally and from pipeline against source2adoc inside a docker container?
+    Do I test from a binary or a test container? For the moment, I guess running `go test ./...` is enough.
+
+
+Copilot ---------------------------------------------------------------------------------------------------
+
+
+Question:
+    when i run bdd tests against the compiled binary, how would you implement them?
+    in go because this already is my language of choice? or in another language?
+
+Answer:
+    package main
+
+    import (
+        "github.com/cucumber/godog"
+        "os/exec"
+    )
+
+    func theApplicationIsRunning() error {
+        // Start the compiled binary
+        cmd := exec.Command("./path/to/your/binary")
+        return cmd.Start()
+    }
+
+    func iSendARequestToTheEndpoint() error {
+        // Send a request to the endpoint
+        // Implement your request logic here
+        return nil
+    }
+
+    func iShouldReceiveASuccessfulResponse() error {
+        // Check the response
+        // Implement your response validation logic here
+        return nil
+    }
+
+    func FeatureContext(s *godog.Suite) {
+        s.Step(`^the application is running$`, theApplicationIsRunning)
+        s.Step(`^I send a request to the endpoint$`, iSendARequestToTheEndpoint)
+        s.Step(`^I should receive a successful response$`, iShouldReceiveASuccessfulResponse)
+    }
+
+    func main() {
+        status := godog.TestSuite{
+            Name:                 "godogs",
+            TestSuiteInitializer: nil,
+            ScenarioInitializer:  FeatureContext,
+        }.Run()
+
+        if status != 0 {
+            os.Exit(status)
+        }
+    }

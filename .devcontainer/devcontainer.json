@@ -12,13 +12,13 @@
         "asciidoctor.asciidoctor-vscode",
         "ms-azuretools.vscode-docker",
         "aaron-bond.better-comments",
-        "pomdtr.markdown-kroki",
         "timonwong.shellcheck",
         "jebbs.plantuml",
         "github.vscode-github-actions",
         "redhat.vscode-yaml",
         "GitHub.copilot",
-				"golang.go"
+				"golang.go",
+        "alexkrechik.cucumberautocomplete"
       ]
     }
   },
