@@ -19,6 +19,8 @@
     "components/app/target/**",
 
     "components/test/",
+    "components/test/acceptance-tests",
+    "components/test/acceptance-tests/specs",
     "components/test/inspec/**",
 
     "config",
