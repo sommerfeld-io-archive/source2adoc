@@ -20,7 +20,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     When I specify the filesystem location using the --exclude flag
     Then asciidoc files should be generated for all source code files
     But the tool should not generate asciidoc files for all files and subfolders within that folder
-  
+
   Scenario Outline: Filename Pattern Exclusion
     Given I want to exclude files that match a specific pattern (e.g., *.sh or prefix-*)
     When I specify the filesystem location using the --exclude flag
@@ -31,7 +31,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
       | pattern  |
       | *.sh     |
       | prefix-* |
-  
+
   Scenario Outline: Pattern with Path Exclusion
     Given I want to exclude files that match a specific pattern within a particular directory
     When I specify the filesystem location using the --exclude flag
@@ -47,4 +47,4 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     Given I want to exclude multiple files and folders in a single command run
     When I specify the --exclude flag multiple times with different values
     Then asciidoc files should be generated for all source code files
-    But the tool should not generate asciidoc files for all specified files, folders, and patterns 
+    But the tool should not generate asciidoc files for all specified files, folders, and patterns
