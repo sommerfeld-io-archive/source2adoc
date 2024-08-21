@@ -13,7 +13,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     Given I want to exclude a specific file by its full path
     When I specify the filesystem location using the --exclude flag
     Then asciidoc files should be generated for all source code files
-    But the tool should not generate asciidoc files for the specified file
+      But the tool should not generate asciidoc files for the specified file
 
   Scenario: Folder Exclusion
     Given I want to exclude an entire folder
