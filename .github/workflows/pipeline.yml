@@ -432,7 +432,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     name: ${{ matrix.image-name }}
-    #needs: ['publish-rc']
+    needs: ['publish-rc']
     permissions:
       contents: read
     env:
