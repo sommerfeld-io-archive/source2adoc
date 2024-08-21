@@ -462,6 +462,7 @@ jobs:
           docker run -d --name "${{ env.CONTAINER_NAME }}" --entrypoint tail "$IMAGE" -f /dev/null
         shell: bash
       - name: Run Inspec test (linux baseline)
+        # https://docs.chef.io/inspec/cli/#exit-codes
         run: |
           readonly exclude="/^((?!os-14).)*$/"
           inspec exec https://github.com/dev-sec/linux-baseline \
@@ -469,6 +470,10 @@ jobs:
             --controls "$exclude" \
             --chef-license "${{ env.CHEF_LICENSE }}" \
             --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }}
+
+            if [ $? -eq 101 ]; then
+              exit 0
+            fi
         shell: bash
       # TODO custom inspec profile - https://github.com/sommerfeld-io/source2adoc/issues/107
       - name: Stop system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
