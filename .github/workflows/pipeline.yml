@@ -432,10 +432,11 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     name: ${{ matrix.image-name }}
-    needs: ['publish-rc']
+    #needs: ['publish-rc']
     permissions:
       contents: read
     env:
+      CHEF_LICENSE: accept-no-persist
       CONTAINER_NAME: system_under_test
     strategy: # see build-image (duplicated because github actions does not support anchors)
       matrix:
@@ -463,7 +464,8 @@ jobs:
       - name: Run Inspec test (linux baseline)
         run: |
           readonly exclude="/^((?!os-14).)*$/"
-          inspec exec https://github.com/dev-sec/linux-baseline --target "docker://${{ env.CONTAINER_NAME }}" --controls "$exclude" --chef-license accept-no-persist
+          export CHEF_LICENSE="${{ env.CHEF_LICENSE }}"
+          inspec exec https://github.com/dev-sec/linux-baseline --target "docker://${{ env.CONTAINER_NAME }}" --controls "$exclude" --chef-license "${{ env.CHEF_LICENSE }}"
         shell: bash
       # TODO custom inspec profile - https://github.com/sommerfeld-io/source2adoc/issues/107
       - name: Stop system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
