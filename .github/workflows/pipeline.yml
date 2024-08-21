@@ -446,12 +446,8 @@ jobs:
           - registry: docker.io
             image-name: source2adoc-docs
     steps:
-      # - name: Login to Container Registry ${{ matrix.registry }}
-      #   uses: docker/login-action@v3
-      #   with:
-      #     registry: ${{ matrix.registry }}
-      #     username: ${{ secrets.DOCKERHUB_USER }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Install Inspec
         run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
         shell: bash
@@ -471,7 +467,17 @@ jobs:
             --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
             --no-distinct-exit
         shell: bash
-      # TODO custom inspec profile - https://github.com/sommerfeld-io/source2adoc/issues/107
+      - name: Run Inspec test (${{ matrix.image-name }})
+        run: |
+          (
+            cd components/test/inspec || exit
+            inspec exec ${{ matrix.image-name }} \
+              --target "docker://${{ env.CONTAINER_NAME }}" \
+              --chef-license "${{ env.CHEF_LICENSE }}" \
+              --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
+              --no-distinct-exit
+          )
+        shell: bash
       - name: Stop system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         if: always()
         run: |

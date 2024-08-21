@@ -12,7 +12,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "VERSION=${nextRelease.version} && sed -i \"s/version: .*/version: $VERSION/\" docs/antora.yml"
+        "prepareCmd": "./.release.sh ${nextRelease.version}"
       }
     ],
     [
@@ -21,7 +21,10 @@
         "assets": [
           "docs/antora.yml",
           "package.json",
-          "package-lock.json"],
+          "package-lock.json",
+          "components/test/inspec/source2adoc/inspec.yml",
+          "components/test/inspec/source2adoc-docs/inspec.yml"
+        ],
         "message": "refactor(release): ${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ],

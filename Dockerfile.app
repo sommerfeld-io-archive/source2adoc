@@ -35,16 +35,17 @@ LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.vendor="source2adoc open source project" \
       org.opencontainers.image.licenses="MIT License"
 
-# Hardening
 COPY config/etc/login.defs /etc/login.defs
 RUN chmod og-r /etc/shadow \
     && chmod 0444 /etc/login.defs
 
-# App setup
 ARG USER=source2adoc
 RUN adduser -D "$USER"
 
 COPY --from=build /workspaces/source2adoc/components/app/source2adoc /usr/bin/source2adoc
+
+RUN chown -hR "$USER:$USER" /usr/bin/source2adoc \
+    && chmod 0700 /usr/bin/source2adoc
 
 USER $USER
 ENTRYPOINT ["/usr/bin/source2adoc"]
