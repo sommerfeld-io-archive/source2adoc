@@ -18,6 +18,9 @@
     "components/app/testdata/**",
     "components/app/target/**",
 
+    "components/test/",
+    "components/test/inspec/**",
+
     "config",
     "config/dist",
     "config/dist/helm",
