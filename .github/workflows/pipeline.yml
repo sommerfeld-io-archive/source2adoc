@@ -460,12 +460,12 @@ jobs:
           docker pull "$IMAGE"
           docker run -d --name "${{ env.CONTAINER_NAME }}" --entrypoint tail "$IMAGE" -f /dev/null
         shell: bash
-      - name: Inspec test (linux baseline)
+      - name: Run Inspec test (linux baseline)
         run: |
           readonly exclude="/^((?!os-14).)*$/"
           inspec exec https://github.com/dev-sec/linux-baseline --target "docker://${{ env.CONTAINER_NAME }}" --controls "$exclude" --chef-license accept-no-persist
         shell: bash
-      # TODO custom inspec profile
+      # TODO custom inspec profile - https://github.com/sommerfeld-io/source2adoc/issues/107
       - name: Stop system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
         run: |
           docker stop --time 0 "${{ env.CONTAINER_NAME }}"
