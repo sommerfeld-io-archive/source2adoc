@@ -4,6 +4,8 @@ In the meantime, we can use this directory to store some feature files which sho
 
 See https://github.com/sommerfeld-io/source2adoc/issues/108
 
+Use a flat hierarchy for the tests. No packages, only `*_test.go` files that map to the filenames of the feature files
+in the main package of `module github.com/sommerfeld-io/source2adoc-test`.
 
 Still to think about:
     How can I test locally and from pipeline against source2adoc inside a docker container?

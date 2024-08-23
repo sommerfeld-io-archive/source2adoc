@@ -37,6 +37,7 @@ on:
       - '**.md'
       - '.devcontainer/**'
       - '.vscode/**'
+      - '.gitkeep'
   schedule:
     - cron: '0 1 * * 2'
 
