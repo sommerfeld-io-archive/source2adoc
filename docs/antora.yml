@@ -1,7 +1,7 @@
 ---
 name: public
 title: source2adoc
-version: main
+version: exclude-files-and-folders
 start_page: ROOT:index.adoc
 nav:
   - modules/ROOT/nav.adoc
