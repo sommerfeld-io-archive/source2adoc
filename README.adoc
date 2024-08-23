@@ -48,6 +48,8 @@ The following section outlines the basic requirements and features of the `sourc
 ** That means the comment is different from "regular" comments and still allows to use metadata similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc).
 ** `@see` should generate an xref, @link should generate a static link.
 
+For a detailed overview of the requirements and features of the `source2adoc` project, refer to the link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test/acceptance-tests/specs[executable specification] used for out automated acceptance tests.
+
 == Usage
 For detailed information on how to use the `source2adoc` application, take a look at the application's help output.
 
@@ -56,7 +58,7 @@ For detailed information on how to use the `source2adoc` application, take a loo
 docker run sommerfeldio/source2adoc:latest --help
 ....
 
-To generate documentation based on the inline comments in a source code file, execute the following command (the `--source-dir` and `--output-dir` flags are relative to `--workdir`): 
+To generate documentation based on the inline comments in a source code file, execute the following command (the `--source-dir` and `--output-dir` flags are relative to `--workdir`):
 
 [source, bash]
 ....
