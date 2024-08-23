@@ -39,8 +39,12 @@ func supportedLanguagesDesc() string {
 	return strings.Join(keys, ", ")
 }
 
-var sourceDir string
-var outputDir string
+// Values from the CLI flags
+var (
+	sourceDir string
+	outputDir string
+	exclude   []string
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "source2adoc",
@@ -50,15 +54,26 @@ var rootCmd = &cobra.Command{
 	Args: cobra.ExactArgs(0),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		sourceCodeFiles := findCodeFiles()
+		excludes, err := getExcludes(cmd)
+		handleError(err)
+
+		sourceCodeFiles := findCodeFiles(excludes)
 		sourceCodeFiles = readCodeFiles(sourceCodeFiles)
 		sourceCodeFiles = parseFileContent(sourceCodeFiles)
 		writeDocsFiles(sourceCodeFiles)
 	},
 }
 
-func findCodeFiles() []*codefiles.CodeFile {
-	sourceCodeFiles, err := codefiles.NewFinder(sourceDir).FindSourceCodeFiles()
+func getExcludes(cmd *cobra.Command) ([]string, error) {
+	exclude, err := cmd.Flags().GetStringSlice("exclude")
+	return exclude, err
+}
+
+func findCodeFiles(exclude []string) []*codefiles.CodeFile {
+	finder := codefiles.NewFinder(sourceDir)
+	finder.SetExcludes(exclude)
+	sourceCodeFiles, err := finder.FindSourceCodeFiles()
+
 	if err != nil {
 		handleError(err)
 	}
@@ -92,6 +107,12 @@ func writeDocsFiles(files []*codefiles.CodeFile) {
 }
 
 func init() {
+	initMandatoryFlags()
+	initMultipleValuesFlags()
+	rootCmd.CompletionOptions.HiddenDefaultCmd = true
+}
+
+func initMandatoryFlags() {
 	var params = []struct {
 		name     string
 		short    string
@@ -107,8 +128,23 @@ func init() {
 		err := rootCmd.MarkFlagRequired(param.name)
 		handleError(err)
 	}
+}
 
-	rootCmd.CompletionOptions.HiddenDefaultCmd = true
+func initMultipleValuesFlags() {
+
+	var params = []struct {
+		name      string
+		short     string
+		variable  *[]string
+		desc      string
+		mandatory bool
+	}{
+		{name: "exclude", short: "x", variable: &exclude, desc: "Exclude files and/or folders when generating documentation"},
+	}
+
+	for _, param := range params {
+		rootCmd.Flags().StringSliceVarP(param.variable, param.name, param.short, []string{}, param.desc)
+	}
 }
 
 // Execute acts as the entrypoint for the CLI app.
