@@ -96,7 +96,7 @@ services:
       - /bin/sh
       - -c
       - |
-        rm -rf target
+        rm -rf /workspaces/source2adoc/target
 
         go mod download
         go mod tidy
@@ -105,7 +105,7 @@ services:
         go test -coverprofile=go-code-coverage.out ./...
 
         chown 1000:1000 go.sum
-        chown -R 1000:1000 target
+        chown -R 1000:1000 /workspaces/source2adoc/target
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
