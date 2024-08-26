@@ -85,7 +85,7 @@ services:
 
   app-test:
     container_name: ${COMPOSE_PROJECT_NAME}-app-test
-    image: golang:1.22.3-alpine3.19
+    image: golang:1.22.6-alpine3.19
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -96,16 +96,44 @@ services:
       - /bin/sh
       - -c
       - |
-        rm -rf /workspaces/source2adoc/target
+        rm -rf $${TARGET_DIR}
+        rm -f "$${COVERAGE_REPORT}"
 
         go mod download
         go mod tidy
         go fmt ./...
         go vet ./...
-        go test -coverprofile=go-code-coverage.out ./...
+        go test -coverprofile="$${COVERAGE_REPORT}" ./...
 
         chown 1000:1000 go.sum
-        chown -R 1000:1000 /workspaces/source2adoc/target
+        chown 1000:1000 "$${COVERAGE_REPORT}"
+        chown -R 1000:1000 $${TARGET_DIR}
+
+        sed -i "s|$${OLD}|$${NEW}|g" "$${COVERAGE_REPORT}"
+    environment:
+      - COVERAGE_REPORT=go-code-coverage.out
+      - OLD=github.com/sommerfeld-io/source2adoc
+      - NEW=components/app
+      - TARGET_DIR=/workspaces/source2adoc/target
+
+  app-acceptance-test:
+    container_name: ${COMPOSE_PROJECT_NAME}-app-acceptance-test
+    image: golang:1.22.6-alpine3.19
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./components/test/acceptance-tests:/workspaces/source2adoc/components/test/acceptance-tests:rw
+      - ./testdata:/workspaces/source2adoc/testdata:ro
+    working_dir: /workspaces/source2adoc/components/test/acceptance-tests
+    command:
+      - /bin/sh
+      - -c
+      - |
+        go mod download
+        go mod tidy
+        go fmt ./...
+        go vet ./...
+        go test -coverprofile=go-code-coverage.out
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
@@ -121,6 +149,8 @@ services:
     command: --source-dir . --output-dir ./target
     depends_on:
       app-test:
+        condition: service_completed_successfully
+      app-acceptance-test:
         condition: service_completed_successfully
 
   docs:

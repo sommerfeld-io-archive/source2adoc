@@ -160,8 +160,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ (github.actor != 'dependabot[bot]') }}
     needs: ['lint-yaml', 'lint-workflows', 'lint-filenames', 'lint-folders', 'lint-gherkin', 'shellcheck']
-    env:
-      COVERAGE_REPORT: components/app/go-code-coverage.out
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -169,17 +167,6 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Test app
         run: docker compose up app-test --exit-code-from app-test
-        shell: bash
-      - name: Update coverage report
-        run: |
-          (
-            readonly old='github.com/sommerfeld-io/source2adoc'
-            readonly new='components/app'
-            sed -i "s|$old|$new|g" "${{ env.COVERAGE_REPORT }}"
-          )
-        shell: bash
-      - name: cat ${{ env.COVERAGE_REPORT }}
-        run: cat ${{ env.COVERAGE_REPORT }}
         shell: bash
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.3.0
