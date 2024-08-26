@@ -19,3 +19,5 @@ Feature: Generate AsciidDoc Documentation from Source Code files
       | path          |
       | testdata/good |
       # TODO use a correct path ... remember, bdd tests are not located in components/app
+
+  # TODO: add negative scenario "i expect not to generate docs for ..."

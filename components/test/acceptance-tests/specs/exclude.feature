@@ -14,9 +14,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     But the tool should not generate AsciiDoc files for the specified file
 
     Examples:
-      | path                                   |
-      | components/app/testdata/good/Makefile  |
-      | components/app/testdata/good/script.sh |
+      | path                           |
+      | testdata/common/good/Makefile  |
+      | testdata/common/good/script.sh |
       # TODO use a correct path ... remember, bdd tests are not located in components/app
 
   Scenario Outline: Folder Exclusion
@@ -26,8 +26,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     But the tool should not generate AsciiDoc files for all files and subfolders within that folder
 
     Examples:
-      | path                                |
-      | components/app/testdata/good/docker |
+      | path                        |
+      | testdata/common/good/docker |
       # TODO use a correct path ... remember, bdd tests are not located in components/app
 
   # TODO https://github.com/sommerfeld-io/source2adoc/issues/109
