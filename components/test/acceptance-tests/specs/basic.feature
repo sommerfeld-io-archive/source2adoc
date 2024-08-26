@@ -7,7 +7,7 @@ Feature: Generate AsciidDoc Documentation from Source Code files
   Background:
     Given I am using the root command of the source2adoc CLI tool to generate AsciiDoc files
 
-  Scenario Outline: Generate AsciiDoc from Source Code Files
+  Scenario Outline: Generate AsciiDoc for supported Source Code Files
     Given I specify "<path>" using the --source-dir flag
     And I specify "target" using the --output-dir flag
     When I run the app
@@ -21,4 +21,12 @@ Feature: Generate AsciidDoc Documentation from Source Code files
       | testdata/good |
       # TODO use a correct path ... remember, bdd tests are not located in components/app
 
-  # TODO: add negative scenario "i expect not to generate docs for ..."
+  Scenario Outline: No AsciiDoc for unsupported Source Code Files
+    Given I specify "<path>" using the --source-dir flag
+    And I specify "target" using the --output-dir flag
+    When I run the app
+    Then no AsciiDoc files should be generated
+
+    Examples:
+      | path         |
+      | testdata/bad |
