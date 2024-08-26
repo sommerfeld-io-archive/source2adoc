@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestCodeFileFinder_ShouldFindSourceCodeFiles tests the case where the finder should return all
+// Test_ShouldFindSourceCodeFiles tests the case where the finder should return all
 // supported code files that are found in the source directory.
-func TestCodeFileFinder_ShouldFindSourceCodeFiles(t *testing.T) {
+func Test_ShouldFindSourceCodeFiles(t *testing.T) {
 	assert := assert.New(t)
 
 	expectedFiles := []*CodeFile{
@@ -36,9 +36,9 @@ func TestCodeFileFinder_ShouldFindSourceCodeFiles(t *testing.T) {
 	}
 }
 
-// TestCodeFileFinder_ShouldNotFindUndesiredSourceCodeFiles tests the case where the finder should
+// Test_ShouldNotFindUndesiredSourceCodeFiles tests the case where the finder should
 // not return files that are unsupported code files.
-func TestCodeFileFinder_ShouldNotFindUndesiredSourceCodeFiles(t *testing.T) {
+func Test_ShouldNotFindUndesiredSourceCodeFiles(t *testing.T) {
 	assert := assert.New(t)
 
 	undesiredFiles := []*CodeFile{
@@ -59,10 +59,10 @@ func TestCodeFileFinder_ShouldNotFindUndesiredSourceCodeFiles(t *testing.T) {
 	}
 }
 
-// TestCodeFileFinder_ShouldFindSourceCodeFilesWithoutExcludes tests the case where the exclude
+// Test_ShouldFindSourceCodeFilesWithoutExcludes tests the case where the exclude
 // list is not empty. The expected result is that the finder should not return the files that are
 // in the exclude list but should still return all other files that should be found.
-func TestCodeFileFinder_ShouldFindSourceCodeFilesWithoutExcludes(t *testing.T) {
+func Test_ShouldFindSourceCodeFilesWithoutExcludes(t *testing.T) {
 	assert := assert.New(t)
 
 	exclude := []string{
