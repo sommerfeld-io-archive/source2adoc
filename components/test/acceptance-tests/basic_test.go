@@ -6,8 +6,6 @@ import (
 	"github.com/cucumber/godog"
 )
 
-var dockerRun string
-
 func Test_BasicFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		ScenarioInitializer: initializeBasicScenario,
