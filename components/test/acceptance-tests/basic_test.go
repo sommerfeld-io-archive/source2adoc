@@ -36,6 +36,9 @@ func iAmUsingTheRootCommand() error {
 
 func iRunTheApp() error {
 	// TODO run the container with all docker flags and app flags
+	// https://docs.docker.com/reference/api/engine/sdk/examples/
+	// go get github.com/docker/docker
+
 	return godog.ErrPending
 }
 

@@ -2,7 +2,10 @@ module github.com/sommerfeld-io/source2adoc-acceptance-tests
 
 go 1.22.6
 
-require github.com/cucumber/godog v0.14.1
+require (
+	github.com/cucumber/godog v0.14.1
+	github.com/docker/docker v27.1.2+incompatible // indirect
+)
 
 require (
 	github.com/cucumber/gherkin/go/v26 v26.2.0 // indirect
