@@ -16,7 +16,7 @@ const (
 )
 
 // TestSourceDir is the path to the test data directory for use in testcases.
-const TestSourceDir = "/workspaces/source2adoc/components/app/testdata"
+const TestSourceDir = "/workspaces/source2adoc/testdata/common"
 
 // TestOutputDir is the path to the test output directory for use in testcases.
-const TestOutputDir = "/workspaces/source2adoc/components/app/target"
+const TestOutputDir = "/workspaces/source2adoc/target"

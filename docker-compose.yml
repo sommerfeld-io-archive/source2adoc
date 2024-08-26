@@ -90,6 +90,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - ./components/app:/workspaces/source2adoc/components/app:rw
+      - ./testdata:/workspaces/source2adoc/testdata:ro
     working_dir: /workspaces/source2adoc/components/app
     command:
       - /bin/sh

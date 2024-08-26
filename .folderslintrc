@@ -15,7 +15,6 @@
     "components/app/internal/**",
     "components/app/pkg/**",
     "components/app/test/**",
-    "components/app/testdata/**",
     "components/app/target/**",
 
     "components/test/",
@@ -42,7 +41,7 @@
     "docs/supplemental-ui/partials",
 
     "public/**",
-    "src",
+    "testdata/**",
 
     "node_modules/**",
     "target/**"

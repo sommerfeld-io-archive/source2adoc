@@ -14,6 +14,7 @@
 FROM golang:1.23.0-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
+COPY testdata /workspaces/source2adoc/testdata
 COPY components/app /workspaces/source2adoc/components/app
 WORKDIR /workspaces/source2adoc/components/app
 
