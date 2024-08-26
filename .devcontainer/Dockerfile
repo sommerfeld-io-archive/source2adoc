@@ -6,7 +6,7 @@
 ## Having Visual Studio Code (VSCode) and the Dev Container plugin installed are
 ## essential prerequisites for this development environment. Docker is also mandatory.
 
-FROM mcr.microsoft.com/devcontainers/go:1.22-bullseye
+FROM mcr.microsoft.com/devcontainers/go:1.23-bullseye
 LABEL maintainer="sebastian@sommerfeld.io"
 
 ARG USER=vscode
