@@ -7,9 +7,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   Background:
     Given I am using the root command of the source2adoc CLI tool to generate AsciiDoc files
 
-  Scenario Outline: Full Path File Exclusion
-    Given I want to exclude a specific file by its full path
-    When I specify <path> using the --exclude flag
+  Scenario Outline: Exclue specific file by its full path
+    Given I specify "<path>" using the --exclude flag
+    When I run the app
     Then AsciiDoc files should be generated for all source code files
     But the tool should not generate AsciiDoc files for the specified file
 
@@ -19,9 +19,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
       | testdata/common/good/script.sh |
       # TODO use a correct path ... remember, bdd tests are not located in components/app
 
-  Scenario Outline: Folder Exclusion
-    Given I want to exclude an entire folder
-    When I specify <path> using the --exclude flag
+  Scenario Outline: Exclude Entire Folder
+    Given I specify "<path>" using the --exclude flag
+    When I run the app
     Then AsciiDoc files should be generated for all source code files
     But the tool should not generate AsciiDoc files for all files and subfolders within that folder
 
@@ -31,9 +31,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
       # TODO use a correct path ... remember, bdd tests are not located in components/app
 
   # TODO https://github.com/sommerfeld-io/source2adoc/issues/109
-  # Scenario Outline: Filename / Foldername Pattern Exclusion
-  #   Given I want to exclude files or folders that match a specific pattern
-  #   When I specify <pattern> using the --exclude flag
+  # Scenario Outline: Exclude files or folders that match a specific pattern
+  #   Given I specify "<pattern>" using the --exclude flag
+  #   When I run the app
   #   Then AsciiDoc files should be generated for all source code files
   #   But the tool should not generate AsciiDoc files for all files matching the pattern in any directory
   #
@@ -43,9 +43,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   #     | prefix-* |
 
   # TODO https://github.com/sommerfeld-io/source2adoc/issues/109
-  # Scenario Outline: Pattern with Path Exclusion
-  #   Given I want to exclude files or folders that match a specific pattern within a particular directory
-  #   When I specify <pattern> using the --exclude flag
+  # Scenario Outline: Exclude files or folders that match a specific pattern within a particular directory
+  #   Given I specify "<pattern>" using the --exclude flag
+  #   When I run the app
   #   Then AsciiDoc files should be generated for all source code files
   #   But the tool should not generate AsciiDoc files for all files matching the pattern in the specified directory
   #
@@ -56,9 +56,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   #     | src/main/**/sources      |
   #     | src/main/**/sources/*.sh |
 
-  Scenario: Flag Usability with Multiple Values
-    Given I want to exclude multiple files and folders in a single command run
-    When I specify the --exclude flag multiple times with different values
+  Scenario: Exclude multiple files and folders in a single command run
+    Given I specify the --exclude flag multiple times with different values
+    When I run the app
     Then AsciiDoc files should be generated for all source code files
     But the tool should not generate AsciiDoc files for all specified files, folders, and patterns
     # TODO concretize ... test is not deterministic enough ... to vague
