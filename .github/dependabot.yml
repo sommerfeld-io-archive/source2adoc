@@ -20,3 +20,8 @@ updates:
     directory: components/app
     schedule:
       interval: weekly
+
+  - package-ecosystem: gomod
+    directory: components/test/acceptance-tests
+    schedule:
+      interval: weekly
