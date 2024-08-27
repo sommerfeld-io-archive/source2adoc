@@ -5,8 +5,10 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/cucumber/godog/colors"
 	"github.com/docker/docker/api/types"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -26,6 +28,16 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 		fmt.Println("Run acceptance tests against the container image:", determineDockerImageToUse())
 		fmt.Println(textWhite)
 	})
+}
+
+func Options(t *testing.T, featureFile string) *godog.Options {
+	return &godog.Options{
+		Format:      "pretty",
+		Paths:       []string{TestSpecsDir + "/" + featureFile},
+		Output:      colors.Colored(os.Stdout),
+		Concurrency: 1,
+		TestingT:    t,
+	}
 }
 
 // ContainerUnderTest represents the system under test.
