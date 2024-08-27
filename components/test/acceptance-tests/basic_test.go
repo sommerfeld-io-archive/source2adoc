@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/cucumber/godog/colors"
 	"github.com/docker/docker/api/types"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -13,14 +15,17 @@ import (
 
 var containerCmd []string
 var containerState *types.ContainerState
+var containerImage string
 
 func Test_BasicFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		ScenarioInitializer: initializeBasicScenario,
 		Options: &godog.Options{
-			Format:   "pretty",
-			Paths:    []string{TestSpecsDir + "/basic.feature"},
-			TestingT: t,
+			Format:      "pretty",
+			Paths:       []string{TestSpecsDir + "/basic.feature"},
+			Output:      colors.Colored(os.Stdout),
+			Concurrency: 1,
+			TestingT:    t,
 		},
 	}
 
@@ -36,8 +41,12 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^I run the app$`, iRunTheApp)
 	sc.Step(`^exit code should be (\d+)$`, exitCodeShouldBe)
 
-	containerCmd = []string{}
-	containerState = nil
+	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
+		containerImage = "sommerfeldio/source2adoc:rc"
+		containerCmd = []string{}
+		containerState = nil
+		return ctx, nil
+	})
 }
 
 func iAmUsingTheRootCommand() error {
@@ -59,7 +68,7 @@ func iSpecifyTheFlagWithValue(flag, value string) error {
 func iRunTheApp() error {
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
-		Image:      "sommerfeldio/source2adoc:rc",
+		Image:      containerImage,
 		Cmd:        containerCmd,
 		WaitingFor: wait.ForExit(),
 	}
