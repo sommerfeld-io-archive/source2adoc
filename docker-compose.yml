@@ -116,26 +116,26 @@ services:
       - NEW=components/app
       - TARGET_DIR=/workspaces/source2adoc/target
 
-  app-acceptance-test:
-    #! PROBLEM: This way the tests cannot work because this image cannot start a docker image
-    #! which is essential for the tests. The BDD tests are run against the a container.
-    container_name: ${COMPOSE_PROJECT_NAME}-app-acceptance-test
-    image: golang:1.22.6-alpine3.19
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./components/test/acceptance-tests:/workspaces/source2adoc/components/test/acceptance-tests:rw
-      - ./testdata:/workspaces/source2adoc/testdata:ro
-    working_dir: /workspaces/source2adoc/components/test/acceptance-tests
-    command:
-      - /bin/sh
-      - -c
-      - |
-        go mod download
-        go mod tidy
-        go fmt ./...
-        go vet ./...
-        go test -coverprofile=go-code-coverage.out
+  # app-acceptance-test:
+  #   #! PROBLEM: This way the tests cannot work because this image cannot start a docker image
+  #   #! which is essential for the tests. The BDD tests are run against the a container.
+  #   container_name: ${COMPOSE_PROJECT_NAME}-app-acceptance-test
+  #   image: golang:1.22.6-alpine3.19
+  #   volumes:
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - ./components/test/acceptance-tests:/workspaces/source2adoc/components/test/acceptance-tests:rw
+  #     - ./testdata:/workspaces/source2adoc/testdata:ro
+  #   working_dir: /workspaces/source2adoc/components/test/acceptance-tests
+  #   command:
+  #     - /bin/sh
+  #     - -c
+  #     - |
+  #       go mod download
+  #       go mod tidy
+  #       go fmt ./...
+  #       go vet ./...
+  #       go test -coverprofile=go-code-coverage.out
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
@@ -152,8 +152,8 @@ services:
     depends_on:
       app-test:
         condition: service_completed_successfully
-      app-acceptance-test:
-        condition: service_completed_successfully
+      # app-acceptance-test:
+      #   condition: service_completed_successfully
 
   docs:
     container_name: ${COMPOSE_PROJECT_NAME}-docs

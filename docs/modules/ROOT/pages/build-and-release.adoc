@@ -1,0 +1,60 @@
+= How we Build and Release
+Sebastian Sommerfeld <sebastian@sommerfeld.io>
+
+The purpose of this guide is to provide an understanding of the strategies we employ to ensure reliable, efficient, and consistent software releases. This guide aligns with our xref:development-guide.adoc[] but explains the specifics of the build and release process in a little more detail.
+
+The build pipeline is triggered by a commit to any branch in the repository. But not all branches are treated equally. The `main` branch is the most important branch in the repository. It is the branch that is always deployable and is the branch that is used to deploy to production. Other branches use a subset of the pipeline to ensure that they can be merged into the `main` branch and are are in a deployable state.
+
+[plantuml, bar, svg]
+....
+@startuml
+
+skinparam linetype ortho
+skinparam monochrome false
+skinparam componentStyle uml2
+skinparam backgroundColor white
+skinparam activity {
+    'FontName Ubuntu
+    FontName Roboto
+}
+|Scheduled|
+    start
+    :Dependabot;
+    floating note left: Dependabot\ncreates Branches
+
+|All Branches|
+    start
+    note right: Start here\nwithout Dependabot
+    split
+        :Run Linters;
+    split again
+        :Generate Docs;
+    end split
+
+
+    split
+        :Scan Code;
+        kill
+    split again
+        :Unit Tests\nand Build;
+        note left: Build\nOnce
+    end split
+
+    :Test intermediate Artifact;
+    :Publish Artifact\nas Release Candidate;
+    :Test Release Candidate;
+
+|Branch: main|
+    if (release?) then (no)
+        stop
+    else (yes)
+        :Create Git Tag\nand GitHub Release;
+    endif
+
+|Tag|
+    :Publish Artifact\nas Release;
+    :Test Released Artifact;
+    stop
+
+@enduml
+....
