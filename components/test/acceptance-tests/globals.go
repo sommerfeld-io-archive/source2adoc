@@ -28,11 +28,14 @@ var ContainerImage string
 //
 // To set a different container image, use `CONTAINER_IMAGE=sommerfeldio/source2adoc:rc go test`.
 func InitializeTestSuite(sc *godog.TestSuiteContext) {
+	textGrey := "\033[90m"
+	textWhite := "\033[0m"
+
 	envVarName := "CONTAINER_IMAGE"
 	defaultContainerImage := "local/source2adoc:dev"
 
 	sc.BeforeSuite(func() {
-		fmt.Println("\033[90m")
+		fmt.Println(textGrey)
 
 		if os.Getenv(envVarName) != "" {
 			ContainerImage = os.Getenv(envVarName)
@@ -46,6 +49,6 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 			fmt.Println("Defaulting to", ContainerImage)
 		}
 
-		fmt.Println("\033[0m")
+		fmt.Println(textWhite)
 	})
 }
