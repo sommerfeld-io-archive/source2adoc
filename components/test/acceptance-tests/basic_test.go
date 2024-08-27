@@ -3,26 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/colors"
 )
 
 var cut ContainerUnderTest
 
 func Test_BasicFeatures(t *testing.T) {
+	opts := Options(t, "basic.feature")
+
 	suite := godog.TestSuite{
 		ScenarioInitializer:  initializeBasicScenario,
 		TestSuiteInitializer: InitializeTestSuite,
-		Options: &godog.Options{
-			Format:      "pretty",
-			Paths:       []string{TestSpecsDir + "/basic.feature"},
-			Output:      colors.Colored(os.Stdout),
-			Concurrency: 1,
-			TestingT:    t,
-		},
+		Options:              opts,
 	}
 
 	if suite.Run() != 0 {
