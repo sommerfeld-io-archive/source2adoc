@@ -4,6 +4,9 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   and folders that should be ignored so that I can exclude certain files and
   directories from the documentation generation process.
 
+  #? SHOULD THIS MOVE INTO basic.feature?
+  #? SHOULD WE RENAME basic.feature TO root.feature because specifies the behavior of the root command?
+
   Background:
     Given I am using the root command of the source2adoc CLI tool to generate AsciiDoc files
 
