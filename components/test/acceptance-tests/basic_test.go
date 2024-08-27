@@ -8,13 +8,9 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/colors"
-	"github.com/docker/docker/api/types"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-var containerCmd []string
-var containerState *types.ContainerState
+var cut ContainerUnderTest
 
 func Test_BasicFeatures(t *testing.T) {
 	suite := godog.TestSuite{
@@ -39,59 +35,59 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^I specify the "([^"]*)" flag$`, iSpecifyTheFlag)
 	sc.Step(`^I specify the "([^"]*)" flag with value "([^"]*)"$`, iSpecifyTheFlagWithValue)
 	sc.Step(`^I run the app$`, iRunTheApp)
+	sc.Step(`^I run the app with volume mount "([^"]*)"$`, iRunTheAppWithVolumeMount)
 	sc.Step(`^exit code should be (\d+)$`, exitCodeShouldBe)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-		containerCmd = []string{}
-		containerState = nil
+		cut = NewContainerUnderTest()
 		return ctx, nil
 	})
 }
 
 func iAmUsingTheRootCommand() error {
-	// root cmd does not require a dedicated command name
-	containerCmd = append(containerCmd, "")
+	// The root cmd does not require a dedicated command name
+	cut.AppendCommand("")
 	return nil
 }
 
 func iSpecifyTheFlag(flag string) error {
-	containerCmd = append(containerCmd, flag)
+	cut.AppendCommand(flag)
 	return nil
 }
 
 func iSpecifyTheFlagWithValue(flag, value string) error {
-	containerCmd = append(containerCmd, flag, value)
+	cut.AppendCommand(flag, value)
 	return nil
 }
 
 func iRunTheApp() error {
-	ctx := context.Background()
-	req := testcontainers.ContainerRequest{
-		Image:      ContainerImage,
-		Cmd:        containerCmd,
-		WaitingFor: wait.ForExit(),
+	cut.CreateContainerRequest()
+	err := cut.Run()
+	if err != nil {
+		return fmt.Errorf("failed to run container: %v", err)
 	}
 
-	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
-	if err != nil {
-		return fmt.Errorf("Failed to start container: %v", err)
-	}
-	defer container.Terminate(ctx)
+	return nil
+}
 
-	containerState, err = container.State(ctx)
+func iRunTheAppWithVolumeMount(volumePath string) error {
+	cut.CreateContainerRequest()
+	cut.MountVolume(volumePath)
+	err := cut.Run()
 	if err != nil {
-		return fmt.Errorf("Failed to get container state: %v", err)
+		return fmt.Errorf("failed to run container: %v", err)
 	}
 
 	return nil
 }
 
 func exitCodeShouldBe(expected int) error {
-	if containerState.ExitCode != 0 {
-		return fmt.Errorf("Expected exit code %d, got %d", expected, containerState.ExitCode)
+	code, err := cut.ExitCode()
+	if err != nil {
+		return fmt.Errorf("failed to get exit code: %v", err)
+	}
+	if code != 0 {
+		return fmt.Errorf("expected exit code %d, got %d", expected, code)
 	}
 	return nil
 }

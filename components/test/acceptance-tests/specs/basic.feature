@@ -15,7 +15,7 @@ Feature: Generate AsciidDoc Documentation from Source Code files
   Scenario Outline: Generate AsciiDoc for supported Source Code Files
     Given I specify the "--source-dir" flag with value "<path>"
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
-    When I run the app
+    When I run the app with volume mount "/workspaces/source2adoc"
     Then exit code should be 0
     # And AsciiDoc files should be generated for all source code files
     # And the path of the source code file should be preserved in the --output-dir directory
@@ -29,7 +29,7 @@ Feature: Generate AsciidDoc Documentation from Source Code files
   Scenario Outline: No AsciiDoc for unsupported Source Code Files
     Given I specify the "--source-dir" flag with value "<path>"
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
-    When I run the app
+    When I run the app with volume mount "/workspaces/source2adoc"
     Then exit code should be 0
     # And no AsciiDoc files should be generated
 
@@ -40,10 +40,11 @@ Feature: Generate AsciidDoc Documentation from Source Code files
   Scenario Outline: Error message for missing source dir
     Given I specify the "--source-dir" flag with value "<path>"
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
-    When I run the app
+    When I run the app with volume mount "/workspaces/source2adoc"
     Then exit code should be 1
     # And no AsciiDoc files should be generated
 
     Examples:
       | path |
       | /workspaces/source2adoc/testdata/missing |
+# only 1 flag should result in exit 1
