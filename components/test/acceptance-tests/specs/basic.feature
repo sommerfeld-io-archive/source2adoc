@@ -13,8 +13,8 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     Then exit code should be 0
 
   Scenario Outline: Generate AsciiDoc for supported Source Code Files
-    Given I specify "<path>" using the --source-dir flag
-    And I specify "/workspaces/source2adoc/target" using the --output-dir flag
+    Given I specify the "--source-dir" flag with value "<path>"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 0
     # And AsciiDoc files should be generated for all source code files
@@ -27,8 +27,8 @@ Feature: Generate AsciidDoc Documentation from Source Code files
       | /workspaces/source2adoc/testdata/common/good |
 
   Scenario Outline: No AsciiDoc for unsupported Source Code Files
-    Given I specify "<path>" using the --source-dir flag
-    And I specify "/workspaces/source2adoc/target" using the --output-dir flag
+    Given I specify the "--source-dir" flag with value "<path>"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 0
     # And no AsciiDoc files should be generated
@@ -38,8 +38,8 @@ Feature: Generate AsciidDoc Documentation from Source Code files
       | /workspaces/source2adoc/testdata/common/bad |
 
   Scenario Outline: Error message for missing source dir
-    Given I specify "<path>" using the --source-dir flag
-    And I specify "/workspaces/source2adoc/target" using the --output-dir flag
+    Given I specify the "--source-dir" flag with value "<path>"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 1
     # And no AsciiDoc files should be generated

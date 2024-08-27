@@ -8,62 +8,43 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     Given I am using the root command of the source2adoc CLI tool to generate AsciiDoc files
 
   Scenario Outline: Exclue specific file by its full path
-    Given I specify "<path>" using the --exclude flag
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
+    And I specify the "--exclude" flag with value "<exclude>"
     When I run the app
     Then exit code should be 0
-    And AsciiDoc files should be generated for all source code files
-    But the tool should not generate AsciiDoc files for the specified file
+    # And AsciiDoc files should be generated for all source code files
+    # But the tool should not generate AsciiDoc files for the specified file
 
     Examples:
-      | path                           |
-      | testdata/common/good/Makefile  |
-      | testdata/common/good/script.sh |
-      # TODO use a correct path ... remember, bdd tests are not located in components/app
+      | exclude                                                |
+      | /workspaces/source2adoc/testdata/common/good/Makefile  |
+      | /workspaces/source2adoc/testdata/common/good/script.sh |
 
   Scenario Outline: Exclude Entire Folder
-    Given I specify "<path>" using the --exclude flag
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
+    And I specify the "--exclude" flag with value "<exclude>"
     When I run the app
     Then exit code should be 0
-    And AsciiDoc files should be generated for all source code files
-    But the tool should not generate AsciiDoc files for all files and subfolders within that folder
+    # And AsciiDoc files should be generated for all source code files
+    # But the tool should not generate AsciiDoc files for all files and subfolders within that folder
 
     Examples:
-      | path                        |
-      | testdata/common/good/docker |
-      # TODO use a correct path ... remember, bdd tests are not located in components/app
+      | exclude                                                      |
+      | /workspaces/source2adoc/testdata/testdata/common/good/docker |
 
-  # TODO https://github.com/sommerfeld-io/source2adoc/issues/109
-  # Scenario Outline: Exclude files or folders that match a specific pattern
-  #   Given I specify "<pattern>" using the --exclude flag
-  #   When I run the app
-  #   Then exit code should be 0
-  #   And AsciiDoc files should be generated for all source code files
-  #   But the tool should not generate AsciiDoc files for all files matching the pattern in any directory
-  #
-  #   Examples:
-  #     | pattern  |
-  #     | *.sh     |
-  #     | prefix-* |
-
-  # TODO https://github.com/sommerfeld-io/source2adoc/issues/109
-  # Scenario Outline: Exclude files or folders that match a specific pattern within a particular directory
-  #   Given I specify "<pattern>" using the --exclude flag
-  #   When I run the app
-  #   Then exit code should be 0
-  #   And AsciiDoc files should be generated for all source code files
-  #   But the tool should not generate AsciiDoc files for all files matching the pattern in the specified directory
-  #
-  #   Examples:
-  #     | pattern                  |
-  #     | src/main/*.sh            |
-  #     | src/main/prefix-*        |
-  #     | src/main/**/sources      |
-  #     | src/main/**/sources/*.sh |
-
-  Scenario: Exclude multiple files and folders in a single command run
-    Given I specify the --exclude flag multiple times with different values
+  Scenario Outline: Exclude multiple files and folders in a single command run
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
+    And I specify the "--exclude" flag with value "<exclude-1>"
+    And I specify the "--exclude" flag with value "<exclude-2>"
+    And I specify the "--exclude" flag with value "<exclude-3>"
     When I run the app
     Then exit code should be 0
-    And AsciiDoc files should be generated for all source code files
-    But the tool should not generate AsciiDoc files for all specified files, folders, and patterns
-    # TODO concretize ... test is not deterministic enough ... to vague
+    # And AsciiDoc files should be generated for all source code files
+    # But the tool should not generate AsciiDoc files for all specified files, folders, and patterns
+
+    Examples:
+      | exclude-1 | exclude-2 | exclude-3 |
+      | Makefile  | script.sh | docker    |

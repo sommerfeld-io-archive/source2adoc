@@ -31,9 +31,8 @@ func Test_BasicFeatures(t *testing.T) {
 
 func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^I am using the root command of the source2adoc CLI tool to generate AsciiDoc files$`, iAmUsingTheRootCommand)
-	sc.Step(`^I specify "([^"]*)" using the --output-dir flag$`, iSpecifyTheOutputDir)
-	sc.Step(`^I specify "([^"]*)" using the --source-dir flag$`, iSpecifyTheSourceDir)
 	sc.Step(`^I specify the "([^"]*)" flag$`, iSpecifyTheFlag)
+	sc.Step(`^I specify the "([^"]*)" flag with value "([^"]*)"$`, iSpecifyTheFlagWithValue)
 	sc.Step(`^I run the app$`, iRunTheApp)
 	sc.Step(`^exit code should be (\d+)$`, exitCodeShouldBe)
 
@@ -47,18 +46,13 @@ func iAmUsingTheRootCommand() error {
 	return nil
 }
 
-func iSpecifyTheOutputDir(dir string) error {
-	containerCmd = append(containerCmd, "--output-dir", dir)
-	return nil
-}
-
-func iSpecifyTheSourceDir(dir string) error {
-	containerCmd = append(containerCmd, "--source-dir", dir)
-	return nil
-}
-
 func iSpecifyTheFlag(flag string) error {
 	containerCmd = append(containerCmd, flag)
+	return nil
+}
+
+func iSpecifyTheFlagWithValue(flag, value string) error {
+	containerCmd = append(containerCmd, flag, value)
 	return nil
 }
 
