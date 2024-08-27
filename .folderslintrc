@@ -20,6 +20,7 @@
     "components/test/",
     "components/test/acceptance-tests",
     "components/test/acceptance-tests/specs",
+    "components/test/acceptance-tests/testhelper",
     "components/test/inspec/**",
 
     "config",

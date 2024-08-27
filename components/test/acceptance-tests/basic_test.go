@@ -6,16 +6,17 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/sommerfeld-io/source2adoc-acceptance-tests/testhelper"
 )
 
-var cut ContainerUnderTest
+var cut testhelper.ContainerUnderTest
 
 func Test_BasicFeatures(t *testing.T) {
-	opts := Options(t, "basic.feature")
+	opts := testhelper.Options(t, "basic.feature")
 
 	suite := godog.TestSuite{
 		ScenarioInitializer:  initializeBasicScenario,
-		TestSuiteInitializer: InitializeTestSuite,
+		TestSuiteInitializer: testhelper.InitializeTestSuite,
 		Options:              opts,
 	}
 
@@ -33,7 +34,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^exit code should be (\d+)$`, exitCodeShouldBe)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-		cut = NewContainerUnderTest()
+		cut = testhelper.NewContainerUnderTest()
 		return ctx, nil
 	})
 }

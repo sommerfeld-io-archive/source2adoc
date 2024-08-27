@@ -1,5 +1,6 @@
-// This file contains global variables and godog hooks that are used in all acceptance test files.
-package main
+// This file contains the `ContainerUnderTest` struct and its methods. The struct is used to configure and run the
+// container under test.
+package testhelper
 
 import (
 	"context"
@@ -14,40 +15,12 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-// TestSpecsDir is the directory where the feature files are located.
-const TestSpecsDir = "specs"
-
-// determineDockerImageToUse determines the container image to use for the tests based on the
-// `CONTAINER_IMAGE` environment variable. If the variable is not set, the default image
-// `local/source2adoc:dev` is used.
-func determineDockerImageToUse() string {
-	env := os.Getenv("CONTAINER_IMAGE")
-	if env != "" {
-		return env
-	}
-
-	return "local/source2adoc:dev"
-}
-
-// InitializeTestSuite is a godog hook that is called before the test suite is run.
-// It prints a message to the console to inform the user about the container image that is used for the tests.
-func InitializeTestSuite(sc *godog.TestSuiteContext) {
-	textGrey := "\033[90m"
-	textWhite := "\033[0m"
-
-	sc.BeforeSuite(func() {
-		fmt.Print(textGrey)
-		fmt.Println("Run acceptance tests against the container image:", determineDockerImageToUse())
-		fmt.Println(textWhite)
-	})
-}
-
 // Options returns the godog options for the test suite. The options are configured centrally to ensure consistency
 // across all tests.
 func Options(t *testing.T, featureFile string) *godog.Options {
 	return &godog.Options{
 		Format:      "pretty",
-		Paths:       []string{TestSpecsDir + "/" + featureFile},
+		Paths:       []string{"specs/" + featureFile},
 		Output:      colors.Colored(os.Stdout),
 		Concurrency: 1,
 		TestingT:    t,
