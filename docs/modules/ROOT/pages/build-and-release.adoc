@@ -3,6 +3,7 @@ Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 The purpose of this guide is to provide an understanding of the strategies we employ to ensure reliable, efficient, and consistent software releases. This guide aligns with our xref:development-guide.adoc[] but explains the specifics of the build and release process in a little more detail.
 
+== Pipeline
 The build pipeline is triggered by a commit to any branch in the repository. But not all branches are treated equally. The `main` branch is the most important branch in the repository. It is the branch that is always deployable and is the branch that is used to deploy to production. Other branches use a subset of the pipeline to ensure that they can be merged into the `main` branch and are are in a deployable state.
 
 [plantuml, bar, svg]
@@ -58,3 +59,10 @@ skinparam activity {
 
 @enduml
 ....
+
+== Acceptance Tests
+We use acceptance tests to ensure that the source2adoc CLI tool works as expected. The acceptance tests are written in Gherkin and can be found in the `link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test/acceptance-tests/specs[components/test/acceptance-tests/specs]` directory.
+
+We run the same set of tests locally and in the CI pipeline against source2adoc Docker images. When no Docker image is specified, the test suite defaults to `local/source2adoc:dev`. To target a specific Docker image, you can set an environment variable and run the test suite with `CONTAINER_IMAGE=sommerfeldio/source2adoc:rc go test`.
+
+The reason behind this is that a pipeline can test against different versions of the app by setting the `CONTAINER_IMAGE` environment variable while the developer can easily run the tests locally through `go test` or the IDE.
