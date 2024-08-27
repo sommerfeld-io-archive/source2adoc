@@ -2,7 +2,7 @@
 * xref:development-guide.adoc[]
 * xref:build-and-release.adoc[]
 * xref:contribute.adoc[]
+* xref:security.adoc[]
 * xref:code-of-conduct.adoc[]
 * xref:license.adoc[]
-* xref:security.adoc[]
 * xref:terms.adoc[]
