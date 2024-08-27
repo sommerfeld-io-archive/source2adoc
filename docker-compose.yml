@@ -117,6 +117,8 @@ services:
       - TARGET_DIR=/workspaces/source2adoc/target
 
   app-acceptance-test:
+    #! PROBLEM: This way the tests cannot work because this image cannot start a docker image
+    #! which is essential for the tests. The BDD tests are run against the a container.
     container_name: ${COMPOSE_PROJECT_NAME}-app-acceptance-test
     image: golang:1.22.6-alpine3.19
     volumes:
