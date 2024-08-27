@@ -15,11 +15,11 @@ import (
 
 var containerCmd []string
 var containerState *types.ContainerState
-var containerImage string
 
 func Test_BasicFeatures(t *testing.T) {
 	suite := godog.TestSuite{
-		ScenarioInitializer: initializeBasicScenario,
+		ScenarioInitializer:  initializeBasicScenario,
+		TestSuiteInitializer: InitializeTestSuite,
 		Options: &godog.Options{
 			Format:      "pretty",
 			Paths:       []string{TestSpecsDir + "/basic.feature"},
@@ -42,7 +42,6 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^exit code should be (\d+)$`, exitCodeShouldBe)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-		containerImage = "sommerfeldio/source2adoc:rc"
 		containerCmd = []string{}
 		containerState = nil
 		return ctx, nil
@@ -68,7 +67,7 @@ func iSpecifyTheFlagWithValue(flag, value string) error {
 func iRunTheApp() error {
 	ctx := context.Background()
 	req := testcontainers.ContainerRequest{
-		Image:      containerImage,
+		Image:      ContainerImage,
 		Cmd:        containerCmd,
 		WaitingFor: wait.ForExit(),
 	}
