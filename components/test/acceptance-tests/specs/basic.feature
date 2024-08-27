@@ -47,4 +47,8 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     Examples:
       | path |
       | /workspaces/source2adoc/testdata/missing |
-# only 1 flag should result in exit 1
+
+  # Scenario: Missing mandatory flags
+  #  Given ...
+  #  ...
+  #  Then exit code should be 1
