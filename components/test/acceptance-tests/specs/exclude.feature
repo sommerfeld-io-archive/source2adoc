@@ -10,7 +10,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   Scenario Outline: Exclue specific file by its full path
     Given I specify "<path>" using the --exclude flag
     When I run the app
-    Then AsciiDoc files should be generated for all source code files
+    Then exit code should be 0
+    And AsciiDoc files should be generated for all source code files
     But the tool should not generate AsciiDoc files for the specified file
 
     Examples:
@@ -22,7 +23,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   Scenario Outline: Exclude Entire Folder
     Given I specify "<path>" using the --exclude flag
     When I run the app
-    Then AsciiDoc files should be generated for all source code files
+    Then exit code should be 0
+    And AsciiDoc files should be generated for all source code files
     But the tool should not generate AsciiDoc files for all files and subfolders within that folder
 
     Examples:
@@ -34,7 +36,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   # Scenario Outline: Exclude files or folders that match a specific pattern
   #   Given I specify "<pattern>" using the --exclude flag
   #   When I run the app
-  #   Then AsciiDoc files should be generated for all source code files
+  #   Then exit code should be 0
+  #   And AsciiDoc files should be generated for all source code files
   #   But the tool should not generate AsciiDoc files for all files matching the pattern in any directory
   #
   #   Examples:
@@ -46,7 +49,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   # Scenario Outline: Exclude files or folders that match a specific pattern within a particular directory
   #   Given I specify "<pattern>" using the --exclude flag
   #   When I run the app
-  #   Then AsciiDoc files should be generated for all source code files
+  #   Then exit code should be 0
+  #   And AsciiDoc files should be generated for all source code files
   #   But the tool should not generate AsciiDoc files for all files matching the pattern in the specified directory
   #
   #   Examples:
@@ -59,6 +63,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   Scenario: Exclude multiple files and folders in a single command run
     Given I specify the --exclude flag multiple times with different values
     When I run the app
-    Then AsciiDoc files should be generated for all source code files
+    Then exit code should be 0
+    And AsciiDoc files should be generated for all source code files
     But the tool should not generate AsciiDoc files for all specified files, folders, and patterns
     # TODO concretize ... test is not deterministic enough ... to vague

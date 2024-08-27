@@ -1,10 +1,18 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"testing"
 
 	"github.com/cucumber/godog"
+	"github.com/docker/docker/api/types"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
+
+var containerCmd []string
+var containerState *types.ContainerState
 
 func Test_BasicFeatures(t *testing.T) {
 	suite := godog.TestSuite{
@@ -21,40 +29,67 @@ func Test_BasicFeatures(t *testing.T) {
 	}
 }
 
-func initializeBasicScenario(ctx *godog.ScenarioContext) {
-	ctx.Step(`^AsciiDoc files should be generated for all source code files$`, asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles)
-	ctx.Step(`^I am using the root command of the source2adoc CLI tool to generate AsciiDoc files$`, iAmUsingTheRootCommand)
-	ctx.Step(`^I run the app$`, iRunTheApp)
-	ctx.Step(`^I specify "([^"]*)" using the --output-dir flag$`, iSpecifyTheOutputDir)
-	ctx.Step(`^I specify "([^"]*)" using the --source-dir flag$`, iSpecifyTheSourceDir)
+func initializeBasicScenario(sc *godog.ScenarioContext) {
+	sc.Step(`^I am using the root command of the source2adoc CLI tool to generate AsciiDoc files$`, iAmUsingTheRootCommand)
+	sc.Step(`^I specify "([^"]*)" using the --output-dir flag$`, iSpecifyTheOutputDir)
+	sc.Step(`^I specify "([^"]*)" using the --source-dir flag$`, iSpecifyTheSourceDir)
+	sc.Step(`^I specify the "([^"]*)" flag$`, iSpecifyTheFlag)
+	sc.Step(`^I run the app$`, iRunTheApp)
+	sc.Step(`^exit code should be (\d+)$`, exitCodeShouldBe)
+
+	containerCmd = []string{}
+	containerState = nil
 }
 
 func iAmUsingTheRootCommand() error {
-	// TODO prepare docker run command with volumes and images etc.
-	return godog.ErrPending
-}
-
-func iRunTheApp() error {
-	// TODO run the container with all docker flags and app flags
-	// https://docs.docker.com/reference/api/engine/sdk/examples/
-	// go get github.com/docker/docker
-
-	return godog.ErrPending
+	// root cmd does not require a dedicated command name
+	containerCmd = append(containerCmd, "")
+	return nil
 }
 
 func iSpecifyTheOutputDir(dir string) error {
-	// TODO prepare --output-dir flag
-	return godog.ErrPending
+	containerCmd = append(containerCmd, "--output-dir", dir)
+	return nil
 }
 
 func iSpecifyTheSourceDir(dir string) error {
-	// TODO prepare --source-dir flag
-	return godog.ErrPending
+	containerCmd = append(containerCmd, "--source-dir", dir)
+	return nil
 }
 
-func asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles() error {
-	// TODO check if all source code files have been converted to AsciiDoc files
-	// TODO this is where the real validation should happen
-	// TODO think about assert library to use
-	return godog.ErrPending
+func iSpecifyTheFlag(flag string) error {
+	containerCmd = append(containerCmd, flag)
+	return nil
+}
+
+func iRunTheApp() error {
+	ctx := context.Background()
+	req := testcontainers.ContainerRequest{
+		Image:      "sommerfeldio/source2adoc:rc",
+		Cmd:        containerCmd,
+		WaitingFor: wait.ForExit(),
+	}
+
+	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	if err != nil {
+		return fmt.Errorf("Failed to start container: %v", err)
+	}
+	defer container.Terminate(ctx)
+
+	containerState, err = container.State(ctx)
+	if err != nil {
+		return fmt.Errorf("Failed to get container state: %v", err)
+	}
+
+	return nil
+}
+
+func exitCodeShouldBe(expected int) error {
+	if containerState.ExitCode != 0 {
+		return fmt.Errorf("Expected exit code %d, got %d", expected, containerState.ExitCode)
+	}
+	return nil
 }

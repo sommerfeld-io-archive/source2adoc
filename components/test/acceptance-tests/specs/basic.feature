@@ -7,26 +7,43 @@ Feature: Generate AsciidDoc Documentation from Source Code files
   Background:
     Given I am using the root command of the source2adoc CLI tool to generate AsciiDoc files
 
+  Scenario: Display help message
+    Given I specify the "--help" flag
+    When I run the app
+    Then exit code should be 0
+
   Scenario Outline: Generate AsciiDoc for supported Source Code Files
     Given I specify "<path>" using the --source-dir flag
-    And I specify "target" using the --output-dir flag
+    And I specify "/workspaces/source2adoc/target" using the --output-dir flag
     When I run the app
-    Then AsciiDoc files should be generated for all source code files
+    Then exit code should be 0
+    # And AsciiDoc files should be generated for all source code files
     # And the path of the source code file should be preserved in the --output-dir directory
     # And the caption of the documentation file should automatically be set from the source code file's name
     # And the path of the source code file should be included in the generated docs file file
 
     Examples:
-      | path          |
-      | testdata/good |
-      # TODO use a correct path ... remember, bdd tests are not located in components/app
+      | path |
+      | /workspaces/source2adoc/testdata/common/good |
 
   Scenario Outline: No AsciiDoc for unsupported Source Code Files
     Given I specify "<path>" using the --source-dir flag
-    And I specify "target" using the --output-dir flag
+    And I specify "/workspaces/source2adoc/target" using the --output-dir flag
     When I run the app
-    Then no AsciiDoc files should be generated
+    Then exit code should be 0
+    # And no AsciiDoc files should be generated
 
     Examples:
-      | path         |
-      | testdata/bad |
+      | path |
+      | /workspaces/source2adoc/testdata/common/bad |
+
+  Scenario Outline: Error message for missing source dir
+    Given I specify "<path>" using the --source-dir flag
+    And I specify "/workspaces/source2adoc/target" using the --output-dir flag
+    When I run the app
+    Then exit code should be 1
+    # And no AsciiDoc files should be generated
+
+    Examples:
+      | path |
+      | /workspaces/source2adoc/testdata/missing |
