@@ -17,6 +17,18 @@ import (
 // TestSpecsDir is the directory where the feature files are located.
 const TestSpecsDir = "specs"
 
+// determineDockerImageToUse determines the container image to use for the tests based on the
+// `CONTAINER_IMAGE` environment variable. If the variable is not set, the default image
+// `local/source2adoc:dev` is used.
+func determineDockerImageToUse() string {
+	env := os.Getenv("CONTAINER_IMAGE")
+	if env != "" {
+		return env
+	}
+
+	return "local/source2adoc:dev"
+}
+
 // InitializeTestSuite is a godog hook that is called before the test suite is run.
 // It prints a message to the console to inform the user about the container image that is used for the tests.
 func InitializeTestSuite(sc *godog.TestSuiteContext) {
@@ -30,6 +42,8 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 	})
 }
 
+// Options returns the godog options for the test suite. The options are configured centrally to ensure consistency
+// across all tests.
 func Options(t *testing.T, featureFile string) *godog.Options {
 	return &godog.Options{
 		Format:      "pretty",
@@ -55,15 +69,6 @@ type ContainerUnderTest struct {
 	req               testcontainers.ContainerRequest
 	containerInstance testcontainers.Container
 	containerState    *types.ContainerState
-}
-
-func determineDockerImageToUse() string {
-	env := os.Getenv("CONTAINER_IMAGE")
-	if env != "" {
-		return env
-	}
-
-	return "local/source2adoc:dev"
 }
 
 // NewContainerUnderTest returns a container request for the system under test
