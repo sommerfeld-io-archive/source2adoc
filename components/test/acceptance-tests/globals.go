@@ -74,21 +74,6 @@ func NewContainerUnderTest() ContainerUnderTest {
 	}
 }
 
-// Context returns the context to use for the container.
-func (c *ContainerUnderTest) Context() context.Context {
-	return c.ctx
-}
-
-// ContainerImage returns the docker image to use for the container that should be tested.
-func (c *ContainerUnderTest) ContainerImage() string {
-	return c.image
-}
-
-// Command returns the command to run in the container.
-func (c *ContainerUnderTest) Command() []string {
-	return c.cmd
-}
-
 // AppendCommand appends a command to the command to run in the container.
 func (c *ContainerUnderTest) AppendCommand(cmd ...string) {
 	c.cmd = append(c.cmd, cmd...)
@@ -97,8 +82,8 @@ func (c *ContainerUnderTest) AppendCommand(cmd ...string) {
 // CreateContainerRequest creates a container request that configures the docker container.
 func (c *ContainerUnderTest) CreateContainerRequest() {
 	c.req = testcontainers.ContainerRequest{
-		Image:      c.ContainerImage(),
-		Cmd:        c.Command(),
+		Image:      c.image,
+		Cmd:        c.cmd,
 		WaitingFor: wait.ForExit(),
 	}
 }
@@ -117,17 +102,17 @@ func (c *ContainerUnderTest) MountVolume(volumePath string) {
 }
 
 func (c *ContainerUnderTest) Run() error {
-	instance, err := testcontainers.GenericContainer(c.Context(), testcontainers.GenericContainerRequest{
+	instance, err := testcontainers.GenericContainer(c.ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: c.req,
 		Started:          true,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to start container: %v", err)
 	}
-	defer instance.Terminate(c.Context())
+	defer instance.Terminate(c.ctx)
 
 	c.containerInstance = instance
-	c.containerState, err = c.containerInstance.State(c.Context())
+	c.containerState, err = c.containerInstance.State(c.ctx)
 	if err != nil {
 		return fmt.Errorf("failed to get container state: %v", err)
 	}
