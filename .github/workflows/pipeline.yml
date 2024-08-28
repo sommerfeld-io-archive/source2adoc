@@ -51,6 +51,16 @@ permissions:
 jobs:
   # ----- Commit stage - 1 - lint ---------------
 
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          ignore_paths: node_modules target
+
   lint:
     runs-on: ubuntu-latest
     name: ${{ matrix.linter }}
@@ -79,6 +89,7 @@ jobs:
 
   go-licenses:
     runs-on: ubuntu-latest
+    needs: ['lint-go']
     name: ${{ matrix.component }}
     strategy:
       matrix:
@@ -106,6 +117,7 @@ jobs:
 
   go-complexity:
     runs-on: ubuntu-latest
+    needs: ['lint-go']
     name: ${{ matrix.component }}
     strategy:
       matrix:
@@ -125,16 +137,6 @@ jobs:
             gocyclo -over 10 .
           )
         shell: bash
-
-  shellcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          ignore_paths: node_modules target
 
   # ----- Commit stage - 2 - scan ---------------
 
@@ -233,8 +235,6 @@ jobs:
     needs: [
       'docs',
       'lint-go',
-      'go-licenses',
-      'go-complexity',
     ]
     permissions:
       contents: read
