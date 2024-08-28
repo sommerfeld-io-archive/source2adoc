@@ -79,12 +79,23 @@ jobs:
     name: ${{ matrix.linter }}
     strategy:
       matrix:
-        linter: ['go-app', 'go-acceptance-tests']
+        include:
+          - linter: go-app
+            component: components/app
+          - linter: go-acceptance-tests
+            component: components/test-acceptance
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run lint-${{ matrix.linter }} from docker-compose.yml
         run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
+        shell: bash
+      - name: Run go vet for -${{ matrix.component }}
+        run: |
+          (
+            cd ${{ matrix.component }} || exit
+            go vet ./...
+          )
         shell: bash
 
   go-licenses:
