@@ -7,6 +7,7 @@
         "codefile",
         "codefiles",
         "ditaa",
+        "exitcode",
         "mvnw",
         "testcontainers",
         "testdata",

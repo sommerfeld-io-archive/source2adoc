@@ -11,6 +11,7 @@ import (
 	"github.com/cucumber/godog"
 	"github.com/cucumber/godog/colors"
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -35,6 +36,7 @@ func Options(t *testing.T, featureFile string) *godog.Options {
 // * req is the container request that configures the docker container
 // * containerInstance represents the actual docker container
 // * containerState is the state of the container (dedicated field to preserve state after the container is terminated)
+// * volumes is a list of volumes to mount to the container as bind mounts (see https://docs.docker.com/engine/storage/bind-mounts)
 type ContainerUnderTest struct {
 	image             string
 	cmd               []string
@@ -42,6 +44,7 @@ type ContainerUnderTest struct {
 	req               testcontainers.ContainerRequest
 	containerInstance testcontainers.Container
 	containerState    *types.ContainerState
+	volumes           []string
 }
 
 // NewContainerUnderTest returns a container request for the system under test
@@ -58,9 +61,10 @@ type ContainerUnderTest struct {
 // To set a different container image, use `CONTAINER_IMAGE=sommerfeldio/source2adoc:rc go test`.
 func NewContainerUnderTest() ContainerUnderTest {
 	return ContainerUnderTest{
-		image: determineDockerImageToUse(),
-		cmd:   []string{},
-		ctx:   context.Background(),
+		image:   determineDockerImageToUse(),
+		cmd:     []string{},
+		ctx:     context.Background(),
+		volumes: []string{},
 	}
 }
 
@@ -69,26 +73,33 @@ func (c *ContainerUnderTest) AppendCommand(cmd ...string) {
 	c.cmd = append(c.cmd, cmd...)
 }
 
-// CreateContainerRequest creates a container request that configures the docker container.
-func (c *ContainerUnderTest) CreateContainerRequest() {
+// CreateContainer configures and creates a container but does not start it. All config must be done
+// here. To add volumes, use the `AddVolume` method.
+func (c *ContainerUnderTest) CreateContainer() {
 	c.req = testcontainers.ContainerRequest{
 		Image:      c.image,
 		Cmd:        c.cmd,
 		WaitingFor: wait.ForExit(),
+		HostConfigModifier: func(hostConfig *container.HostConfig) {
+			hostConfig.Binds = c.volumes
+		},
 	}
 }
 
-// MountVolume mounts a volume to the container request. The volumePath is mounted as source folder
-// on the host and as target folder in the container.
-func (c *ContainerUnderTest) MountVolume(volumePath string) {
-	c.req.Mounts = testcontainers.ContainerMounts{
-		{
-			Source: testcontainers.GenericVolumeMountSource{
-				Name: "test-volume",
-			},
-			Target: testcontainers.ContainerMountTarget(volumePath),
-		},
-	}
+// AddVolume add a configuration to mount a volume to the container request. The pathOnHost is
+// mounted as source folder on the host and as target folder in the container keeping the paths
+// the same.
+//
+// Make sure to call this method before `CreateContainer`.
+func (c *ContainerUnderTest) AddVolume(pathOnHost string) error {
+	//! if c.req != nil {
+	//! 	return fmt.Errorf("container with host config request already set, cannot add volume, call AddVolume() before CreateContainer()")
+	//! }
+
+	mount := pathOnHost + ":" + pathOnHost
+	c.volumes = append(c.volumes, mount)
+
+	return nil
 }
 
 func (c *ContainerUnderTest) Run() error {

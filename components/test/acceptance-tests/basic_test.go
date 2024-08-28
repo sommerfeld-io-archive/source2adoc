@@ -12,16 +12,20 @@ import (
 var cut testhelper.ContainerUnderTest
 
 func Test_BasicFeatures(t *testing.T) {
-	opts := testhelper.Options(t, "basic.feature")
+	featureFile := "basic.feature"
+	opts := testhelper.Options(t, featureFile)
 
 	suite := godog.TestSuite{
+		Name:                 featureFile,
 		ScenarioInitializer:  initializeBasicScenario,
 		TestSuiteInitializer: testhelper.InitializeTestSuite,
 		Options:              opts,
 	}
 
-	if suite.Run() != 0 {
-		t.Fatal("non-zero status returned, failed to run feature tests")
+	exitcode := suite.Run()
+	if exitcode != 0 {
+		t.Fatal(suite.Name, "|", "non-zero status returned.", "failed to run tests.", "finished with exit code", exitcode)
+
 	}
 }
 
@@ -41,7 +45,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 
 func iAmUsingTheRootCommand() error {
 	// The root cmd does not require a dedicated command name
-	cut.AppendCommand("")
+	// cut.AppendCommand("")
 	return nil
 }
 
@@ -56,7 +60,7 @@ func iSpecifyTheFlagWithValue(flag, value string) error {
 }
 
 func iRunTheApp() error {
-	cut.CreateContainerRequest()
+	cut.CreateContainer()
 	err := cut.Run()
 	if err != nil {
 		return fmt.Errorf("failed to run container: %v", err)
@@ -65,9 +69,9 @@ func iRunTheApp() error {
 	return nil
 }
 
-func iRunTheAppWithVolumeMount(volumePath string) error {
-	cut.CreateContainerRequest()
-	cut.MountVolume(volumePath)
+func iRunTheAppWithVolumeMount(pathOnHost string) error {
+	cut.AddVolume(pathOnHost)
+	cut.CreateContainer()
 	err := cut.Run()
 	if err != nil {
 		return fmt.Errorf("failed to run container: %v", err)
@@ -81,7 +85,7 @@ func exitCodeShouldBe(expected int) error {
 	if err != nil {
 		return fmt.Errorf("failed to get exit code: %v", err)
 	}
-	if code != 0 {
+	if code != expected {
 		return fmt.Errorf("expected exit code %d, got %d", expected, code)
 	}
 	return nil

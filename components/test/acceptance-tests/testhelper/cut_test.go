@@ -47,13 +47,13 @@ func Test_ShouldAppendCommand(t *testing.T) {
 	assert.Equal(expected, actual, "Commands should be appended correctly")
 }
 
-func Test_ShouldCreateContainerRequest(t *testing.T) {
+func Test_ShouldCreateContainer(t *testing.T) {
 	assert := assert.New(t)
 
 	c := NewContainerUnderTest()
 	c.image = "custom/image:tag"
 	c.AppendCommand("command1", "command2")
-	c.CreateContainerRequest()
+	c.CreateContainer()
 
 	expected := testcontainers.ContainerRequest{
 		Image:      "custom/image:tag",
