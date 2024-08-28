@@ -31,7 +31,7 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app with volume mount "/workspaces/source2adoc"
     Then exit code should be 0
-    # And no AsciiDoc files should be generated
+    And no AsciiDoc files should be generated
 
     Examples:
       | path |
@@ -42,13 +42,24 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app with volume mount "/workspaces/source2adoc"
     Then exit code should be 1
-    # And no AsciiDoc files should be generated
+    And no AsciiDoc files should be generated
 
     Examples:
       | path |
       | /workspaces/source2adoc/testdata/missing |
 
-  # Scenario: Missing mandatory flags
-  #  Given ...
-  #  ...
-  #  Then exit code should be 1
+  Scenario Outline: Not all mandatory flags are specified
+    Given I specify the "<existing>" flag with value "<value>"
+    When I run the app
+    Then exit code should be 1
+
+    Examples:
+      | existing | value |
+      | --source-dir | /workspaces/source2adoc/testdata |
+      | --output-dir | /workspaces/source2adoc/target |
+
+  Scenario: Mandatory flags without values
+    Given I specify the "--source-dir" flag
+    And I specify the "--output-dir" flag
+    When I run the app
+    Then exit code should be 1

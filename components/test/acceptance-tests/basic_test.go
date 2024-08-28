@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -10,11 +11,15 @@ import (
 )
 
 type BasicTestState struct {
-	cut testhelper.ContainerUnderTest
+	cut       testhelper.ContainerUnderTest
+	sourceDir string
+	outputDir string
 }
 
 func (ts *BasicTestState) reset() {
 	ts.cut = testhelper.NewContainerUnderTest()
+	ts.sourceDir = ""
+	ts.outputDir = ""
 }
 
 func Test_BasicFeatures(t *testing.T) {
@@ -44,6 +49,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^I run the app$`, ts.iRunTheApp)
 	sc.Step(`^I run the app with volume mount "([^"]*)"$`, ts.iRunTheAppWithVolumeMount)
 	sc.Step(`^exit code should be (\d+)$`, ts.exitCodeShouldBe)
+	sc.Step(`^no AsciiDoc files should be generated$`, ts.noAsciiDocFilesShouldBeGenerated)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
 		ts.reset()
@@ -64,6 +70,13 @@ func (ts *BasicTestState) iSpecifyTheFlag(flag string) error {
 }
 
 func (ts *BasicTestState) iSpecifyTheFlagWithValue(flag, value string) error {
+	if flag == "--source-dir" {
+		ts.sourceDir = value
+	}
+	if flag == "--output-dir" {
+		ts.outputDir = value
+	}
+
 	ts.cut.AppendCommand(flag, value)
 	return nil
 }
@@ -94,6 +107,17 @@ func (ts *BasicTestState) exitCodeShouldBe(expected int) error {
 	}
 	if code != expected {
 		return fmt.Errorf("expected exit code %d, got %d", expected, code)
+	}
+	return nil
+}
+
+func (ts *BasicTestState) noAsciiDocFilesShouldBeGenerated() error {
+	if ts.outputDir == "" {
+		return fmt.Errorf("output directory not set")
+	}
+
+	if _, err := os.Stat(ts.outputDir); !os.IsNotExist(err) {
+		return fmt.Errorf(ts.outputDir, "directory should not exist")
 	}
 	return nil
 }
