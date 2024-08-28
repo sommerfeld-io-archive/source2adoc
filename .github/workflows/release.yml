@@ -69,22 +69,28 @@ jobs:
           short-description: ${{ github.event.repository.description }}
           readme-filepath: ./UPLOAD.md
 
-  test-release:
+  acceptance-test-rc:
     runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
     needs: publish-release
-    name: ${{ matrix.image-name }}
     permissions:
       contents: read
-    strategy:
-      matrix:
-        include:
-          - registry: docker.io
-            image-name: source2adoc
-          - registry: docker.io
-            image-name: source2adoc-docs
+    env:
+      CONTAINER_IMAGE: sommerfeldio/source2adoc
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: components/test/acceptance-tests/go.mod
+      - name: Run Acceptance tests for ${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_LATEST }}
+        run: |
+          (
+            cd components/test/acceptance-tests || exit
+            CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_LATEST }} go test
+          )
+        shell: bash
 
   inspec-release:
     runs-on: ubuntu-latest
@@ -141,3 +147,45 @@ jobs:
           docker stop --time 0 "${{ env.CONTAINER_NAME }}"
           docker rm "${{ env.CONTAINER_NAME }}"
         shell: bash
+
+  docker-scout-release:
+    runs-on: ubuntu-latest
+    needs: publish-release
+    name: ${{ matrix.image-name }}
+    permissions:
+      contents: read
+    env:
+      CHEF_LICENSE: accept-no-persist
+      CONTAINER_NAME: system_under_test
+    strategy:
+      matrix:
+        include:
+          - registry: docker.io
+            image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Login to Container Registry ${{ matrix.registry }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ matrix.registry }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Docker Scout CVEs for ${{ matrix.image-name }}:${{ env.IMAGE_TAG_LATEST }}
+        uses: docker/scout-action@v1.13.0
+        with:
+          command: cves
+          image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_LATEST }}
+          exit-code: false
+          #write-comment: ${{ github.event_name == 'pull_request' }}
+          write-comment: true
+      - name: Docker Scout Compare :${{ env.IMAGE_TAG_RC }}" to :${{ env.IMAGE_TAG_LATEST }}
+        uses: docker/scout-action@v1.13.0
+        with:
+          command: compare
+          image: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
+          to: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_LATEST }}
+          exit-code: false
+          write-comment: true
