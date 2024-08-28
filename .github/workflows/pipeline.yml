@@ -51,142 +51,76 @@ permissions:
 jobs:
   # ----- Commit stage - 1 - lint ---------------
 
-  lint-yaml:
+  lint:
     runs-on: ubuntu-latest
+    name: ${{ matrix.linter }}
+    strategy:
+      matrix:
+        linter: ['yaml', 'workflows', 'filenames', 'folders', 'gherkin']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run yamllint
-        run: docker compose up lint-yaml --exit-code-from lint-yaml
+      - name: Run lint-${{ matrix.linter }} from docker-compose.yml
+        run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
         shell: bash
 
-  lint-workflows:
+  lint-go:
     runs-on: ubuntu-latest
+    name: ${{ matrix.linter }}
+    strategy:
+      matrix:
+        linter: ['go-app', 'go-acceptance-tests']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Lint GitHub Actions workflow files
-        run: docker compose up lint-workflows --exit-code-from lint-workflows
+      - name: Run lint-${{ matrix.linter }} from docker-compose.yml
+        run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
         shell: bash
 
-  lint-filenames:
+  go-licenses:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run ls-lint in container
-        run: docker compose up lint-filenames --exit-code-from lint-filenames
-        shell: bash
-
-  lint-folders:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run folderslint in container
-        run: docker compose up lint-folders --exit-code-from lint-folders
-        shell: bash
-
-  lint-gherkin:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Lint Gherkin specifiation files
-        run: docker compose up lint-gherkin --exit-code-from lint-gherkin
-        shell: bash
-
-  lint-go-app:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run golangci-lint in container
-        run: docker compose up lint-go-app --exit-code-from lint-go-app
-        shell: bash
-
-  lint-go-acceptance-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Run golangci-lint in container
-        run: docker compose up lint-go-acceptance-tests --exit-code-from lint-go-acceptance-tests
-        shell: bash
-
-  go-licenses-app:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.component }}
+    strategy:
+      matrix:
+        include:
+          - component: components/app
+            go-module-name: source2adoc
+          - component: components/test/acceptance-tests
+            go-module-name: source2adoc-acceptance-tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: components/app/go.mod
-      - name: Scan licenses of Go dependencies
+          go-version-file: ${{ matrix.component }}/go.mod
+      - name: Scan licenses of Go dependencies for ${{ matrix.go-module-name }} in ${{ matrix.component }}
         run: |
           (
-            cd components/app || exit
-
+            cd ${{ matrix.component }} || exit
             go install github.com/google/go-licenses@latest
-            go-licenses check --include_tests github.com/sommerfeld-io/source2adoc
-            go-licenses report --include_tests github.com/sommerfeld-io/source2adoc
+            go-licenses check --include_tests github.com/sommerfeld-io/${{ matrix.go-module-name }}
+            go-licenses report --include_tests github.com/sommerfeld-io/${{ matrix.go-module-name }}
           )
         shell: bash
 
-  go-complexity-app:
+  go-complexity:
     runs-on: ubuntu-latest
+    name: ${{ matrix.component }}
+    strategy:
+      matrix:
+        component: ['components/app', 'components/test/acceptance-tests']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: components/app/go.mod
-      - name: Calculate cyclomatic complexity of Go code
+          go-version-file: ${{ matrix.component }}/go.mod
+      - name: Calculate cyclomatic complexity of Go code  in ${{ matrix.component }}
         run: |
           (
-            cd components/app || exit
-
-            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-            gocyclo -over 10 .
-          )
-        shell: bash
-
-  go-licenses-acceptance-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: components/test/acceptance-tests/go.mod
-      - name: Scan licenses of Go dependencies
-        run: |
-          (
-            cd components/test/acceptance-tests || exit
-
-            go install github.com/google/go-licenses@latest
-            go-licenses check --include_tests github.com/sommerfeld-io/source2adoc-acceptance-tests
-            go-licenses report --include_tests github.com/sommerfeld-io/source2adoc-acceptance-tests
-          )
-        shell: bash
-
-  go-complexity-acceptance-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: components/test/acceptance-tests/go.mod
-      - name: Calculate cyclomatic complexity of Go code
-        run: |
-          (
-            cd components/test/acceptance-tests || exit
-
+            cd ${{ matrix.component }} || exit
             go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
             gocyclo -over 10 .
           )
@@ -207,7 +141,7 @@ jobs:
   sonarcloud:
     runs-on: ubuntu-latest
     if: ${{ (github.actor != 'dependabot[bot]') }}
-    needs: ['lint-yaml', 'lint-workflows', 'lint-filenames', 'lint-folders', 'lint-gherkin', 'shellcheck']
+    needs: ['lint', 'shellcheck']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -298,12 +232,9 @@ jobs:
     name: ${{ matrix.image-name }}:${{ github.sha }}
     needs: [
       'docs',
-      'lint-go-app',
-      'lint-go-acceptance-tests',
-      'go-licenses-app',
-      'go-licenses-acceptance-tests',
-      'go-complexity-app',
-      'go-complexity-acceptance-tests',
+      'lint-go',
+      'go-licenses',
+      'go-complexity',
     ]
     permissions:
       contents: read
