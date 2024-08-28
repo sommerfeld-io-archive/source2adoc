@@ -412,11 +412,28 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: components/test/acceptance-tests/go.mod
+      - name: Info
+        run: |
+          pwd
+          echo ${{ github.workspace }}
+          echo "$GITHUB_WORKSPACE"
+          ls -alF
+        shell: bash
+      - name: Adjust paths in feature files to compensate different paths in Github Actions compared to devcontainer
+        run: |
+          (
+            cd components/test/acceptance-tests/specs || exit
+
+            OLD="/workspaces/source2adoc"
+            for file in *.feature; do
+              sed -i "s|$OLD|$GITHUB_WORKSPACE|g" "$file"
+            done
+          )
+        shell: bash
       - name: Run Acceptance tests for ${{ env.CONTAINER_IMAGE }}:${{ github.sha }}
         run: |
           (
             cd components/test/acceptance-tests || exit
-            pwd
             CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ github.sha }} go test
           )
         shell: bash
@@ -522,11 +539,28 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: components/test/acceptance-tests/go.mod
+      - name: Info
+        run: |
+          pwd
+          echo ${{ github.workspace }}
+          echo "$GITHUB_WORKSPACE"
+          ls -alF
+        shell: bash
+      - name: Adjust paths in feature files to compensate different paths in Github Actions compared to devcontainer
+        run: |
+          (
+            cd components/test/acceptance-tests/specs || exit
+
+            OLD="/workspaces/source2adoc"
+            for file in *.feature; do
+              sed -i "s|$OLD|$GITHUB_WORKSPACE|g" "$file"
+            done
+          )
+        shell: bash
       - name: Run Acceptance tests for ${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_RC }}
         run: |
           (
             cd components/test/acceptance-tests || exit
-            pwd
             CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_RC }} go test
           )
         shell: bash
@@ -656,26 +690,26 @@ jobs:
 
   # ----- Cleanup -------------------------------
 
-  # cleanup:
-  #   runs-on: ubuntu-latest
-  #   name: ${{ matrix.image-name }}
-  #   # needs: ['test-rc', 'inspec-rc']
-  #   needs: ['publish-rc']
-  #   if: always()
-  #   permissions:
-  #     contents: read
-  #   strategy: # see build-image (duplicated because github actions does not support anchors)
-  #     matrix:
-  #       include:
-  #         - registry: docker.io
-  #           image-name: source2adoc
-  #         - registry: docker.io
-  #           image-name: source2adoc-docs
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Remove :${{ github.sha }} images from ${{ matrix.registry }}
-  #       run: |
-  #         TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
-  #         curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
-  #       shell: bash
+  cleanup:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.image-name }}
+    # needs: ['test-rc', 'inspec-rc']
+    needs: ['publish-rc']
+    if: always()
+    permissions:
+      contents: read
+    strategy: # see build-image (duplicated because github actions does not support anchors)
+      matrix:
+        include:
+          - registry: docker.io
+            image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Remove :${{ github.sha }} images from ${{ matrix.registry }}
+        run: |
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+          curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
+        shell: bash

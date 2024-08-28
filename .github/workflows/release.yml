@@ -69,7 +69,7 @@ jobs:
           short-description: ${{ github.event.repository.description }}
           readme-filepath: ./UPLOAD.md
 
-  acceptance-test-rc:
+  acceptance-test-release:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     needs: publish-release
@@ -84,11 +84,28 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: components/test/acceptance-tests/go.mod
+      - name: Info
+        run: |
+          pwd
+          echo ${{ github.workspace }}
+          echo "$GITHUB_WORKSPACE"
+          ls -alF
+        shell: bash
+      - name: Adjust paths in feature files to compensate different paths in Github Actions compared to devcontainer
+        run: |
+          (
+            cd components/test/acceptance-tests/specs || exit
+
+            OLD="/workspaces/source2adoc"
+            for file in *.feature; do
+              sed -i "s|$OLD|$GITHUB_WORKSPACE|g" "$file"
+            done
+          )
+        shell: bash
       - name: Run Acceptance tests for ${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_LATEST }}
         run: |
           (
             cd components/test/acceptance-tests || exit
-            pwd
             CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_LATEST }} go test
           )
         shell: bash
