@@ -2,6 +2,7 @@
 package testhelper
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -31,4 +32,27 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 		fmt.Println("Run acceptance tests against the container image:", determineDockerImageToUse())
 		fmt.Println(textWhite)
 	})
+}
+
+func cleanupTargetDir() error {
+	targetDir := "../../../target"
+	err := os.RemoveAll(targetDir)
+	if err != nil {
+		return fmt.Errorf("error removing target directory: %v", err)
+	}
+	return nil
+}
+
+// AfterScenario is a godog hook that is called after each scenario. It handles the cleanup after each scenario
+// to avoid side effects between scenarios due leftovers from previous scenarios.
+func AfterScenario(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+	if err != nil {
+		return ctx, fmt.Errorf("error in scenario: %v", err)
+	}
+
+	err = cleanupTargetDir()
+	if err != nil {
+		return ctx, fmt.Errorf("error cleaning up target directory: %v", err)
+	}
+	return ctx, nil
 }

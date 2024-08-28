@@ -41,6 +41,8 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 		cut = testhelper.NewContainerUnderTest()
 		return ctx, nil
 	})
+
+	sc.After(testhelper.AfterScenario)
 }
 
 func iUseTheRootCommand() error {

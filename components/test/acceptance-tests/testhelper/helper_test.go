@@ -49,3 +49,15 @@ func Test_ShouldUseCorrectOptions(t *testing.T) {
 
 	assert.Equal(expected, actual, "Options should be equal")
 }
+
+func Test_ShouldCleanupTargetDir(t *testing.T) {
+	assert := assert.New(t)
+
+	t.Run("Should remove target directory", func(t *testing.T) {
+		err := cleanupTargetDir()
+		assert.NoError(err, "Should not return an error")
+
+		_, err = os.Stat("../../../target")
+		assert.True(os.IsNotExist(err), "Target directory should not exist")
+	})
+}
