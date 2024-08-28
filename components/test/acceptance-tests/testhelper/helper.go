@@ -45,8 +45,12 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 	textWhite := "\033[0m"
 
 	sc.BeforeSuite(func() {
+		img := determineDockerImageToUse()
+		cmd := "CONTAINER_IMAGE=" + img
+
 		fmt.Print(textGrey)
-		fmt.Println("Run acceptance tests against the container image:", determineDockerImageToUse())
+		fmt.Println("Run acceptance tests against the container image:", img)
+		fmt.Println("Reproduce with:", cmd, "go test")
 		fmt.Println(textWhite)
 	})
 }

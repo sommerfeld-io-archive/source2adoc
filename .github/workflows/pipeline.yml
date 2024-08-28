@@ -654,26 +654,26 @@ jobs:
 
   # ----- Cleanup -------------------------------
 
-  cleanup:
-    runs-on: ubuntu-latest
-    name: ${{ matrix.image-name }}
-    # needs: ['test-rc', 'inspec-rc']
-    needs: ['publish-rc']
-    if: always()
-    permissions:
-      contents: read
-    strategy: # see build-image (duplicated because github actions does not support anchors)
-      matrix:
-        include:
-          - registry: docker.io
-            image-name: source2adoc
-          - registry: docker.io
-            image-name: source2adoc-docs
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Remove :${{ github.sha }} images from ${{ matrix.registry }}
-        run: |
-          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
-          curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
-        shell: bash
+  # cleanup:
+  #   runs-on: ubuntu-latest
+  #   name: ${{ matrix.image-name }}
+  #   # needs: ['test-rc', 'inspec-rc']
+  #   needs: ['publish-rc']
+  #   if: always()
+  #   permissions:
+  #     contents: read
+  #   strategy: # see build-image (duplicated because github actions does not support anchors)
+  #     matrix:
+  #       include:
+  #         - registry: docker.io
+  #           image-name: source2adoc
+  #         - registry: docker.io
+  #           image-name: source2adoc-docs
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Remove :${{ github.sha }} images from ${{ matrix.registry }}
+  #       run: |
+  #         TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${{ secrets.DOCKERHUB_USER }}'", "password": "'${{ secrets.DOCKERHUB_TOKEN }}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+  #         curl -X DELETE -H "Authorization: JWT ${TOKEN}" https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}/tags/${{ github.sha }}/
+  #       shell: bash
