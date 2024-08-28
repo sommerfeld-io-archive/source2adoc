@@ -8,22 +8,22 @@ class Apache < Inspec.resource(1)
       describe apache do
         its ('service') { should cmp 'apache2' }
       end
-  
+
       describe apache do
         its ('conf_dir') { should cmp '/etc/apache2' }
       end
-  
+
       describe apache do
         its ('conf_path') { should cmp '/etc/apache2/apache2.conf' }
       end
-  
+
       describe apache do
         its ('user') { should cmp 'www-data' }
       end
     EXAMPLE
-  
+
     attr_reader :service, :conf_dir, :conf_path, :user
-  
+
     def initialize
         super
 

@@ -56,7 +56,7 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 }
 
 func cleanupTargetDir() error {
-	targetDir := "../../../target"
+	targetDir := "../../target"
 	err := os.RemoveAll(targetDir)
 	if err != nil {
 		return fmt.Errorf("error removing target directory: %v", err)

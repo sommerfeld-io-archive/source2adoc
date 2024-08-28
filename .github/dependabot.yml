@@ -22,6 +22,6 @@ updates:
       interval: weekly
 
   - package-ecosystem: gomod
-    directory: components/test/acceptance-tests
+    directory: components/test-acceptance
     schedule:
       interval: weekly

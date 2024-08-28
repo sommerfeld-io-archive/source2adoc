@@ -85,7 +85,7 @@ jobs:
         include:
           - component: components/app
             go-module-name: source2adoc
-          - component: components/test/acceptance-tests
+          - component: components/test-acceptance
             go-module-name: source2adoc-acceptance-tests
     steps:
       - name: Checkout code
@@ -109,7 +109,7 @@ jobs:
     name: ${{ matrix.component }}
     strategy:
       matrix:
-        component: ['components/app', 'components/test/acceptance-tests']
+        component: ['components/app', 'components/test-acceptance']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -178,7 +178,7 @@ jobs:
           cp docs/modules/ROOT/pages/index.adoc README.adoc
           cp docs/modules/ROOT/pages/license.adoc LICENSE.adoc
           cp docs/modules/ROOT/pages/license.adoc components/app/LICENSE.adoc
-          cp docs/modules/ROOT/pages/license.adoc components/test/acceptance-tests/LICENSE.adoc
+          cp docs/modules/ROOT/pages/license.adoc components/test-acceptance/LICENSE.adoc
           cp docs/modules/ROOT/pages/code-of-conduct.adoc CODE_OF_CONDUCT.adoc
           cp docs/modules/ROOT/pages/contribute.adoc CONTRIBUTING.adoc
           cp docs/modules/ROOT/pages/security.adoc SECURITY.adoc
@@ -349,7 +349,7 @@ jobs:
       - name: Run Inspec test (${{ matrix.image-name }})
         run: |
           (
-            cd components/test/inspec || exit
+            cd components/test-compliance || exit
             inspec exec ${{ matrix.image-name }} \
               --target "docker://${{ env.CONTAINER_NAME }}" \
               --chef-license "${{ env.CHEF_LICENSE }}" \

@@ -57,7 +57,7 @@ services:
       - -c
       - |
         npm install -g gherkin-lint
-        gherkin-lint components/test/acceptance-tests/specs
+        gherkin-lint components/test-acceptance/specs
     tty: *tty
 
   lint-go-app:
@@ -73,8 +73,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-go-acceptance-tests
     image: *lint-go-image
     volumes:
-      - ./components/test/acceptance-tests:/workspaces/source2adoc/components/test/acceptance-tests
-    working_dir: /workspaces/source2adoc/components/test/acceptance-tests
+      - ./components/test-acceptance:/workspaces/source2adoc/components/test-acceptance
+    working_dir: /workspaces/source2adoc/components/test-acceptance
     command: *lint-go-cmd
     tty: *tty
 

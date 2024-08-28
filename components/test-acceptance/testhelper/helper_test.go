@@ -57,7 +57,7 @@ func Test_ShouldCleanupTargetDir(t *testing.T) {
 		err := cleanupTargetDir()
 		assert.NoError(err, "Should not return an error")
 
-		_, err = os.Stat("../../../target")
+		_, err = os.Stat("../../target")
 		assert.True(os.IsNotExist(err), "Target directory should not exist")
 	})
 }

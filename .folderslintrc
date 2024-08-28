@@ -18,10 +18,10 @@
     "components/app/target/**",
 
     "components/test/",
-    "components/test/acceptance-tests",
-    "components/test/acceptance-tests/specs",
-    "components/test/acceptance-tests/testhelper",
-    "components/test/inspec/**",
+    "components/test-acceptance",
+    "components/test-acceptance/specs",
+    "components/test-acceptance/testhelper",
+    "components/test-compliance/**",
 
     "config",
     "config/dist",
