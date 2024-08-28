@@ -10,14 +10,12 @@ The build pipeline is triggered by a commit to any branch in the repository. But
 ....
 @startuml
 
-skinparam linetype ortho
-skinparam monochrome false
-skinparam componentStyle uml2
 skinparam backgroundColor white
 skinparam activity {
     'FontName Ubuntu
     FontName Roboto
 }
+
 |Scheduled|
     start
     :Dependabot;
@@ -25,25 +23,22 @@ skinparam activity {
 
 |All Branches|
     start
-    note right: Start here\nwithout Dependabot
+    floating note right: Start here\nwithout Dependabot
     split
         :Run Linters;
     split again
         :Generate Docs;
     end split
 
-
     split
         :Scan Code;
         kill
     split again
-        :Unit Tests\nand Build;
-        note left: Build\nOnce
+        :Build and\nUnit Tests and\nAcceptance Tests;
     end split
 
-    :Test intermediate Artifact;
-    :Publish Artifact\nas Release Candidate;
-    :Test Release Candidate;
+    :Publish Artifact as Release Candidate;
+    :Validate Release Candidate;
 
 |Branch: main|
     if (release?) then (no)
@@ -54,15 +49,14 @@ skinparam activity {
 
 |Tag|
     :Publish Artifact\nas Release;
-    :Test Released Artifact;
+    :Validate Release;
     stop
 
 @enduml
 ....
 
-== Acceptance Tests
-We use acceptance tests to ensure that the source2adoc CLI tool works as expected. The acceptance tests are written in Gherkin and can be found in the `link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test/acceptance-tests/specs[components/test/acceptance-tests/specs]` directory.
+== Docker Image Build
+The Docker image build process is separated into multiple steps. The image is a Multi-Stage Dockerfile to ensure that the final image is as small as possible with as few dependencies as possible. Part of the build process is to run unit tests and acceptance tests to ensure that the image is working as expected. For more information, see link:https://github.com/sommerfeld-io/source2adoc/blob/main/Dockerfile.app[Dockerfile.app].
 
-We run the same set of tests locally and in the CI pipeline against source2adoc Docker images. When no Docker image is specified, the test suite defaults to `local/source2adoc:dev`. To target a specific Docker image, you can set an environment variable and run the test suite with `CONTAINER_IMAGE=sommerfeldio/source2adoc:rc go test`.
-
-The reason behind this is that a pipeline can test against different versions of the app by setting the `CONTAINER_IMAGE` environment variable while the developer can easily run the tests locally through `go test` or the IDE.
+=== Acceptance Tests
+We use acceptance tests to ensure that the source2adoc CLI tool works as expected. The acceptance tests are written in Gherkin and can be found in the `link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test/acceptance-tests/specs[components/test/acceptance-tests/specs]` directory. We run the same set of tests locally from the IDE and as part of the Docker image build.

@@ -1,16 +1,38 @@
-## Dockerfile for a Go application.
+## The Dockerfile.app is used to build the application image. Part of the build process is to run
+## unit tests and acceptance tests. Each task is executed in a separate stage. The final image
+## contains the application binary and the necessary runtime environment and configuration.
+##
+## [ditaa, target="dockerfile-app"]
+## ....
+## +-----------------------+
+## | Dockerfile.app        |
+## |                       |
+## | +-------------------+ |
+## | | build + unit test | |
+## | +-------------------+ |
+## | | acceptance test   | |
+## | +-------------------+ |
+## | | run               | |
+## | +-------------------+ |
+## +-----------------------+
+## ....
 ##
 ## == How to use
-## Build the Docker image using the following command: `docker build --no-cache  -t local/source2adoc:dev -f Dockerfile.app .`
+## Build the Docker image with: `docker build -t local/source2adoc:dev -f Dockerfile.app .`
 ##
 ## Use `docker run --rm local/source2adoc:dev` to run the application based on the local build.
 ##
 ## Use `docker run --rm sommerfeldio/source2adoc:rc` to run the most recent release candidate from
 ## DockerHub.
 ##
+## Use `docker run --rm sommerfeldio/source2adoc:latest` to run the most recent release from
+## DockerHub.
+##
 ## @see docker-compose.yml
 
 
+## The build stage is used to compile the application and run the unit tests. The unit tests are
+## executed with the `go test` command as part of the build process.
 FROM golang:1.23.0-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
@@ -25,6 +47,8 @@ RUN pwd && ls -alF \
     && go build .
 
 
+## The run stage is used to run the application in a minimal runtime environment. The binary does
+## not expect a dedicated runtime environment. A simple Linux environment is sufficient.
 FROM alpine:3.20.2 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
 LABEL org.opencontainers.image.title=source2adoc \

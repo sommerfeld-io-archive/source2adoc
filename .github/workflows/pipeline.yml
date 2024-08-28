@@ -376,66 +376,61 @@ jobs:
           #write-comment: ${{ github.event_name == 'pull_request' }}
           write-comment: true
 
-  # test-image:
-  #   runs-on: ubuntu-latest
-  #   if: ${{ github.actor != 'dependabot[bot]' }}
-  #   name: ${{ matrix.image-name }}
-  #   needs: ['build-image']
-  #   permissions:
-  #     contents: read
-  #   strategy: # see build-image (duplicated because github actions does not support anchors)
-  #     matrix:
-  #       include:
-  #         - registry: docker.io
-  #           image-name: source2adoc
-  #         - registry: docker.io
-  #           image-name: source2adoc-docs
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
-  #       run: echo "CHANGE ME"
-  #       shell: bash
-
-  acceptance-test-image:
+  inspec-image:
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ (github.actor != 'dependabot[bot]') }}
+    name: ${{ matrix.image-name }}
     needs: ['build-image']
     permissions:
       contents: read
     env:
-      CONTAINER_IMAGE: sommerfeldio/source2adoc
+      CHEF_LICENSE: accept-no-persist
+      CONTAINER_NAME: system_under_test
+    strategy: # see build-image (duplicated because github actions does not support anchors)
+      matrix:
+        include:
+          - registry: docker.io
+            image-name: source2adoc
+          - registry: docker.io
+            image-name: source2adoc-docs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: components/test/acceptance-tests/go.mod
-      - name: Info
-        run: |
-          pwd
-          echo ${{ github.workspace }}
-          echo "$GITHUB_WORKSPACE"
-          ls -alF
+      - name: Install Inspec
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
         shell: bash
-      - name: Adjust paths in feature files to compensate different paths in Github Actions compared to devcontainer
+      - name: Start system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
+        run: |
+          readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}"
+          docker pull "$IMAGE"
+          docker run -d --name "${{ env.CONTAINER_NAME }}" --entrypoint tail "$IMAGE" -f /dev/null
+        shell: bash
+      - name: Run Inspec test (linux baseline)
+        run: |
+          readonly exclude="/^((?!os-14).)*$/"
+          inspec exec https://github.com/dev-sec/linux-baseline \
+            --target "docker://${{ env.CONTAINER_NAME }}" \
+            --controls "$exclude" \
+            --chef-license "${{ env.CHEF_LICENSE }}" \
+            --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
+            --no-distinct-exit
+        shell: bash
+      - name: Run Inspec test (${{ matrix.image-name }})
         run: |
           (
-            cd components/test/acceptance-tests/specs || exit
-
-            OLD="/workspaces/source2adoc"
-            for file in *.feature; do
-              sed -i "s|$OLD|$GITHUB_WORKSPACE|g" "$file"
-            done
+            cd components/test/inspec || exit
+            inspec exec ${{ matrix.image-name }} \
+              --target "docker://${{ env.CONTAINER_NAME }}" \
+              --chef-license "${{ env.CHEF_LICENSE }}" \
+              --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
+              --no-distinct-exit
           )
         shell: bash
-      - name: Run Acceptance tests for ${{ env.CONTAINER_IMAGE }}:${{ github.sha }}
+      - name: Stop system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ github.sha }}
+        if: always()
         run: |
-          (
-            cd components/test/acceptance-tests || exit
-            CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ github.sha }} go test
-          )
+          docker stop --time 0 "${{ env.CONTAINER_NAME }}"
+          docker rm "${{ env.CONTAINER_NAME }}"
         shell: bash
 
   # ----- Deploy --- upload website -------------
@@ -443,10 +438,7 @@ jobs:
   publish-docs:
     runs-on: ubuntu-latest
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
-    needs: [
-      # 'test-image',
-      'acceptance-test-image',
-    ]
+    needs: ['inspec-image']
     permissions:
       contents: write
     steps:
@@ -461,10 +453,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     name: ${{ matrix.image-name }} as release candidate
-    needs: [
-      # 'test-image',
-      'acceptance-test-image',
-    ]
+    needs: ['inspec-image']
     permissions: # see build-image (duplicated because github actions does not support anchors)
       contents: read
       pull-requests: write
@@ -503,78 +492,13 @@ jobs:
           #write-comment: ${{ github.event_name == 'pull_request' }}
           write-comment: true
 
-  # test-rc:
-  #   runs-on: ubuntu-latest
-  #   if: ${{ github.actor != 'dependabot[bot]' }}
-  #   name: ${{ matrix.image-name }}
-  #   needs: ['publish-rc']
-  #   permissions:
-  #     contents: read
-  #   strategy: # see build-image (duplicated because github actions does not support anchors)
-  #     matrix:
-  #       include:
-  #         - registry: docker.io
-  #           image-name: source2adoc
-  #         - registry: docker.io
-  #           image-name: source2adoc-docs
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Dummy for ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
-  #       run: echo "CHANGE ME"
-  #       shell: bash
-
-  acceptance-test-rc:
+  validate-checksums:
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    needs: ['publish-rc']
-    permissions:
-      contents: read
-    env:
-      CONTAINER_IMAGE: sommerfeldio/source2adoc
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: components/test/acceptance-tests/go.mod
-      - name: Info
-        run: |
-          pwd
-          echo ${{ github.workspace }}
-          echo "$GITHUB_WORKSPACE"
-          ls -alF
-        shell: bash
-      - name: Adjust paths in feature files to compensate different paths in Github Actions compared to devcontainer
-        run: |
-          (
-            cd components/test/acceptance-tests/specs || exit
-
-            OLD="/workspaces/source2adoc"
-            for file in *.feature; do
-              sed -i "s|$OLD|$GITHUB_WORKSPACE|g" "$file"
-            done
-          )
-        shell: bash
-      - name: Run Acceptance tests for ${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_RC }}
-        run: |
-          (
-            cd components/test/acceptance-tests || exit
-            CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_RC }} go test
-          )
-        shell: bash
-
-  inspec-rc:
-    runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     name: ${{ matrix.image-name }}
-    needs: ['publish-rc']
+    needs: ['inspec-image']
     permissions:
       contents: read
-    env:
-      CHEF_LICENSE: accept-no-persist
-      CONTAINER_NAME: system_under_test
     strategy: # see build-image (duplicated because github actions does not support anchors)
       matrix:
         include:
@@ -585,52 +509,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Install Inspec
-        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
-        shell: bash
-      - name: Start system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
-        run: |
-          readonly IMAGE="${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}"
-          docker pull "$IMAGE"
-          docker run -d --name "${{ env.CONTAINER_NAME }}" --entrypoint tail "$IMAGE" -f /dev/null
-        shell: bash
-      - name: Run Inspec test (linux baseline)
-        run: |
-          readonly exclude="/^((?!os-14).)*$/"
-          inspec exec https://github.com/dev-sec/linux-baseline \
-            --target "docker://${{ env.CONTAINER_NAME }}" \
-            --controls "$exclude" \
-            --chef-license "${{ env.CHEF_LICENSE }}" \
-            --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
-            --no-distinct-exit
-        shell: bash
-      - name: Run Inspec test (${{ matrix.image-name }})
-        run: |
-          (
-            cd components/test/inspec || exit
-            inspec exec ${{ matrix.image-name }} \
-              --target "docker://${{ env.CONTAINER_NAME }}" \
-              --chef-license "${{ env.CHEF_LICENSE }}" \
-              --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
-              --no-distinct-exit
-          )
-        shell: bash
-      - name: Stop system under test ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER }}/${{ matrix.image-name }}:${{ env.IMAGE_TAG_RC }}
-        if: always()
-        run: |
-          docker stop --time 0 "${{ env.CONTAINER_NAME }}"
-          docker rm "${{ env.CONTAINER_NAME }}"
-        shell: bash
 
   # ----- Tag repository ------------------------
 
   release-code:
     runs-on: ubuntu-latest
-    needs: [
-      # 'test-rc',
-      'inspec-rc',
-      'acceptance-test-rc',
-    ]
+    needs: ['validate-checksums']
     if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     permissions:
       contents: write
@@ -693,8 +577,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
-    # needs: ['test-rc', 'inspec-rc']
-    needs: ['publish-rc']
+    needs: ['validate-checksums']
     if: always()
     permissions:
       contents: read
