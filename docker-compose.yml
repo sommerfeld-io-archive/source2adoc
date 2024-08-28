@@ -52,7 +52,12 @@ services:
     image: node:22.6.0-alpine3.19
     volumes: *default-volumes
     working_dir: *default-workdir
-    command: ash -c "npm install -g gherkin-lint && gherkin-lint components/test/acceptance-tests/specs"
+    command:
+      - /bin/ash
+      - -c
+      - |
+        npm install -g gherkin-lint
+        gherkin-lint components/test/acceptance-tests/specs
     tty: *tty
 
   lint-go-app:
