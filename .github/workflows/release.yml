@@ -88,6 +88,7 @@ jobs:
         run: |
           (
             cd components/test/acceptance-tests || exit
+            pwd
             CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_LATEST }} go test
           )
         shell: bash

@@ -416,6 +416,7 @@ jobs:
         run: |
           (
             cd components/test/acceptance-tests || exit
+            pwd
             CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ github.sha }} go test
           )
         shell: bash
@@ -525,6 +526,7 @@ jobs:
         run: |
           (
             cd components/test/acceptance-tests || exit
+            pwd
             CONTAINER_IMAGE=${{ env.CONTAINER_IMAGE }}:${{ env.IMAGE_TAG_RC }} go test
           )
         shell: bash
