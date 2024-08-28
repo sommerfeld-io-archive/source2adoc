@@ -5,28 +5,12 @@ package testhelper
 import (
 	"context"
 	"fmt"
-	"os"
-	"testing"
 
-	"github.com/cucumber/godog"
-	"github.com/cucumber/godog/colors"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
-
-// Options returns the godog options for the test suite. The options are configured centrally to ensure consistency
-// across all tests.
-func Options(t *testing.T, featureFile string) *godog.Options {
-	return &godog.Options{
-		Format:      "pretty",
-		Paths:       []string{"specs/" + featureFile},
-		Output:      colors.Colored(os.Stdout),
-		Concurrency: 1,
-		TestingT:    t,
-	}
-}
 
 // ContainerUnderTest represents the system under test.
 //
