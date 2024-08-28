@@ -58,12 +58,21 @@ services:
     command: ash -c "npm install -g gherkin-lint && gherkin-lint components/test/acceptance-tests/specs"
     tty: true
 
-  lint-go:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-go
+  lint-go-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-go-app
     image: golangci/golangci-lint:v1.59.1
     volumes:
       - ./components/app:/workspaces/source2adoc/components/app
     working_dir: /workspaces/source2adoc/components/app
+    command: golangci-lint run -v
+    tty: true
+
+  lint-go-acceptance-tests:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-go-acceptance-tests
+    image: golangci/golangci-lint:v1.59.1
+    volumes:
+      - ./components/test/acceptance-tests:/workspaces/source2adoc/components/test/acceptance-tests
+    working_dir: /workspaces/source2adoc/components/test/acceptance-tests
     command: golangci-lint run -v
     tty: true
 

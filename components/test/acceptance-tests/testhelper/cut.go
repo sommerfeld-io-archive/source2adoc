@@ -39,10 +39,10 @@ type ContainerUnderTest struct {
 // will fail. So you need to build  the image before running the tests.
 //
 // The reason behind this is that a pipeline can test against different versions of the app
-// by setting the CONTAINER_IMAGE environment variable while the developer can easily run the
+// by setting the `CONTAINER_IMAGE` environment variable while the developer can easily run the
 // tests locally through `go test` or the IDE.
 //
-// To set a different container image, use `CONTAINER_IMAGE=sommerfeldio/source2adoc:rc go test`.
+// See `docs/modules/ROOT/pages/build-and-release.adoc` for more information.
 func NewContainerUnderTest() ContainerUnderTest {
 	return ContainerUnderTest{
 		image:   determineDockerImageToUse(),
@@ -88,7 +88,12 @@ func (c *ContainerUnderTest) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed to start container: %v", err)
 	}
-	defer instance.Terminate(c.ctx)
+	defer func() {
+		terminateErr := instance.Terminate(c.ctx)
+		if terminateErr != nil {
+			err = fmt.Errorf("failed to terminate container: %v", terminateErr)
+		}
+	}()
 
 	c.containerInstance = instance
 	c.containerState, err = c.containerInstance.State(c.ctx)
