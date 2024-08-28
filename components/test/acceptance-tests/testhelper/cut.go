@@ -74,7 +74,7 @@ func (c *ContainerUnderTest) AppendCommand(cmd ...string) {
 }
 
 // CreateContainer configures and creates a container but does not start it. All config must be done
-// here. To add volumes, use the `AddVolume` method.
+// here. To add volumes, use the `MountVolume` method.
 func (c *ContainerUnderTest) CreateContainer() {
 	c.req = testcontainers.ContainerRequest{
 		Image:      c.image,
@@ -86,20 +86,14 @@ func (c *ContainerUnderTest) CreateContainer() {
 	}
 }
 
-// AddVolume add a configuration to mount a volume to the container request. The pathOnHost is
-// mounted as source folder on the host and as target folder in the container keeping the paths
-// the same.
+// MountVolume add a configuration to mount a volume to the container request as bind mounts
+// (see https://docs.docker.com/engine/storage/bind-mounts). The pathOnHost is mounted as source
+// folder on the host and as target folder in the container keeping the paths the same.
 //
-// Make sure to call this method before `CreateContainer`.
-func (c *ContainerUnderTest) AddVolume(pathOnHost string) error {
-	//! if c.req != nil {
-	//! 	return fmt.Errorf("container with host config request already set, cannot add volume, call AddVolume() before CreateContainer()")
-	//! }
-
+// Call this method before or after `CreateContainer` but before `Run`.
+func (c *ContainerUnderTest) MountVolume(pathOnHost string) {
 	mount := pathOnHost + ":" + pathOnHost
 	c.volumes = append(c.volumes, mount)
-
-	return nil
 }
 
 func (c *ContainerUnderTest) Run() error {

@@ -30,7 +30,7 @@ func Test_BasicFeatures(t *testing.T) {
 }
 
 func initializeBasicScenario(sc *godog.ScenarioContext) {
-	sc.Step(`^I am using the root command of the source2adoc CLI tool to generate AsciiDoc files$`, iAmUsingTheRootCommand)
+	sc.Step(`^I use the root command of the source2adoc CLI tool to generate AsciiDoc files$`, iUseTheRootCommand)
 	sc.Step(`^I specify the "([^"]*)" flag$`, iSpecifyTheFlag)
 	sc.Step(`^I specify the "([^"]*)" flag with value "([^"]*)"$`, iSpecifyTheFlagWithValue)
 	sc.Step(`^I run the app$`, iRunTheApp)
@@ -43,9 +43,8 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	})
 }
 
-func iAmUsingTheRootCommand() error {
+func iUseTheRootCommand() error {
 	// The root cmd does not require a dedicated command name
-	// cut.AppendCommand("")
 	return nil
 }
 
@@ -65,18 +64,16 @@ func iRunTheApp() error {
 	if err != nil {
 		return fmt.Errorf("failed to run container: %v", err)
 	}
-
 	return nil
 }
 
 func iRunTheAppWithVolumeMount(pathOnHost string) error {
-	cut.AddVolume(pathOnHost)
 	cut.CreateContainer()
+	cut.MountVolume(pathOnHost)
 	err := cut.Run()
 	if err != nil {
 		return fmt.Errorf("failed to run container: %v", err)
 	}
-
 	return nil
 }
 

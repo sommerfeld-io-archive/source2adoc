@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
@@ -53,14 +52,15 @@ func Test_ShouldCreateContainer(t *testing.T) {
 	c := NewContainerUnderTest()
 	c.image = "custom/image:tag"
 	c.AppendCommand("command1", "command2")
+
 	c.CreateContainer()
 
-	expected := testcontainers.ContainerRequest{
-		Image:      "custom/image:tag",
-		Cmd:        []string{"command1", "command2"},
-		WaitingFor: wait.ForExit(),
-	}
-	actual := c.req
+	assert.NotEmpty(c.req, "request should not be empty")
+	assert.NotNil(c.req.WaitingFor, "WaitingFor should not be nil")
+	assert.Equal(wait.ForExit(), c.req.WaitingFor, "WaitingFor should be set correctly")
 
-	assert.Equal(expected, actual, "Container request should be created correctly")
+	assert.Equal("custom/image:tag", c.req.Image, "Image should be set correctly")
+	assert.Equal([]string{"command1", "command2"}, c.req.Cmd, "Cmd should be set correctly")
+
+	assert.NotNil(c.req.HostConfigModifier, "HostConfigModifier should not be nil")
 }
