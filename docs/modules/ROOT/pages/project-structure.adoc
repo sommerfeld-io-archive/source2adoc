@@ -1,7 +1,8 @@
-= How we Build and Release
+= How this project is structured
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
-The purpose of this guide is to provide an understanding of the strategies we employ to ensure reliable, efficient, and consistent software releases. This guide aligns with our xref:development-guide.adoc[] but explains the specifics of the build and release process in a little more detail.
+== Filesystem Structure
+TODO ... something about components, docs, Dockerfiles, docker-compose, ...
 
 == Pipeline
 The build pipeline is triggered by a commit to any branch in the repository. But not all branches are treated equally. The `main` branch is the most important branch in the repository. It is the branch that is always deployable and is the branch that is used to deploy to production. Other branches use a subset of the pipeline to ensure that they can be merged into the `main` branch and are are in a deployable state.

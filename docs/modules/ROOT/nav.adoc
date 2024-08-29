@@ -1,6 +1,6 @@
 * xref:index.adoc[]
 * xref:development-guide.adoc[]
-* xref:build-and-release.adoc[]
+* xref:project-structure.adoc[]
 * xref:contribute.adoc[]
 * xref:security.adoc[]
 * xref:code-of-conduct.adoc[]
