@@ -17,10 +17,29 @@
 ## In case the Antora docs are not up-to-date, after building the application, build the image without
 ## using the Docker cache: docker compose build --no-cache`
 ##
+## == Service Dependencies
+## Some services depend on other services to complete successfully before they can be executed. Others
+## are standalone services that can be executed independently. The services with dependencies are:
+##
+## [ditaa, target="dockerfile-app"]
+## ....
+## +-----------------+    +-----------------+    +-----------------+
+## | test            +--->| binary          +--->| acceptance-test |
+## +--------+--------+    +-----------------+    +-----------------+
+##          |
+##          |             +-----------------+
+##          +------------>| app             |
+##                        +-----------------+
+## ....
+##
 ## == Integrations
 ## Several services from this Docker Compose file are used in the pipeline to ensure the projects
 ## adheres to the same rules and coding standards when build remotely in a Github Actions workflow.
 ## Several services are used in the projects pre-commit hooks as well.
+##
+## The services used in the pipeline and pre-commit hooks are the standalone services that can be
+## executed independently.
+
 
 services:
   lint-yaml:
@@ -129,8 +148,8 @@ services:
       - NEW=components/app
       - TARGET_DIR=/workspaces/source2adoc/target
 
-  build:
-    container_name: ${COMPOSE_PROJECT_NAME}-build
+  binary:
+    container_name: ${COMPOSE_PROJECT_NAME}-binary
     image: *golang-image
     volumes: *volumes
     working_dir: /workspaces/source2adoc/components/app
@@ -168,7 +187,7 @@ services:
     environment:
       - TARGET_DIR=/workspaces/source2adoc/target
     depends_on:
-      build:
+      binary:
         condition: service_completed_successfully
 
   app:
@@ -180,8 +199,7 @@ services:
       dockerfile: Dockerfile.app
     volumes: *volumes
     working_dir: *default-workdir
-    # command: --help
-    command: --source-dir . --output-dir ./target
+    command: --help
     depends_on:
       test:
         condition: service_completed_successfully

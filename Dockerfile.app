@@ -8,7 +8,7 @@
 ## | Dockerfile.app        |
 ## |                       |
 ## | +-------------------+ |
-## | | build + unit test | |
+## | | unit test + build | |
 ## | +-------------------+ |
 ## | | acceptance test   | |
 ## | +-------------------+ |
