@@ -23,6 +23,8 @@
 ## [source, bash]
 ## ....
 ## docker build -t local/source2adoc:dev -f Dockerfile.app .
+## docker build --no-cache --progress plain -t local/source2adoc:dev -f Dockerfile.app .
+##
 ## docker run --rm local/source2adoc:dev --help
 ## ....
 ##
