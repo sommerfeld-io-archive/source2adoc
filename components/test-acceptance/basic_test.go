@@ -4,22 +4,43 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/cucumber/godog"
 	"github.com/sommerfeld-io/source2adoc-acceptance-tests/testhelper"
 )
 
-type BasicTestState struct {
-	cut       testhelper.ContainerUnderTest
-	sourceDir string
-	outputDir string
+type TestState struct {
+	sourceDir   string
+	outputDir   string
+	cmdWithArgs []string
+	exitCode    int
 }
 
-func (ts *BasicTestState) reset() {
-	ts.cut = testhelper.NewContainerUnderTest()
+func (ts *TestState) reset() {
+	ts.cmdWithArgs = []string{}
 	ts.sourceDir = ""
 	ts.outputDir = ""
+	ts.exitCode = 0
+}
+
+// appendCommand appends to the command which will be passed to the app (with arguments and flags).
+func (ts *TestState) appendCommand(cmd ...string) {
+	ts.cmdWithArgs = append(ts.cmdWithArgs, cmd...)
+}
+
+// cleanup removes the output directory if it was created during the test.
+func (ts *TestState) cleanup() error {
+	if ts.outputDir == "" {
+		return nil
+	}
+
+	err := os.RemoveAll(ts.outputDir)
+	if err != nil {
+		return fmt.Errorf("error cleaning up target directory: %v", err)
+	}
+	return nil
 }
 
 func Test_BasicFeatures(t *testing.T) {
@@ -29,7 +50,7 @@ func Test_BasicFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		Name:                 featureFile,
 		ScenarioInitializer:  initializeBasicScenario,
-		TestSuiteInitializer: testhelper.InitializeTestSuite,
+		TestSuiteInitializer: initializeTestSuite,
 		Options:              opts,
 	}
 
@@ -40,14 +61,16 @@ func Test_BasicFeatures(t *testing.T) {
 	}
 }
 
-func initializeBasicScenario(sc *godog.ScenarioContext) {
-	ts := &BasicTestState{}
+func initializeTestSuite(sc *godog.TestSuiteContext) {
+}
 
-	sc.Step(`^I use the root command of the source2adoc CLI tool to generate AsciiDoc files$`, ts.iUseTheRootCommand)
+func initializeBasicScenario(sc *godog.ScenarioContext) {
+	ts := &TestState{}
+
+	sc.Step(`^I use the root command of the source2adoc CLI tool$`, ts.iUseTheRootCommand)
 	sc.Step(`^I specify the "([^"]*)" flag$`, ts.iSpecifyTheFlag)
 	sc.Step(`^I specify the "([^"]*)" flag with value "([^"]*)"$`, ts.iSpecifyTheFlagWithValue)
 	sc.Step(`^I run the app$`, ts.iRunTheApp)
-	sc.Step(`^I run the app with volume mount "([^"]*)"$`, ts.iRunTheAppWithVolumeMount)
 	sc.Step(`^exit code should be (\d+)$`, ts.exitCodeShouldBe)
 	sc.Step(`^no AsciiDoc files should be generated$`, ts.noAsciiDocFilesShouldBeGenerated)
 
@@ -56,20 +79,33 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 		return ctx, nil
 	})
 
-	sc.After(testhelper.AfterScenario)
+	sc.After(func(ctx context.Context, sc *godog.Scenario, err error) (context.Context, error) {
+		return ctx, ts.cleanup()
+	})
 }
 
-func (ts *BasicTestState) iUseTheRootCommand() error {
+func (ts *TestState) iUseTheRootCommand() error {
+	_, err := os.Stat(testhelper.BinaryPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("source2adoc binary does not exist %v", err)
+		} else {
+			return fmt.Errorf("failed to check source2adoc binary existence %v", err)
+		}
+	}
+
+	//! check executable
+
 	// The root cmd does not require a dedicated command name
 	return nil
 }
 
-func (ts *BasicTestState) iSpecifyTheFlag(flag string) error {
-	ts.cut.AppendCommand(flag)
+func (ts *TestState) iSpecifyTheFlag(flag string) error {
+	ts.appendCommand(flag)
 	return nil
 }
 
-func (ts *BasicTestState) iSpecifyTheFlagWithValue(flag, value string) error {
+func (ts *TestState) iSpecifyTheFlagWithValue(flag, value string) error {
 	if flag == "--source-dir" {
 		ts.sourceDir = value
 	}
@@ -77,41 +113,31 @@ func (ts *BasicTestState) iSpecifyTheFlagWithValue(flag, value string) error {
 		ts.outputDir = value
 	}
 
-	ts.cut.AppendCommand(flag, value)
+	ts.appendCommand(flag, value)
 	return nil
 }
 
-func (ts *BasicTestState) iRunTheApp() error {
-	ts.cut.CreateContainer()
-	err := ts.cut.Run()
+func (ts *TestState) iRunTheApp() error {
+	cmd := exec.Command(testhelper.BinaryPath, ts.cmdWithArgs...)
+	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("failed to run container: %v", err)
+		exitErr, ok := err.(*exec.ExitError)
+		ts.exitCode = exitErr.ExitCode()
+		if !ok || ts.exitCode != 1 {
+			return fmt.Errorf("failed to run the app: %v", err)
+		}
 	}
 	return nil
 }
 
-func (ts *BasicTestState) iRunTheAppWithVolumeMount(pathOnHost string) error {
-	ts.cut.CreateContainer()
-	ts.cut.MountVolume(pathOnHost)
-	err := ts.cut.Run()
-	if err != nil {
-		return fmt.Errorf("failed to run container: %v", err)
+func (ts *TestState) exitCodeShouldBe(expected int) error {
+	if ts.exitCode != expected {
+		return fmt.Errorf("expected exit code %d, got %d", expected, ts.exitCode)
 	}
 	return nil
 }
 
-func (ts *BasicTestState) exitCodeShouldBe(expected int) error {
-	code, err := ts.cut.ExitCode()
-	if err != nil {
-		return fmt.Errorf("failed to get exit code: %v", err)
-	}
-	if code != expected {
-		return fmt.Errorf("expected exit code %d, got %d", expected, code)
-	}
-	return nil
-}
-
-func (ts *BasicTestState) noAsciiDocFilesShouldBeGenerated() error {
+func (ts *TestState) noAsciiDocFilesShouldBeGenerated() error {
 	if ts.outputDir == "" {
 		return fmt.Errorf("output directory not set")
 	}

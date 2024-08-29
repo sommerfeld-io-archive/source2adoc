@@ -147,8 +147,6 @@ services:
     depends_on:
       app-test:
         condition: service_completed_successfully
-      # app-acceptance-test:
-      #   condition: service_completed_successfully
 
   docs:
     container_name: ${COMPOSE_PROJECT_NAME}-docs
