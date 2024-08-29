@@ -60,3 +60,7 @@ The Docker image build process is separated into multiple steps. The image is a 
 
 === Acceptance Tests
 We use acceptance tests to ensure that the source2adoc CLI tool works as expected. The acceptance tests are written in Gherkin and can be found in the `link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test-acceptance/specs[components/test-acceptance/specs]` directory. We run the same set of tests locally from the IDE and as part of the Docker image build.
+
+The simplest way to run the acceptance tests is to use the `docker compose up acceptance-test` command. This command will build a binary of the app and runs the acceptance tests against the app. This is intended to be used in the local development environment.
+
+However, the actual build breaker is the Docker image build itself where the acceptance tests are run in a dedicated stage against the binary inside the image.
