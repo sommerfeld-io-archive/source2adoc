@@ -18,15 +18,21 @@
 ## ....
 ##
 ## == How to use
-## Build the Docker image with: `docker build -t local/source2adoc:dev -f Dockerfile.app .`
+## Remember to mount volumes, when running an actual command other than `--help`.
 ##
-## Use `docker run --rm local/source2adoc:dev` to run the application based on the local build.
+## [source, bash]
+## ....
+## docker build -t local/source2adoc:dev -f Dockerfile.app .
+## docker run --rm local/source2adoc:dev --help
+## ....
 ##
-## Use `docker run --rm sommerfeldio/source2adoc:rc` to run the most recent release candidate from
-## DockerHub.
+## To run releases or release candidates, use the respective tags.
 ##
-## Use `docker run --rm sommerfeldio/source2adoc:latest` to run the most recent release from
-## DockerHub.
+## [source, bash]
+## ....
+## docker run --rm sommerfeldio/source2adoc:rc
+## docker run --rm sommerfeldio/source2adoc:latest
+## ....
 ##
 ## @see docker-compose.yml
 
@@ -38,13 +44,34 @@ LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY testdata /workspaces/source2adoc/testdata
 COPY components/app /workspaces/source2adoc/components/app
-WORKDIR /workspaces/source2adoc/components/app
 
-RUN pwd && ls -alF \
-    && go mod download \
+WORKDIR /workspaces/source2adoc/components/app
+RUN go mod download \
     && go mod tidy \
+    && go vet ./... \
     && go test -coverprofile=go-code-coverage.out ./... \
     && go build .
+
+
+## The acceptance-test stage is used to run the acceptance tests against the binary created in the
+## build stage.
+FROM golang:1.23.0-alpine3.19 AS acceptance-test
+LABEL maintainer="sebastian@sommerfeld.io"
+
+COPY --from=build /workspaces/source2adoc/components/app/source2adoc /workspaces/source2adoc/components/app/source2adoc
+COPY testdata /workspaces/source2adoc/testdata
+COPY components/test-acceptance /workspaces/source2adoc/components/test-acceptance
+
+WORKDIR /workspaces/source2adoc/components/test-acceptance
+RUN go mod download \
+    && go mod tidy \
+    && go vet ./...
+
+WORKDIR /workspaces/source2adoc/components/test-acceptance/testhelper
+RUN go test ./...
+
+WORKDIR /workspaces/source2adoc/components/test-acceptance
+RUN go test
 
 
 ## The run stage is used to run the application in a minimal runtime environment. The binary does
@@ -67,7 +94,7 @@ RUN chmod og-r /etc/shadow \
 ARG USER=source2adoc
 RUN adduser -D "$USER"
 
-COPY --from=build /workspaces/source2adoc/components/app/source2adoc /usr/bin/source2adoc
+COPY --from=acceptance-test /workspaces/source2adoc/components/app/source2adoc /usr/bin/source2adoc
 
 RUN chown -hR "$USER:$USER" /usr/bin/source2adoc \
     && chmod 0700 /usr/bin/source2adoc
