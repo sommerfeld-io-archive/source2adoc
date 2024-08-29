@@ -26,8 +26,10 @@ services:
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
-    volumes: &default-volumes
-      - .:/workspaces/source2adoc
+    volumes: &volumes
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - project-root-volume:/workspaces/source2adoc
     working_dir: &default-workdir /workspaces/source2adoc
     command: .
     tty: &tty true
@@ -35,7 +37,7 @@ services:
   lint-workflows:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
     image: rhysd/actionlint:latest
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     command: -color
     tty: *tty
@@ -43,14 +45,14 @@ services:
   lint-filenames:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
     image: lslintorg/ls-lint:1.11.2
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     tty: *tty
 
   lint-folders:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
     image: sommerfeldio/folderslint:latest
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     command: .
     tty: *tty
@@ -58,7 +60,7 @@ services:
   lint-gherkin:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-gherkin
     image: node:22.6.0-alpine3.19
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     command:
       - /bin/ash
@@ -71,8 +73,7 @@ services:
   lint-go-app:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-go-app
     image: &lint-go-image docker/golangci-lint:1.60.3-go1.23.0
-    volumes:
-      - ./components/app:/workspaces/source2adoc/components/app
+    volumes: *volumes
     working_dir: /workspaces/source2adoc/components/app
     command: &lint-go-cmd golangci-lint run -v
     tty: *tty
@@ -80,8 +81,7 @@ services:
   lint-go-acceptance-tests:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-go-acceptance-tests
     image: *lint-go-image
-    volumes:
-      - ./components/test-acceptance:/workspaces/source2adoc/components/test-acceptance
+    volumes: *volumes
     working_dir: /workspaces/source2adoc/components/test-acceptance
     command: *lint-go-cmd
     tty: *tty
@@ -89,25 +89,21 @@ services:
   lint-dockerfile-app:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
     image: &lint-dockerfile-image hadolint/hadolint:latest
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     entrypoint: hadolint Dockerfile.app
 
   lint-dockerfile-docs:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-docs
     image: *lint-dockerfile-image
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     entrypoint: hadolint Dockerfile.docs
 
-  app-test:
-    container_name: ${COMPOSE_PROJECT_NAME}-app-test
+  test:
+    container_name: ${COMPOSE_PROJECT_NAME}-test
     image: &golang-image golang:1.22.6-alpine3.19
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./components/app:/workspaces/source2adoc/components/app:rw
-      - ./testdata:/workspaces/source2adoc/testdata:ro
+    volumes: *volumes
     working_dir: /workspaces/source2adoc/components/app
     command:
       - /bin/ash
@@ -133,6 +129,48 @@ services:
       - NEW=components/app
       - TARGET_DIR=/workspaces/source2adoc/target
 
+  build:
+    container_name: ${COMPOSE_PROJECT_NAME}-build
+    image: *golang-image
+    volumes: *volumes
+    working_dir: /workspaces/source2adoc/components/app
+    command:
+      - /bin/ash
+      - -c
+      - |
+        rm source2adoc
+        go build
+        chown 1000:1000 source2adoc
+    depends_on:
+      test:
+        condition: service_completed_successfully
+
+  acceptance-test:
+    container_name: ${COMPOSE_PROJECT_NAME}-acceptance-test
+    image: *golang-image
+    volumes: *volumes
+    working_dir: /workspaces/source2adoc/components/test-acceptance
+    command:
+      - /bin/ash
+      - -c
+      - |
+        go mod download
+        go mod tidy
+        go fmt ./...
+        go vet ./...
+        (
+          cd testhelper || exit
+          go test ./...
+        )
+        go test
+
+        chown 1000:1000 go.sum
+    environment:
+      - TARGET_DIR=/workspaces/source2adoc/target
+    depends_on:
+      build:
+        condition: service_completed_successfully
+
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
     image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
@@ -140,12 +178,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.app
-    volumes: *default-volumes
+    volumes: *volumes
     working_dir: *default-workdir
     # command: --help
     command: --source-dir . --output-dir ./target
     depends_on:
-      app-test:
+      test:
         condition: service_completed_successfully
 
   docs:
@@ -156,3 +194,11 @@ services:
       dockerfile: Dockerfile.docs
     ports:
       - 3080:3000
+
+volumes:
+  project-root-volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: .
+      o: bind

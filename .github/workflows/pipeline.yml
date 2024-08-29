@@ -161,7 +161,7 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Test app
-        run: docker compose up app-test --exit-code-from app-test
+        run: docker compose up test --exit-code-from test
         shell: bash
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.3.0
