@@ -13,6 +13,14 @@
 ## docker compose build
 ## docker compose up
 ## ....
+##
+## In case the Antora docs are not up-to-date, after building the application, build the image without
+## using the Docker cache: docker compose build --no-cache`
+##
+## == Integrations
+## Several services from this Docker Compose file are used in the pipeline to ensure the projects
+## adheres to the same rules and coding standards when build remotely in a Github Actions workflow.
+## Several services are used in the projects pre-commit hooks as well.
 
 services:
   lint-yaml:
@@ -94,7 +102,7 @@ services:
 
   app-test:
     container_name: ${COMPOSE_PROJECT_NAME}-app-test
-    image: golang:1.22.6-alpine3.19
+    image: &golang-image golang:1.22.6-alpine3.19
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -102,7 +110,7 @@ services:
       - ./testdata:/workspaces/source2adoc/testdata:ro
     working_dir: /workspaces/source2adoc/components/app
     command:
-      - /bin/sh
+      - /bin/ash
       - -c
       - |
         rm -rf $${TARGET_DIR}
