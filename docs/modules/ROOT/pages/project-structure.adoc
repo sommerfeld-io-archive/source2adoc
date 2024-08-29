@@ -2,7 +2,21 @@
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 == Filesystem Structure
-TODO ... something about components, docs, Dockerfiles, docker-compose, ...
+This is the structure of the repository with the most important directories and files. There is of course more in the repository, but the important parts are listed here.
+
+[source, plain]
+....
++--+  components
+|  +---  app                   # The main application
+|  +---  test-acceptance       # BDD-style Acceptance tests
+|  +---  test-compliance       # Compliance tests with Chef Inspec
++---  config                   # Configuration files used in Docker images
++---  docs                     # Documentation (Antora component)
++---  testdata                 # Test data for all kinds of tests
++---  Dockerfile.app           # Multi-Stage Dockerfile for the main application
++---  Dockerfile.docs          # Dockerfile for building and running the documentation website
++---  docker-compose.yml       # Docker Compose file with the toolchain (e.g. for local development)
+....
 
 == Pipeline
 The build pipeline is triggered by a commit to any branch in the repository. But not all branches are treated equally. The `main` branch is the most important branch in the repository. It is the branch that is always deployable and is the branch that is used to deploy to production. Other branches use a subset of the pipeline to ensure that they can be merged into the `main` branch and are are in a deployable state.
