@@ -368,20 +368,6 @@ jobs:
           docker rm "${{ env.CONTAINER_NAME }}"
         shell: bash
 
-  # ----- Deploy --- upload website -------------
-
-  publish-docs:
-    runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
-    needs: ['inspec-image']
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{github.ref}}
-
   # ----- Deploy :rc stage ----------------------
 
   publish-rc:

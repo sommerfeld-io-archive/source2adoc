@@ -15,6 +15,18 @@ env:
   IMAGE_TAG_LATEST: latest
 
 jobs:
+  publish-website:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      # TODO copy files out of the container (the website, avoid building the website again)
+      # TODO upload via FTP to webspace
+
   publish-release:
     runs-on: ubuntu-latest
     name: ${{ matrix.image-name }}
@@ -67,7 +79,6 @@ jobs:
 
   validate-release:
     runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     name: ${{ matrix.image-name }}
     needs: ['publish-release']
     permissions:
