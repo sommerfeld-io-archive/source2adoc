@@ -6,17 +6,24 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
 	"github.com/sommerfeld-io/source2adoc-acceptance-tests/testhelper"
 )
 
+type Paths struct {
+	codeFile string
+	adocFile string
+}
+
 type TestState struct {
 	sourceDir   string
 	outputDir   string
 	cmdWithArgs []string
 	exitCode    int
+	paths       []Paths
 }
 
 func (ts *TestState) reset() {
@@ -24,6 +31,7 @@ func (ts *TestState) reset() {
 	ts.sourceDir = ""
 	ts.outputDir = ""
 	ts.exitCode = 0
+	ts.paths = []Paths{}
 }
 
 // appendCommand appends to the command which will be passed to the app (with arguments and flags).
@@ -75,6 +83,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^exit code should be (\d+)$`, ts.exitCodeShouldBe)
 	sc.Step(`^no AsciiDoc files should be generated$`, ts.noAsciiDocFilesShouldBeGenerated)
 	sc.Step(`^AsciiDoc files should be generated for all source code files$`, ts.asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles)
+	sc.Step(`^the path of the generated docs in the --output-dir directory should mimic the source code file\'s path$`, ts.theAdocPathShouldMimicCodeFilesPath)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
 		ts.reset()
@@ -160,27 +169,51 @@ func (ts *TestState) asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles() error
 		return fmt.Errorf("output directory not set")
 	}
 
-	codeFilePaths, err := testhelper.FindSourceCodeFiles(ts.sourceDir)
+	paths, err := testhelper.FindSourceCodeFiles(ts.sourceDir)
+	for _, path := range paths {
+		Paths := Paths{
+			codeFile: path,
+		}
+		ts.paths = append(ts.paths, Paths)
+	}
+
 	if err != nil {
 		return fmt.Errorf("failed to find source code files: %v", err)
 	}
-	if len(codeFilePaths) == 0 {
+	if len(ts.paths) == 0 {
 		return fmt.Errorf("no source code files found")
 	}
 
-	asciidocPath := []string{}
-	for _, filePath := range codeFilePaths {
-		adocFile := testhelper.TranslateFilename(filePath)
-		asciidocPath = append(asciidocPath, adocFile)
+	tmp := []Paths{}
+	for _, path := range ts.paths {
+		adoc := testhelper.TranslateFilename(path.codeFile)
+		path.adocFile = adoc
+		tmp = append(tmp, path)
 	}
-	if len(asciidocPath) != len(codeFilePaths) {
-		return fmt.Errorf("number of AsciiDoc files generated does not match number of source code files")
+	ts.paths = []Paths{}
+	ts.paths = append(ts.paths, tmp...)
+
+	for _, paths := range ts.paths {
+		fullPath := filepath.Join(ts.outputDir, paths.adocFile)
+		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
+			return fmt.Errorf("AsciiDoc file %s does not exist in output directory", paths.adocFile)
+		}
 	}
 
-	for _, filePath := range asciidocPath {
-		fullPath := filepath.Join(ts.outputDir, filePath)
-		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			return fmt.Errorf("AsciiDoc file %s does not exist in output directory", filePath)
+	return nil
+}
+
+func (ts *TestState) theAdocPathShouldMimicCodeFilesPath() error {
+	if ts.paths == nil {
+		return fmt.Errorf("no paths found")
+	}
+
+	for _, paths := range ts.paths {
+		codeFile := paths.codeFile
+		codeDir := filepath.Dir(codeFile)
+
+		if !strings.Contains(paths.adocFile, codeDir) {
+			return fmt.Errorf("AsciiDoc file path %s does not mimic the source code file path %s", paths.adocFile, codeDir)
 		}
 	}
 
