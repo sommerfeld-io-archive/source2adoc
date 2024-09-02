@@ -13,11 +13,18 @@ import (
 	"github.com/sommerfeld-io/source2adoc-acceptance-tests/testhelper"
 )
 
+// Paths is a simple type to hold the paths of the source code and AsciiDoc files. This struct does
+// not offer any methods, it is just a simple data container.
 type Paths struct {
 	codeFile string
 	adocFile string
 }
 
+// TestState is a struct that holds the state of the test scenario and some intermediate data and
+// results. This struct offers methods to interact with the data.
+//
+// Remember to reset the state before each scenario and to cleanup the output directory after each
+// scenario.
 type TestState struct {
 	sourceDir   string
 	outputDir   string
@@ -26,6 +33,7 @@ type TestState struct {
 	paths       []Paths
 }
 
+// reset resets the state of the test scenario.
 func (ts *TestState) reset() {
 	ts.cmdWithArgs = []string{}
 	ts.sourceDir = ""
