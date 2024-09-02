@@ -8,7 +8,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
   #? SHOULD WE RENAME basic.feature TO root.feature because specifies the behavior of the root command?
 
   Background:
-    Given I use the root command of the source2adoc CLI tool
+    Given I use the "root" command of the source2adoc CLI tool
 
   Scenario Outline: Exclue specific file by its full path
     Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"

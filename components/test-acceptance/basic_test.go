@@ -76,7 +76,7 @@ func initializeTestSuite(sc *godog.TestSuiteContext) {
 func initializeBasicScenario(sc *godog.ScenarioContext) {
 	ts := &TestState{}
 
-	sc.Step(`^I use the root command of the source2adoc CLI tool$`, ts.iUseTheRootCommand)
+	sc.Step(`^I use the "([^"]*)" command of the source(\d+)adoc CLI tool$`, ts.iUseCommand)
 	sc.Step(`^I specify the "([^"]*)" flag$`, ts.iSpecifyTheFlag)
 	sc.Step(`^I specify the "([^"]*)" flag with value "([^"]*)"$`, ts.iSpecifyTheFlagWithValue)
 	sc.Step(`^I run the app$`, ts.iRunTheApp)
@@ -97,7 +97,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	})
 }
 
-func (ts *TestState) iUseTheRootCommand() error {
+func (ts *TestState) iUseCommand(commandName string) error {
 	info, err := os.Stat(testhelper.BinaryPath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -112,6 +112,9 @@ func (ts *TestState) iUseTheRootCommand() error {
 	}
 
 	// The root cmd does not require a dedicated command name
+	if commandName != "root" {
+		ts.appendCommand(commandName)
+	}
 	return nil
 }
 

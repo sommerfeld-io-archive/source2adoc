@@ -5,7 +5,7 @@ Feature: Generate AsciidDoc Documentation from Source Code files
   inline comments in the source code.
 
   Background:
-    Given I use the root command of the source2adoc CLI tool
+    Given I use the "root" command of the source2adoc CLI tool
 
   Scenario: Display help message
     Given I specify the "--help" flag
