@@ -12,8 +12,8 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     When I run the app
     Then exit code should be 0
 
-  Scenario Outline: Generate AsciiDoc for supported Source Code Files
-    Given I specify the "--source-dir" flag with value "<path>"
+  Scenario: Generate AsciiDoc for supported Source Code Files
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common/good"
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 0
@@ -22,31 +22,19 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     # And the caption of the documentation file should automatically be set from the source code file's name
     # And the path of the source code file should be included in the generated docs file
 
-    Examples:
-      | path |
-      | /workspaces/source2adoc/testdata/common/good |
-
-  Scenario Outline: No AsciiDoc for unsupported Source Code Files
-    Given I specify the "--source-dir" flag with value "<path>"
+  Scenario: No AsciiDoc for unsupported Source Code Files
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common/bad"
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 0
     And no AsciiDoc files should be generated
 
-    Examples:
-      | path |
-      | /workspaces/source2adoc/testdata/common/bad |
-
-  Scenario Outline: Error message for missing source dir
-    Given I specify the "--source-dir" flag with value "<path>"
+  Scenario: Error message for missing source dir
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/missing"
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 1
     And no AsciiDoc files should be generated
-
-    Examples:
-      | path |
-      | /workspaces/source2adoc/testdata/missing |
 
   Scenario Outline: Not all mandatory flags are specified
     Given I specify the "<existing>" flag with value "<value>"
