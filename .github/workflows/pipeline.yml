@@ -311,6 +311,11 @@ jobs:
       matrix:
         image-name: ['source2adoc', 'source2adoc-docs']
     steps:
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Scout CVEs for ${{ matrix.image-name }}:${{ github.sha }}
         uses: docker/scout-action@v1.13.0
         with:
@@ -331,6 +336,11 @@ jobs:
       matrix:
         image-name: ['source2adoc', 'source2adoc-docs']
     steps:
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_RC }}"
         uses: docker/scout-action@v1.13.0
         with:
@@ -352,6 +362,11 @@ jobs:
       matrix:
         image-name: ['source2adoc', 'source2adoc-docs']
     steps:
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_LATEST }}"
         uses: docker/scout-action@v1.13.0
         with:
