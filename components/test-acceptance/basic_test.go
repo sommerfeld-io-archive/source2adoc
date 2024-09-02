@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -73,6 +74,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^I run the app$`, ts.iRunTheApp)
 	sc.Step(`^exit code should be (\d+)$`, ts.exitCodeShouldBe)
 	sc.Step(`^no AsciiDoc files should be generated$`, ts.noAsciiDocFilesShouldBeGenerated)
+	sc.Step(`^AsciiDoc files should be generated for all source code files$`, ts.asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
 		ts.reset()
@@ -85,16 +87,18 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 }
 
 func (ts *TestState) iUseTheRootCommand() error {
-	_, err := os.Stat(testhelper.BinaryPath)
+	info, err := os.Stat(testhelper.BinaryPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("source2adoc binary does not exist %v", err)
+			return fmt.Errorf("source2adoc binary does not exist: %v", err)
 		} else {
-			return fmt.Errorf("failed to check source2adoc binary existence %v", err)
+			return fmt.Errorf("failed to check source2adoc binary existence: %v", err)
 		}
 	}
 
-	//! check executable
+	if info.Mode()&os.ModeType != 0 {
+		return fmt.Errorf("source2adoc binary is not executable")
+	}
 
 	// The root cmd does not require a dedicated command name
 	return nil
@@ -145,5 +149,40 @@ func (ts *TestState) noAsciiDocFilesShouldBeGenerated() error {
 	if _, err := os.Stat(ts.outputDir); !os.IsNotExist(err) {
 		return fmt.Errorf(ts.outputDir, "directory should not exist")
 	}
+	return nil
+}
+
+func (ts *TestState) asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles() error {
+	if ts.sourceDir == "" {
+		return fmt.Errorf("source directory not set")
+	}
+	if ts.outputDir == "" {
+		return fmt.Errorf("output directory not set")
+	}
+
+	codeFilePaths, err := testhelper.FindSourceCodeFiles(ts.sourceDir)
+	if err != nil {
+		return fmt.Errorf("failed to find source code files: %v", err)
+	}
+	if len(codeFilePaths) == 0 {
+		return fmt.Errorf("no source code files found")
+	}
+
+	asciidocPath := []string{}
+	for _, filePath := range codeFilePaths {
+		adocFile := testhelper.TranslateFilename(filePath)
+		asciidocPath = append(asciidocPath, adocFile)
+	}
+	if len(asciidocPath) != len(codeFilePaths) {
+		return fmt.Errorf("number of AsciiDoc files generated does not match number of source code files")
+	}
+
+	for _, filePath := range asciidocPath {
+		fullPath := filepath.Join(ts.outputDir, filePath)
+		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
+			return fmt.Errorf("AsciiDoc file %s does not exist in output directory", filePath)
+		}
+	}
+
 	return nil
 }

@@ -17,10 +17,10 @@ Feature: Generate AsciidDoc Documentation from Source Code files
     And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
     When I run the app
     Then exit code should be 0
-    # And AsciiDoc files should be generated for all source code files
-    # And the path of the source code file should be preserved in the --output-dir directory
+    And AsciiDoc files should be generated for all source code files
+    # And the path of the generated docs in the --output-dir directory should mimic the source code file's path
     # And the caption of the documentation file should automatically be set from the source code file's name
-    # And the path of the source code file should be included in the generated docs file file
+    # And the path of the source code file should be included in the generated docs file
 
     Examples:
       | path |
