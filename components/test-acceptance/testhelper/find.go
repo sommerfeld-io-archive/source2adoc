@@ -49,3 +49,25 @@ func TranslateFilename(filename string) string {
 	name = strings.ToLower(name)
 	return name + ".adoc"
 }
+
+// findInString checks if the needle is found in the haystack.
+func findInString(needle string, haystack string) error {
+	if !strings.Contains(haystack, needle) {
+		return fmt.Errorf("needle %s was not found in haystack", needle)
+	}
+	return nil
+}
+
+func FindInAdocFile(path string, needle string) error {
+	fileContent, err := os.ReadFile(path)
+	if err != nil {
+		return fmt.Errorf("failed to read AsciiDoc file: %v", err)
+	}
+
+	err = findInString(needle, string(fileContent))
+	if err != nil {
+		return fmt.Errorf("needle %s not found in AsciiDoc file", needle)
+	}
+
+	return nil
+}

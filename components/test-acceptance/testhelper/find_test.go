@@ -1,6 +1,7 @@
 package testhelper
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -44,5 +45,35 @@ func Test_ShouldTranslateFilename(t *testing.T) {
 	for _, test := range tests {
 		actualName := TranslateFilename(test.filename)
 		assert.Equal(test.expectedName, actualName, "filename translation is incorrect")
+	}
+}
+func Test_ShouldFindInString(t *testing.T) {
+	assert := assert.New(t)
+
+	tests := []struct {
+		needle   string
+		haystack string
+		expected error
+	}{
+		{
+			needle:   "needle",
+			haystack: "This is a haystack",
+			expected: fmt.Errorf("needle needle was not found in haystack"),
+		},
+		{
+			needle:   "This is",
+			haystack: "This is a haystack",
+			expected: nil,
+		},
+		{
+			needle:   "123",
+			haystack: "456789",
+			expected: fmt.Errorf("needle 123 was not found in haystack"),
+		},
+	}
+
+	for _, test := range tests {
+		err := findInString(test.needle, test.haystack)
+		assert.Equal(test.expected, err, "expected error does not match")
 	}
 }

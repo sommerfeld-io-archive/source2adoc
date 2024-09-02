@@ -84,6 +84,8 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^no AsciiDoc files should be generated$`, ts.noAsciiDocFilesShouldBeGenerated)
 	sc.Step(`^AsciiDoc files should be generated for all source code files$`, ts.asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles)
 	sc.Step(`^the path of the generated docs in the --output-dir directory should mimic the source code file\'s path$`, ts.theAdocPathShouldMimicCodeFilesPath)
+	sc.Step(`^the caption of the documentation file should automatically be set from the source code file\'s name$`, ts.theCaptionOfTheDocumentationFileShouldAutomaticallyBeSet)
+	sc.Step(`^the path of the source code file should be included in the generated docs file$`, ts.thePathOfTheCodeFileShouldBeIncludedInTheDocsFile)
 
 	sc.Before(func(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
 		ts.reset()
@@ -217,5 +219,36 @@ func (ts *TestState) theAdocPathShouldMimicCodeFilesPath() error {
 		}
 	}
 
+	return nil
+}
+
+func (ts *TestState) theCaptionOfTheDocumentationFileShouldAutomaticallyBeSet() error {
+	if ts.paths == nil {
+		return fmt.Errorf("no paths found")
+	}
+
+	for _, paths := range ts.paths {
+		caption := "= " + filepath.Base(paths.codeFile)
+		path := filepath.Join(ts.outputDir, paths.adocFile)
+		err := testhelper.FindInAdocFile(path, caption)
+		if err != nil {
+			return fmt.Errorf("caption %s is not the caption of the AsciiDoc file", caption)
+		}
+	}
+	return nil
+}
+
+func (ts *TestState) thePathOfTheCodeFileShouldBeIncludedInTheDocsFile() error {
+	if ts.paths == nil {
+		return fmt.Errorf("no paths found")
+	}
+
+	for _, paths := range ts.paths {
+		path := filepath.Join(ts.outputDir, paths.adocFile)
+		err := testhelper.FindInAdocFile(path, paths.codeFile)
+		if err != nil {
+			return fmt.Errorf("path to the code file %s is not part of the AsciiDoc file", paths.codeFile)
+		}
+	}
 	return nil
 }
