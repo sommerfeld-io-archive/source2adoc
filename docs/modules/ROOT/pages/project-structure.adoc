@@ -1,4 +1,4 @@
-= How this project is structured
+= Project and Repository Structure
 Sebastian Sommerfeld <sebastian@sommerfeld.io>
 
 == Filesystem Structure
@@ -21,7 +21,7 @@ This is the structure of the repository with the most important directories and 
 == Pipeline
 The build pipeline is triggered by a commit to any branch in the repository. But not all branches are treated equally. The `main` branch is the most important branch in the repository. It is the branch that is always deployable and is the branch that is used to deploy to production. Other branches use a subset of the pipeline to ensure that they can be merged into the `main` branch and are are in a deployable state.
 
-[plantuml, bar, svg]
+[plantuml, pipeline, svg]
 ....
 @startuml
 
@@ -49,26 +49,87 @@ skinparam activity {
         :Scan Code;
         kill
     split again
-        :Build and\nUnit Tests and\nAcceptance Tests;
+        :Build and
+        Unit Tests and
+        Acceptance Tests;
+
+        :Publish Artifact as
+        :<commit-sha>;
     end split
 
-    :Publish Artifact as Release Candidate;
+    :Publish Artifact as
+    Release Candidate :rc;
+
     :Validate Release Candidate;
 
 |Branch: main|
     if (release?) then (no)
         stop
     else (yes)
-        :Create Git Tag\nand GitHub Release;
+        :Create Git Tag
+        and GitHub Release;
     endif
 
 |Tag|
-    :Publish Artifact\nas Release;
+    :Publish Artifact
+    as Release :latest;
+
     :Validate Release;
     stop
 
 @enduml
 ....
+
+=== Docker Scout Scan
+We use the `docker-scout` tool to scan the Docker image for vulnerabilities. The tool is run as part of the Docker image build process in out pipeline. The tool is configured not to break the build, but to provide a report of the vulnerabilities found in the image. The report is then used to decide if the image is safe or if it needs to be fixed.
+
+[plantuml, scout, svg]
+....
+@startuml
+
+skinparam backgroundColor white
+skinparam activity {
+    'FontName Ubuntu
+    FontName Roboto
+}
+
+|Existing|
+    start
+
+    :Tag :latest;
+
+    :Tag :rc;
+
+    floating note left: both tage were\nbuilt by some\nprevious pipeline\nrun with release
+
+|All Branches|
+    :New Tag :<commig-sha>;
+
+    :Docker Scout compare
+    :<commig-sha> to :rc/
+
+    :Docker Scout compare
+    :<commig-sha> to :latest/
+
+    :Docker Scout CVS
+    scan for :<commig-sha>/
+
+|Branch: main|
+    :New Tag :rc;
+
+    floating note left: no new scans\nbecause :rc is\na re-tagged\n:<commit-sha>
+
+|Tag|
+    :New Tag :latest;
+
+    :Docker Scout CVS
+    scan for :latest/
+
+    stop
+
+@enduml
+....
+
 
 == Docker Image Build
 The Docker image build process is separated into multiple steps. The image is a Multi-Stage Dockerfile to ensure that the final image is as small as possible with as few dependencies as possible. Part of the build process is to run unit tests and acceptance tests to ensure that the image is working as expected. For more information, see link:https://github.com/sommerfeld-io/source2adoc/blob/main/Dockerfile.app[Dockerfile.app].
