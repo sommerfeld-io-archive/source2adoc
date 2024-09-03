@@ -128,7 +128,6 @@ services:
       - /bin/ash
       - -c
       - |
-        rm -rf $${TARGET_DIR}
         rm -f "$${COVERAGE_REPORT}"
 
         go mod download
@@ -139,14 +138,12 @@ services:
 
         chown 1000:1000 go.sum
         chown 1000:1000 "$${COVERAGE_REPORT}"
-        chown -R 1000:1000 $${TARGET_DIR}
 
         sed -i "s|$${OLD}|$${NEW}|g" "$${COVERAGE_REPORT}"
     environment:
       - COVERAGE_REPORT=go-code-coverage.out
       - OLD=github.com/sommerfeld-io/source2adoc
       - NEW=components/app
-      - TARGET_DIR=/workspaces/source2adoc/target/unit-test
 
   binary:
     container_name: ${COMPOSE_PROJECT_NAME}-binary
