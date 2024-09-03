@@ -135,6 +135,7 @@ services:
 
         chown 1000:1000 go.sum
         chown 1000:1000 "$${COVERAGE_REPORT}"
+        chown -R 1000:1000 /workspaces/source2adoc/target
 
         sed -i "s|$${OLD}|$${NEW}|g" "$${COVERAGE_REPORT}"
     environment:
@@ -178,8 +179,6 @@ services:
         go test
 
         chown 1000:1000 go.sum
-    environment:
-      - TARGET_DIR=/workspaces/source2adoc/target/unit-test
     depends_on:
       binary:
         condition: service_completed_successfully
@@ -215,6 +214,7 @@ services:
         yarn global add gulp-cli@3.0.0
 
         antora playbooks/public.yml --stacktrace --clean --fetch
+        chown -R 1000:1000 /workspaces/source2adoc/target
 
   docs:
     container_name: ${COMPOSE_PROJECT_NAME}-docs
