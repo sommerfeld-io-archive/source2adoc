@@ -95,7 +95,7 @@ jobs:
   antora-build-and-deploy:
     runs-on: ubuntu-latest
     # if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
-    needs: generate-files
+    # needs: generate-files
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
