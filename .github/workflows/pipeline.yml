@@ -459,9 +459,6 @@ jobs:
     if: always()
     permissions:
       contents: read
-    strategy:
-      matrix:
-        image-name: ['source2adoc', 'source2adoc-docs']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
