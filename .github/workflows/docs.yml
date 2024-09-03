@@ -13,9 +13,10 @@ on:
     branches-ignore:
       - dependabot/**
     paths:
-      - '**.adoc'
       - 'docs/**'
       - .github/workflows/docs.yml
+    tags:
+      - '*'
   schedule:
     - cron: '0 1 * * *'
 
@@ -82,6 +83,8 @@ jobs:
             echo "$content" > "$file"
           done
         shell: bash
+      # TODO ... source2adoc
+      # TODO ... source2adoc antora
       - name: Commit and push
         uses: EndBug/add-and-commit@v9.1.4
         with:
@@ -91,13 +94,13 @@ jobs:
 
   antora-build-and-deploy:
     runs-on: ubuntu-latest
-    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+    # if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
     needs: generate-files
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{github.ref}}
+          ref: main
       - name: Antora build
         run: docker compose up docs-build --exit-code-from docs-build
         shell: bash
