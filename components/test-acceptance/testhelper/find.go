@@ -9,12 +9,18 @@ import (
 
 // FindSourceCodeFiles finds source code files in the given directory and its subdirectories that
 // are supported by the app.
-func FindSourceCodeFiles(sourceDir string) ([]string, error) {
+func FindSourceCodeFiles(sourceDir string, excludes []string) ([]string, error) {
 	var codeFiles []string
 
 	err := filepath.Walk(sourceDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
+		}
+
+		for _, exclude := range excludes {
+			if strings.Contains(path, exclude) {
+				return nil
+			}
 		}
 
 		if info.IsDir() {

@@ -28,6 +28,7 @@ type Paths struct {
 type TestState struct {
 	sourceDir   string
 	outputDir   string
+	excludes    []string
 	cmdWithArgs []string
 	exitCode    int
 	paths       []Paths
@@ -38,6 +39,7 @@ func (ts *TestState) reset() {
 	ts.cmdWithArgs = []string{}
 	ts.sourceDir = ""
 	ts.outputDir = ""
+	ts.excludes = []string{}
 	ts.exitCode = 0
 	ts.paths = []Paths{}
 }
@@ -61,7 +63,7 @@ func (ts *TestState) cleanup() error {
 }
 
 func Test_BasicFeatures(t *testing.T) {
-	featureFile := "basic.feature"
+	featureFile := "" // meaning *.feature
 	opts := testhelper.Options(t, featureFile)
 
 	suite := godog.TestSuite{
@@ -90,6 +92,7 @@ func initializeBasicScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^I run the app$`, ts.iRunTheApp)
 	sc.Step(`^exit code should be (\d+)$`, ts.exitCodeShouldBe)
 	sc.Step(`^no AsciiDoc files should be generated$`, ts.noAsciiDocFilesShouldBeGenerated)
+	sc.Step(`^no AsciiDoc file should be generated for "([^"]*)"$`, ts.noAsciiDocFileShouldBeGeneratedFor)
 	sc.Step(`^AsciiDoc files should be generated for all source code files$`, ts.asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles)
 	sc.Step(`^the path of the generated docs in the --output-dir directory should mimic the source code file\'s path$`, ts.theAdocPathShouldMimicCodeFilesPath)
 	sc.Step(`^the caption of the documentation file should automatically be set from the source code file\'s name$`, ts.theCaptionOfTheDocumentationFileShouldAutomaticallyBeSet)
@@ -138,6 +141,9 @@ func (ts *TestState) iSpecifyTheFlagWithValue(flag, value string) error {
 	if flag == "--output-dir" {
 		ts.outputDir = value
 	}
+	if flag == "--exclude" {
+		ts.excludes = append(ts.excludes, value)
+	}
 
 	ts.appendCommand(flag, value)
 	return nil
@@ -168,8 +174,39 @@ func (ts *TestState) noAsciiDocFilesShouldBeGenerated() error {
 		return fmt.Errorf("output directory not set")
 	}
 
-	if _, err := os.Stat(ts.outputDir); !os.IsNotExist(err) {
-		return fmt.Errorf(ts.outputDir, "directory should not exist")
+	if _, err := os.Stat(ts.outputDir); err != nil {
+		if !os.IsNotExist(err) {
+			return fmt.Errorf("directory %s should not exist but it does exist", ts.outputDir)
+		}
+	}
+	return nil
+}
+
+func (ts *TestState) noAsciiDocFileShouldBeGeneratedFor(path string) error {
+	if ts.outputDir == "" {
+		return fmt.Errorf("output directory not set")
+	}
+
+	excludePath := ""
+	base := filepath.Base(path)
+	if strings.HasPrefix(base, "Dockerfile") ||
+		strings.HasSuffix(base, ".yml") ||
+		strings.HasSuffix(base, ".yaml") ||
+		strings.HasPrefix(base, "Makefile") ||
+		strings.HasPrefix(base, "Vagrantfile") ||
+		strings.HasSuffix(base, ".sh") {
+
+		adocFile := testhelper.TranslateFilename(path)
+		excludePath = filepath.Join(ts.outputDir, adocFile)
+	} else {
+		// codeFile = directory
+		excludePath = filepath.Join(ts.outputDir, path)
+	}
+
+	if _, err := os.Stat(excludePath); err != nil {
+		if !os.IsNotExist(err) {
+			return fmt.Errorf("path %s should not exist but it does exist (underlying error is %v)", excludePath, err)
+		}
 	}
 	return nil
 }
@@ -182,7 +219,7 @@ func (ts *TestState) asciiDocFilesShouldBeGeneratedForAllSourceCodeFiles() error
 		return fmt.Errorf("output directory not set")
 	}
 
-	paths, err := testhelper.FindSourceCodeFiles(ts.sourceDir)
+	paths, err := testhelper.FindSourceCodeFiles(ts.sourceDir, ts.excludes)
 	for _, path := range paths {
 		Paths := Paths{
 			codeFile: path,

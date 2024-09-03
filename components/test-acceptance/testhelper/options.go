@@ -2,6 +2,7 @@ package testhelper
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -16,7 +17,7 @@ import (
 func Options(t *testing.T, featureFile string) *godog.Options {
 	return &godog.Options{
 		Format:      "pretty",
-		Paths:       []string{"specs/" + featureFile},
+		Paths:       []string{filepath.Join("specs", featureFile)},
 		Output:      colors.Colored(os.Stdout),
 		Concurrency: 1,
 		TestingT:    t,

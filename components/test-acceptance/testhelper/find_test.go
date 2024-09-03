@@ -2,6 +2,7 @@ package testhelper
 
 import (
 	"fmt"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,12 +10,39 @@ import (
 
 func Test_ShouldFindSourceCodeFiles(t *testing.T) {
 	assert := assert.New(t)
-	expectedFilesCount := 9
 
-	files, err := FindSourceCodeFiles(TestDataPath)
-	assert.NoError(err, "error should be nil but was", err)
-	assert.NotNil(files, "files should not be nil")
-	assert.Len(files, expectedFilesCount, "files count should be", expectedFilesCount)
+	tests := []struct {
+		expectedCount int
+		excludes      []string
+	}{
+		{
+			expectedCount: 9,
+			excludes:      []string{},
+		},
+		{
+			expectedCount: 8,
+			excludes:      []string{filepath.Join(TestDataPath, "script.sh")},
+		},
+		{
+			expectedCount: 7,
+			excludes:      []string{filepath.Join(TestDataPath, "yaml")},
+		},
+		{
+			expectedCount: 7,
+			excludes: []string{
+				filepath.Join(TestDataPath, "Makefile"),
+				filepath.Join(TestDataPath, "Vagrantfile"),
+			},
+		},
+	}
+
+	for _, test := range tests {
+		files, err := FindSourceCodeFiles(TestDataPath, test.excludes)
+
+		assert.NoError(err, "error should be nil but was", err)
+		assert.NotNil(files, "files should not be nil")
+		assert.Len(files, test.expectedCount, "files count should be", test.expectedCount)
+	}
 }
 
 func Test_ShouldTranslateFilename(t *testing.T) {
