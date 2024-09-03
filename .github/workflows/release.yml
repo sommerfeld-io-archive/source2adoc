@@ -4,7 +4,7 @@
 ## conditions for creating a release whenever a new tag and GitHub release is pushed to the
 ## repository.
 
-name: Release
+name: Release Pipeline
 
 on:
   release:
