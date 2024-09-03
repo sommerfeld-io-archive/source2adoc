@@ -13,8 +13,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     And I specify the "--exclude" flag with value "<exclude>"
     When I run the app
     Then exit code should be 0
-    # And AsciiDoc files should be generated for all source code files
-    # But the tool should not generate AsciiDoc files for the specified file
+    And AsciiDoc files should be generated for all source code files
+    # But no AsciiDoc file should be generated for the excluded
 
     Examples:
       | exclude                                                |
@@ -27,8 +27,8 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     And I specify the "--exclude" flag with value "<exclude>"
     When I run the app
     Then exit code should be 0
-    # And AsciiDoc files should be generated for all source code files
-    # But the tool should not generate AsciiDoc files for all files and subfolders within that folder
+    And AsciiDoc files should be generated for all source code files
+    # But no AsciiDoc file should be generated for the excluded
 
     Examples:
       | exclude                                                      |
@@ -42,10 +42,18 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
     And I specify the "--exclude" flag with value "<exclude-2>"
     When I run the app
     Then exit code should be 0
-    # And AsciiDoc files should be generated for all source code files
-    # But the tool should not generate AsciiDoc files for all specified files, folders, and patterns
+    And AsciiDoc files should be generated for all source code files
+    # But no AsciiDoc file should be generated for the excluded
 
     Examples:
       | exclude-1 | exclude-2 |
       | Makefile  | script.sh |
       | docker    | yaml      |
+      | docker    | script.sh |
+
+  Scenario: Exclude flag without value
+    Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target/acceptance-test"
+    And I specify the "--exclude" flag
+    When I run the app
+    Then exit code should be 1
