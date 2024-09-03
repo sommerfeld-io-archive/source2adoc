@@ -89,7 +89,7 @@ LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.vendor="source2adoc open source project" \
       org.opencontainers.image.licenses="MIT License"
 
-COPY config/etc/login.defs /etc/login.defs
+COPY components/configs/etc/login.defs /etc/login.defs
 RUN chmod og-r /etc/shadow \
     && chmod 0444 /etc/login.defs
 

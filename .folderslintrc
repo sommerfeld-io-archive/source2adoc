@@ -17,16 +17,13 @@
     "components/app/test/**",
     "components/app/target/**",
 
+    "components/configs/**",
+
     "components/test/",
     "components/test-acceptance",
     "components/test-acceptance/specs",
     "components/test-acceptance/testhelper",
     "components/test-compliance/**",
-
-    "config",
-    "config/dist",
-    "config/dist/helm",
-    "config/etc",
 
     "docs",
     "docs/playbooks",

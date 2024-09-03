@@ -7,10 +7,10 @@ This is the structure of the repository with the most important directories and 
 [source, plain]
 ....
 +--+  components
-|  +---  app                   # The main application
+|  +---  app                   # The main application code
+|  +---  configs               # Configuration files used in Docker images
 |  +---  test-acceptance       # BDD-style Acceptance tests
 |  +---  test-compliance       # Compliance tests with Chef Inspec
-+---  config                   # Configuration files used in Docker images
 +---  docs                     # Documentation (Antora component)
 +---  testdata                 # Test data for all kinds of tests
 +---  Dockerfile               # Multi-Stage Dockerfile for the main applicationwebsite
