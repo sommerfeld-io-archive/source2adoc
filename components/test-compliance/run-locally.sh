@@ -7,14 +7,12 @@
     cd /workspaces/source2adoc || exit
 
     echo "[INFO] Building images ================================================================="
-    docker build -t local/source2adoc:dev -f Dockerfile.app .
-    docker build -t local/source2adoc-docs:dev -f Dockerfile.docs .
+    docker build -t local/source2adoc:dev .
 
     readonly INSPEC_PROFILE_PATH="/workspaces/source2adoc/components/test-compliance"
 
     readonly IMAGES=(
         "source2adoc"
-        "source2adoc-docs"
     )
 
     for image in "${IMAGES[@]}"

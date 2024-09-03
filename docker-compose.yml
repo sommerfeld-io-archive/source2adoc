@@ -30,6 +30,10 @@
 ##          |             +-----------------+
 ##          +------------>| app             |
 ##                        +-----------------+
+##
+## +-----------------+    +-----------------+
+## | docs-build      +--->| docs            |
+## +-----------------+    +-----------------+
 ## ....
 ##
 ## == Integrations
@@ -105,19 +109,12 @@ services:
     command: *lint-go-cmd
     tty: *tty
 
-  lint-dockerfile-app:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
+  lint-dockerfile:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
     image: &lint-dockerfile-image hadolint/hadolint:latest
     volumes: *volumes
     working_dir: *default-workdir
-    entrypoint: hadolint Dockerfile.app
-
-  lint-dockerfile-docs:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-docs
-    image: *lint-dockerfile-image
-    volumes: *volumes
-    working_dir: *default-workdir
-    entrypoint: hadolint Dockerfile.docs
+    entrypoint: hadolint Dockerfile
 
   test:
     container_name: ${COMPOSE_PROJECT_NAME}-test
@@ -193,7 +190,7 @@ services:
     user: 1000:1000
     build:
       context: .
-      dockerfile: Dockerfile.app
+      dockerfile: Dockerfile
     volumes: *volumes
     working_dir: *default-workdir
     command: --help
@@ -201,14 +198,34 @@ services:
       test:
         condition: service_completed_successfully
 
+  docs-build:
+    container_name: ${COMPOSE_PROJECT_NAME}-docs-build
+    image: node:22.6.0-alpine3.20
+    volumes: *volumes
+    working_dir: /workspaces/source2adoc/docs
+    command:
+      - /bin/ash
+      - -c
+      - |
+        yarn global add @asciidoctor/core@~3.0.2
+        yarn global add asciidoctor-kroki@~0.18.1
+        yarn global add @antora/cli@3.1.7
+        yarn global add @antora/site-generator@3.1.7
+        yarn global add @antora/lunr-extension@~1.0.0-alpha.8
+        yarn global add gulp-cli@3.0.0
+
+        antora playbooks/public.yml --stacktrace --clean --fetch
+
   docs:
     container_name: ${COMPOSE_PROJECT_NAME}-docs
-    image: local/${COMPOSE_PROJECT_NAME}-docs:${DEV_TAG}
-    build:
-      context: .
-      dockerfile: Dockerfile.docs
+    image: httpd:2.4.59-alpine3.19
+    volumes:
+      - ./target/docs/public:/usr/local/apache2/htdocs
     ports:
-      - 3080:3000
+      - 3080:80
+    depends_on:
+      docs-build:
+        condition: service_completed_successfully
 
 volumes:
   project-root-volume:

@@ -1,11 +1,11 @@
-## The Dockerfile.app is used to build the application image. Part of the build process is to run
+## The Dockerfile is used to build the application image. Part of the build process is to run
 ## unit tests and acceptance tests. Each task is executed in a separate stage. The final image
 ## contains the application binary and the necessary runtime environment and configuration.
 ##
 ## [ditaa, target="dockerfile-app"]
 ## ....
 ## +-----------------------+
-## | Dockerfile.app        |
+## | Dockerfile        |
 ## |                       |
 ## | +-------------------+ |
 ## | | unit test + build | |
@@ -22,8 +22,8 @@
 ##
 ## [source, bash]
 ## ....
-## docker build -t local/source2adoc:dev -f Dockerfile.app .
-## docker build --no-cache --progress plain -t local/source2adoc:dev -f Dockerfile.app .
+## docker build -t local/source2adoc:dev .
+## docker build --no-cache --progress plain -t local/source2adoc:dev .
 ##
 ## docker run --rm local/source2adoc:dev --help
 ## ....

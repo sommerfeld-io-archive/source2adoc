@@ -13,8 +13,7 @@ This is the structure of the repository with the most important directories and 
 +---  config                   # Configuration files used in Docker images
 +---  docs                     # Documentation (Antora component)
 +---  testdata                 # Test data for all kinds of tests
-+---  Dockerfile.app           # Multi-Stage Dockerfile for the main application
-+---  Dockerfile.docs          # Dockerfile for building and running the documentation website
++---  Dockerfile               # Multi-Stage Dockerfile for the main applicationwebsite
 +---  docker-compose.yml       # Docker Compose file with the toolchain (e.g. for local development)
 ....
 
@@ -132,7 +131,7 @@ skinparam activity {
 
 
 == Docker Image Build
-The Docker image build process is separated into multiple steps. The image is a Multi-Stage Dockerfile to ensure that the final image is as small as possible with as few dependencies as possible. Part of the build process is to run unit tests and acceptance tests to ensure that the image is working as expected. For more information, see link:https://github.com/sommerfeld-io/source2adoc/blob/main/Dockerfile.app[Dockerfile.app].
+The Docker image build process is separated into multiple steps. The image is a Multi-Stage Dockerfile to ensure that the final image is as small as possible with as few dependencies as possible. Part of the build process is to run unit tests and acceptance tests to ensure that the image is working as expected. For more information, see link:https://github.com/sommerfeld-io/source2adoc/blob/main/Dockerfile[Dockerfile].
 
 === Acceptance Tests
 We use acceptance tests to ensure that the source2adoc CLI tool works as expected. The acceptance tests are written in Gherkin and can be found in the `link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test-acceptance/specs[components/test-acceptance/specs]` directory. We run the same set of tests locally from the IDE and as part of the Docker image build.

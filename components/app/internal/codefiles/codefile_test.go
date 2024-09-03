@@ -39,7 +39,7 @@ func Test_ShouldIdentifyLanguage(t *testing.T) {
 		{filename: "config.yml", expected: LanguageYml, supported: true},
 		{filename: "config.yaml", expected: LanguageYml, supported: true},
 		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
-		{filename: "Dockerfile.app", expected: LanguageDockerfile, supported: true},
+		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
 		{filename: "Dockerfile.docs", expected: LanguageDockerfile, supported: true},
 		{filename: "Vagrantfile.prod", expected: LanguageVagrant, supported: true},
 		{filename: "Makefile", expected: LanguageMake, supported: true},

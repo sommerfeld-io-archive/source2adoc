@@ -14,7 +14,7 @@ func Test_ShouldFindSourceCodeFiles(t *testing.T) {
 
 	expectedFiles := []*CodeFile{
 		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile")),
-		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile.app")),
+		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile")),
 		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile.docs")),
 		NewCodeFile(filepath.Join(TestSourceDir, "good/yaml/some.yml")),
 		NewCodeFile(filepath.Join(TestSourceDir, "good/yaml/some.yaml")),
@@ -74,7 +74,7 @@ func Test_ShouldFindSourceCodeFilesWithoutExcludes(t *testing.T) {
 
 	expectedFiles := []*CodeFile{
 		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile")),
-		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile.app")),
+		NewCodeFile(filepath.Join(TestSourceDir, "good/docker/Dockerfile")),
 		NewCodeFile(filepath.Join(TestSourceDir, "good/Vagrantfile")),
 		NewCodeFile(filepath.Join(TestSourceDir, "good/small-comment.sh")),
 		NewCodeFile(filepath.Join(TestSourceDir, "good/script.sh")),
