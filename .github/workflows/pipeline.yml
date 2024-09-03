@@ -342,9 +342,6 @@ jobs:
       contents: read
       pull-requests: write
       security-events: write
-    strategy:
-      matrix:
-        image-name: ['source2adoc', 'source2adoc-docs']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
