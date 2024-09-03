@@ -146,7 +146,7 @@ services:
       - COVERAGE_REPORT=go-code-coverage.out
       - OLD=github.com/sommerfeld-io/source2adoc
       - NEW=components/app
-      - TARGET_DIR=/workspaces/source2adoc/target
+      - TARGET_DIR=/workspaces/source2adoc/target/unit-test
 
   binary:
     container_name: ${COMPOSE_PROJECT_NAME}-binary
@@ -185,7 +185,7 @@ services:
 
         chown 1000:1000 go.sum
     environment:
-      - TARGET_DIR=/workspaces/source2adoc/target
+      - TARGET_DIR=/workspaces/source2adoc/target/unit-test
     depends_on:
       binary:
         condition: service_completed_successfully

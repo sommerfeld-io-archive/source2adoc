@@ -63,7 +63,7 @@ RUN chown -hR "$USER:$USER" /usr/local/apache2 \
     && chmod g-r /etc/shadow \
     && rm /usr/local/apache2/htdocs/index.html
 
-COPY --from=build /workspaces/source2adoc/target/public /usr/local/apache2/htdocs
+COPY --from=build /workspaces/source2adoc/target/docs/public /usr/local/apache2/htdocs
 RUN chown -hR "$USER:$USER" /usr/local/apache2/htdocs
 
 USER "$USER"

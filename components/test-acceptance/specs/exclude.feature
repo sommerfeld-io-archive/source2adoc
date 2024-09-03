@@ -9,7 +9,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
 
   Scenario Outline: Exclue specific file by its full path
     Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
-    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target/acceptance-test"
     And I specify the "--exclude" flag with value "<exclude>"
     When I run the app
     Then exit code should be 0
@@ -23,7 +23,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
 
   Scenario Outline: Exclude Entire Folder
     Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
-    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target/acceptance-test"
     And I specify the "--exclude" flag with value "<exclude>"
     When I run the app
     Then exit code should be 0
@@ -37,7 +37,7 @@ Feature: Exclude Files and Folders from AsciiDoc Documentation Generation
 
   Scenario Outline: Exclude multiple files and folders in a single command run
     Given I specify the "--source-dir" flag with value "/workspaces/source2adoc/testdata/common"
-    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target"
+    And I specify the "--output-dir" flag with value "/workspaces/source2adoc/target/acceptance-test"
     And I specify the "--exclude" flag with value "<exclude-1>"
     And I specify the "--exclude" flag with value "<exclude-2>"
     When I run the app
