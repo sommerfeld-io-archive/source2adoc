@@ -94,13 +94,13 @@ jobs:
 
   antora-build-and-deploy:
     runs-on: ubuntu-latest
-    # if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
-    # needs: generate-files
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+    needs: generate-files
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{github.ref}}
       - name: Antora build
         run: docker compose up docs-build --exit-code-from docs-build
         shell: bash
