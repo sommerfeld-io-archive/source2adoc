@@ -6,7 +6,7 @@
 ## Afterwarts the workflow builds the Anti-Plagiarism documentation and uploads the webste
 ## to its webspace on sommerfeld.io via FTP.
 
-name: Build + Deployment Pipeline
+name: Documentation Pipeline
 
 on:
   push:
@@ -15,14 +15,15 @@ on:
     paths:
       - '**.adoc'
       - 'docs/**'
+      - .github/workflows/docs.yml
   schedule:
-    - cron: '0 1 * * 2'
+    - cron: '0 1 * * *'
 
 permissions:
   contents: read
 
 jobs:
-  docs:
+  generate-files:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     permissions:
@@ -87,3 +88,27 @@ jobs:
           author_name: sebastian
           author_email: sebastian@sommerfeld.io
           message: 'docs: [Actions Bot] generate docs'
+
+  antora-build-and-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ (github.actor != 'dependabot[bot]') && (github.ref == 'refs/heads/main') }}
+    needs: generate-files
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.ref}}
+      - name: Antora build
+        run: docker compose up docs-build --exit-code-from docs-build
+        shell: bash
+      - name: Deploy via FTP
+        run: |
+          (
+            cd target/docs/public || exit
+            ls -alF
+            docker run -i --rm \
+              --volume "$(pwd):$(pwd)" \
+              --workdir "$(pwd)" \
+              sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / ./*
+          )
+        shell: bash
