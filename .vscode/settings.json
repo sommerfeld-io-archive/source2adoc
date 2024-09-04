@@ -7,7 +7,10 @@
         "codefile",
         "codefiles",
         "ditaa",
+        "exitcode",
         "mvnw",
-        "testdata"
+        "testcontainers",
+        "testdata",
+        "testhelper"
     ]
 }

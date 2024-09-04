@@ -56,22 +56,34 @@ repos:
         entry: /bin/bash -c 'docker compose up lint-gherkin --exit-code-from lint-gherkin'
   - repo: local
     hooks:
-      - id: lint-go
-        name: lint-go
+      - id: lint-go-app
+        name: lint-go-app
         language: script
-        entry: /bin/bash -c 'docker compose up lint-go --exit-code-from lint-go'
+        entry: /bin/bash -c 'docker compose up lint-go-app --exit-code-from lint-go-app'
   - repo: local
     hooks:
-      - id: lint-dockerfile-app
-        name: lint-dockerfile-app
+      - id: lint-go-acceptance-tests
+        name: lint-go-acceptance-tests
         language: script
-        entry: /bin/bash -c 'docker compose up lint-dockerfile-app --exit-code-from lint-dockerfile-app'
+        entry: /bin/bash -c 'docker compose up lint-go-acceptance-tests --exit-code-from lint-go-acceptance-tests'
   - repo: local
     hooks:
-      - id: lint-dockerfile-docs
-        name: lint-dockerfile-docs
+      - id: complexity-go-app
+        name: complexity-go-app
         language: script
-        entry: /bin/bash -c 'docker compose up lint-dockerfile-docs --exit-code-from lint-dockerfile-docs'
+        entry: /bin/bash -c 'docker compose up complexity-go-app --exit-code-from complexity-go-app'
+  - repo: local
+    hooks:
+      - id: complexity-go-acceptance-tests
+        name: complexity-go-acceptance-tests
+        language: script
+        entry: /bin/bash -c 'docker compose up complexity-go-acceptance-tests --exit-code-from complexity-go-acceptance-tests'
+  - repo: local
+    hooks:
+      - id: lint-dockerfile
+        name: lint-dockerfile
+        language: script
+        entry: /bin/bash -c 'docker compose up lint-dockerfile --exit-code-from lint-dockerfile'
   - repo: local
     hooks:
       - id: docker-compose-build

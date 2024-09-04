@@ -14,7 +14,7 @@ content:
       start_path: docs
     - url: https://github.com/sommerfeld-io/source2adoc.git
       branches: ~
-      tags: ['v*', '!v0.1.*']
+      tags: ['v*', '!v0.1.*', '!v0.2.*']
       start_path: docs
 
 asciidoc:
@@ -38,8 +38,8 @@ ui:
 
 output:
   clean: true
-  dir: /workspaces/source2adoc/target/public
+  dir: /workspaces/source2adoc/target/docs/public
 
 runtime:
-  cache_dir: /workspaces/source2adoc/target/cache/antora
+  cache_dir: /workspaces/source2adoc/target/docs/cache/antora
   fetch: true

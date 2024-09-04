@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCodeFile_ShouldSplitPathAndFilename(t *testing.T) {
+func Test_ShouldSplitPathAndFilename(t *testing.T) {
 	assert := assert.New(t)
 
 	tests := []struct {
@@ -28,7 +28,7 @@ func TestCodeFile_ShouldSplitPathAndFilename(t *testing.T) {
 	}
 }
 
-func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
+func Test_ShouldIdentifyLanguage(t *testing.T) {
 	assert := assert.New(t)
 
 	tests := []struct {
@@ -39,7 +39,7 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		{filename: "config.yml", expected: LanguageYml, supported: true},
 		{filename: "config.yaml", expected: LanguageYml, supported: true},
 		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
-		{filename: "Dockerfile.app", expected: LanguageDockerfile, supported: true},
+		{filename: "Dockerfile", expected: LanguageDockerfile, supported: true},
 		{filename: "Dockerfile.docs", expected: LanguageDockerfile, supported: true},
 		{filename: "Vagrantfile.prod", expected: LanguageVagrant, supported: true},
 		{filename: "Makefile", expected: LanguageMake, supported: true},
@@ -53,7 +53,7 @@ func TestCodeFile_ShouldIdentifyLanguage(t *testing.T) {
 		assert.Equal(test.supported, supported, "Invalid supported status for: "+test.filename)
 	}
 }
-func TestCodeFile_ShouldGetDataFromGetterFunctions(t *testing.T) {
+func Test_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
@@ -80,7 +80,7 @@ func TestCodeFile_ShouldGetDataFromGetterFunctions(t *testing.T) {
 	assert.Equal(expectedSupported, actualSupported, "Incorrect path supported status")
 }
 
-func TestCodeFile_ShouldReadFileContent(t *testing.T) {
+func Test_ShouldReadFileContent(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
@@ -103,7 +103,7 @@ func TestCodeFile_ShouldReadFileContent(t *testing.T) {
 	assert.Equal(expectedContent, actualContent, "Incorrect file content")
 }
 
-func TestCodeFile_ShouldParseDocumentation(t *testing.T) {
+func Test_ShouldParseDocumentation(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{
@@ -139,7 +139,7 @@ ut labore et dolore magna aliquyam erat, sed diam voluptua.
 	docs := codeFile.parsedDocumentation()
 	assert.Equal(expectedDocs, docs, "Incorrect parsed documentation")
 }
-func TestCodeFile_ShouldTranslateDocumentationFileName(t *testing.T) {
+func Test_ShouldTranslateDocumentationFileName(t *testing.T) {
 	codeFile := &CodeFile{
 		path: filepath.Join(TestSourceDir, "good"),
 		name: "small-comment.sh",
@@ -150,7 +150,7 @@ func TestCodeFile_ShouldTranslateDocumentationFileName(t *testing.T) {
 	assert.Equal(t, expectedFileName, actualFileName, "Incorrect documentation file name")
 }
 
-func TestCodeFile_ShouldWriteDocumentationFile(t *testing.T) {
+func Test_ShouldWriteDocumentationFile(t *testing.T) {
 	assert := assert.New(t)
 
 	codeFile := &CodeFile{

@@ -13,98 +13,221 @@
 ## docker compose build
 ## docker compose up
 ## ....
+##
+## In case the Antora docs are not up-to-date, after building the application, build the image without
+## using the Docker cache: docker compose build --no-cache`
+##
+## == Service Dependencies
+## Some services depend on other services to complete successfully before they can be executed. Others
+## are standalone services that can be executed independently. The services with dependencies are:
+##
+## [ditaa, target="dockerfile-app"]
+## ....
+## +-----------------+    +-----------------+    +-----------------+
+## | test            +--->| binary          +--->| acceptance-test |
+## +--------+--------+    +-----------------+    +-----------------+
+##          |
+##          |             +-----------------+
+##          +------------>| app             |
+##                        +-----------------+
+##
+## +-----------------+    +-----------------+
+## | docs-build      +--->| docs            |
+## +-----------------+    +-----------------+
+## ....
+##
+## == Integrations
+## Several services from this Docker Compose file are used in the pipeline to ensure the projects
+## adheres to the same rules and coding standards when build remotely in a Github Actions workflow.
+## Several services are used in the projects pre-commit hooks as well.
+##
+## The services used in the pipeline and pre-commit hooks are the standalone services that can be
+## executed independently.
+
 
 services:
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
+    volumes: &volumes
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - project-root-volume:/workspaces/source2adoc
+    working_dir: &default-workdir /workspaces/source2adoc
     command: .
-    tty: true
+    tty: &tty true
 
   lint-workflows:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
     image: rhysd/actionlint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
+    volumes: *volumes
+    working_dir: *default-workdir
     command: -color
-    tty: true
+    tty: *tty
 
   lint-filenames:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-filenames
     image: lslintorg/ls-lint:1.11.2
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
+    volumes: *volumes
+    working_dir: *default-workdir
+    tty: *tty
 
   lint-folders:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-folders
     image: sommerfeldio/folderslint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
+    volumes: *volumes
+    working_dir: *default-workdir
     command: .
-    tty: true
+    tty: *tty
 
   lint-gherkin:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-gherkin
     image: node:22.6.0-alpine3.19
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-    command: ash -c "npm install -g gherkin-lint && gherkin-lint components/test/acceptance-tests/specs"
-    tty: true
-
-  lint-go:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-go
-    image: golangci/golangci-lint:v1.59.1
-    volumes:
-      - ./components/app:/workspaces/source2adoc/components/app
-    working_dir: /workspaces/source2adoc/components/app
-    command: golangci-lint run -v
-    tty: true
-
-  lint-dockerfile-app:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-app
-    image: hadolint/hadolint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-    entrypoint: hadolint Dockerfile.app
-
-  lint-dockerfile-docs:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile-docs
-    image: hadolint/hadolint:latest
-    volumes:
-      - .:/workspaces/source2adoc
-    working_dir: /workspaces/source2adoc
-    entrypoint: hadolint Dockerfile.docs
-
-  app-test:
-    container_name: ${COMPOSE_PROJECT_NAME}-app-test
-    image: golang:1.22.3-alpine3.19
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./components/app:/workspaces/source2adoc/components/app:rw
-    working_dir: /workspaces/source2adoc/components/app
+    volumes: *volumes
+    working_dir: *default-workdir
     command:
-      - /bin/sh
+      - /bin/ash
       - -c
       - |
-        rm -rf target
+        npm install -g gherkin-lint
+        gherkin-lint components/test-acceptance/specs
+    tty: *tty
+
+  lint-go-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-go-app
+    image: &lint-go-image docker/golangci-lint:1.60.3-go1.23.0
+    volumes: *volumes
+    working_dir: &app-workdir /workspaces/source2adoc/components/app
+    command: &lint-go-cmd golangci-lint run -v
+    tty: *tty
+
+  lint-go-acceptance-tests:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-go-acceptance-tests
+    image: *lint-go-image
+    volumes: *volumes
+    working_dir: &acceptance-test-workdir /workspaces/source2adoc/components/test-acceptance
+    command: *lint-go-cmd
+    tty: *tty
+
+  complexity-go-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-complexity-go-app
+    image: &golang-image golang:1.22.6-alpine3.19
+    volumes: *volumes
+    working_dir: *app-workdir
+    command: &go-complexity-cmd
+      - /bin/ash
+      - -c
+      - |
+        go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+        gocyclo -over $${LIMIT} .
+    environment: &go-complexity-env
+      - LIMIT=10
+
+  complexity-go-acceptance-tests:
+    container_name: ${COMPOSE_PROJECT_NAME}-complexity-go-acceptance-tests
+    image: &golang-image golang:1.22.6-alpine3.19
+    volumes: *volumes
+    working_dir: *acceptance-test-workdir
+    command: *go-complexity-cmd
+    environment: *go-complexity-env
+
+  licenses-go-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-licenses-go-app
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *app-workdir
+    command: &go-licenses-cmd
+      - /bin/ash
+      - -c
+      - |
+        go install github.com/google/go-licenses@latest
+        go-licenses check --include_tests github.com/sommerfeld-io/$${MODULE}
+        go-licenses report --include_tests github.com/sommerfeld-io/$${MODULE}
+    environment:
+      - MODULE=source2adoc
+
+  licenses-go-acceptance-tests:
+    container_name: ${COMPOSE_PROJECT_NAME}-licenses-go-acceptance-tests
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *acceptance-test-workdir
+    command: *go-licenses-cmd
+    environment:
+      - MODULE=source2adoc-acceptance-tests
+
+  lint-dockerfile:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
+    image: &lint-dockerfile-image hadolint/hadolint:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    entrypoint: hadolint Dockerfile
+
+  test:
+    container_name: ${COMPOSE_PROJECT_NAME}-test
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *app-workdir
+    command:
+      - /bin/ash
+      - -c
+      - |
+        rm -f "$${COVERAGE_REPORT}"
 
         go mod download
         go mod tidy
         go fmt ./...
         go vet ./...
-        go test -coverprofile=go-code-coverage.out ./...
+        go test -coverprofile="$${COVERAGE_REPORT}" ./...
 
         chown 1000:1000 go.sum
-        chown -R 1000:1000 target
+        chown 1000:1000 "$${COVERAGE_REPORT}"
+        chown -R 1000:1000 /workspaces/source2adoc/target
+
+        sed -i "s|$${OLD}|$${NEW}|g" "$${COVERAGE_REPORT}"
+    environment:
+      - COVERAGE_REPORT=go-code-coverage.out
+      - OLD=github.com/sommerfeld-io/source2adoc
+      - NEW=components/app
+
+  binary:
+    container_name: ${COMPOSE_PROJECT_NAME}-binary
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *app-workdir
+    command:
+      - /bin/ash
+      - -c
+      - |
+        rm source2adoc
+        go build .
+        chown 1000:1000 source2adoc
+    depends_on:
+      test:
+        condition: service_completed_successfully
+
+  acceptance-test:
+    container_name: ${COMPOSE_PROJECT_NAME}-acceptance-test
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *acceptance-test-workdir
+    command:
+      - /bin/ash
+      - -c
+      - |
+        go mod download
+        go mod tidy
+        go fmt ./...
+        go vet ./...
+        (
+          cd testhelper || exit
+          go test ./...
+        )
+        go test
+
+        chown 1000:1000 go.sum
+    depends_on:
+      binary:
+        condition: service_completed_successfully
 
   app:
     container_name: ${COMPOSE_PROJECT_NAME}-app
@@ -112,21 +235,48 @@ services:
     user: 1000:1000
     build:
       context: .
-      dockerfile: Dockerfile.app
-    volumes:
-      - .:/workspaces/source2adoc:rw
-    working_dir: /workspaces/source2adoc
-    # command: --help
-    command: --source-dir . --output-dir ./target
+      dockerfile: Dockerfile
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: --help
     depends_on:
-      app-test:
+      test:
         condition: service_completed_successfully
+
+  docs-build:
+    container_name: ${COMPOSE_PROJECT_NAME}-docs-build
+    image: node:22.6.0-alpine3.20
+    volumes: *volumes
+    working_dir: &docs-workdir /workspaces/source2adoc/docs
+    command:
+      - /bin/ash
+      - -c
+      - |
+        yarn global add @asciidoctor/core@~3.0.2
+        yarn global add asciidoctor-kroki@~0.18.1
+        yarn global add @antora/cli@3.1.7
+        yarn global add @antora/site-generator@3.1.7
+        yarn global add @antora/lunr-extension@~1.0.0-alpha.8
+        yarn global add gulp-cli@3.0.0
+
+        antora playbooks/public.yml --stacktrace --clean --fetch
+        chown -R 1000:1000 /workspaces/source2adoc/target
 
   docs:
     container_name: ${COMPOSE_PROJECT_NAME}-docs
-    image: local/${COMPOSE_PROJECT_NAME}-docs:${DEV_TAG}
-    build:
-      context: .
-      dockerfile: Dockerfile.docs
+    image: httpd:2.4.59-alpine3.19
+    volumes:
+      - ./target/docs/public:/usr/local/apache2/htdocs
     ports:
-      - 3080:3000
+      - 3080:80
+    depends_on:
+      docs-build:
+        condition: service_completed_successfully
+
+volumes:
+  project-root-volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: .
+      o: bind

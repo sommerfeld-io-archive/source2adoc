@@ -22,8 +22,8 @@
           "docs/antora.yml",
           "package.json",
           "package-lock.json",
-          "components/test/inspec/source2adoc/inspec.yml",
-          "components/test/inspec/source2adoc-docs/inspec.yml"
+          "components/test-compliance/source2adoc/inspec.yml",
+          "components/test-compliance/source2adoc-docs/inspec.yml"
         ],
         "message": "refactor(release): ${nextRelease.version}\n\n${nextRelease.notes}"
       }

@@ -15,18 +15,15 @@
     "components/app/internal/**",
     "components/app/pkg/**",
     "components/app/test/**",
-    "components/app/testdata/**",
     "components/app/target/**",
 
-    "components/test/",
-    "components/test/acceptance-tests",
-    "components/test/acceptance-tests/specs",
-    "components/test/inspec/**",
+    "components/configs/**",
 
-    "config",
-    "config/dist",
-    "config/dist/helm",
-    "config/etc",
+    "components/test/",
+    "components/test-acceptance",
+    "components/test-acceptance/specs",
+    "components/test-acceptance/testhelper",
+    "components/test-compliance/**",
 
     "docs",
     "docs/playbooks",
@@ -42,7 +39,7 @@
     "docs/supplemental-ui/partials",
 
     "public/**",
-    "src",
+    "testdata/**",
 
     "node_modules/**",
     "target/**"

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDocumentationPart_ShouldGetDataFromGetterFunctions(t *testing.T) {
+func Test_ShouldGetDataFromSectionGetters(t *testing.T) {
 	assert := assert.New(t)
 
 	part := &DocumentationPart{
