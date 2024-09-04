@@ -23,10 +23,10 @@ The primary objective of `source2adoc` is to facilitate the creation of comprehe
 
 The app supports multiple source code languages. The common ground is, that these languages mark their comments through the hash-symbol (`#`).
 
-* Bash Scripts
-* `yaml` and `yml`
+* Bash Scripts (`*.sh`)
+* `*.yaml` and `*.yml`
 * `Vagrantfile`
-* `Dockerfile`
+* `Dockerfile*` (allowing `Dockerfile` and suffixes like `Dockerfile.dev`)
 * `Makefile`
 
 `source2adoc` does not aim at replacing or duplicating existing solutions like JavaDoc or GoDoc! We focus on languages that are not covered by existing solutions in a way we expect!
@@ -38,15 +38,17 @@ The following section outlines the basic requirements and features of the `sourc
 ** Initially, the application will only consider code comments acting as header documentation for entire files.
 ** Documentation blocks for classes and functions may be considered in future iterations.
 * *File Path Preservation*
-** When generating documentation, the file path should be preserved. For instance, the source code file `src/main/Dockerfile` should result in the AsciiDoc file `<output-dir>/src/main/Dockerfile.adoc`.
+** When generating documentation, the file path should be preserved. For instance, the source code file `src/main/Dockerfile` should result in the AsciiDoc file `<output-dir>/src/main/dockerfile.adoc`. All generated AsciiDoc filenames are lowercase, dots are replaced by dashes.
 * *File Metadata*
 ** The caption of the documentation file should automatically be set from the source code file's name.
 ** Additionally, the path of the source code file should be included in the generated docs file file.
 ** The actual text of the header docs should be rendered into the file as well. This text will not be translated any further (except for JavDoc-style metadata, see below), it is taken as is, thus allowing to write AsciiDoc markup directly into the source code docs.
 * *Comment Style*
-** The code comment style should resemble JavaDoc but a double hash-symbol (`##`) as the marker for commented lines.
+** The code comments should start with a double hash-symbol (`##`) as the marker for relevant lines.
 ** That means the comment is different from "regular" comments and still allows to use metadata similar to JavaDoc (e.g. @author, @since, ... but not all of them - see https://en.wikipedia.org/wiki/JavaDoc).
 ** `@see` should generate an xref, @link should generate a static link.
+
+NOTE: Translating JavaDoc-style metadata is not yet supported, but link:https://github.com/sommerfeld-io/source2adoc/issues/118[planned for a future release].
 
 For a detailed overview of the requirements and features of the `source2adoc` project, refer to the link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test-acceptance/specs[executable specification] used for out automated acceptance tests.
 
@@ -65,7 +67,7 @@ docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" \
         --source-dir src --output-dir docs
 ....
 
-To exclude specific files or folders from the documentation generation process, use the `--exclude` flag. This flag allows you to specify files and folders that should be ignored during the documentation generation process. The `--exclude` flag is relative to `--source-dir` (i.e. files to exclude are expected inside `--source-dir`). Using wildcards as part of the path or filename is not supported (link:https://github.com/sommerfeld-io/source2adoc/issues/109[supporting this is planned for some future release]).
+To exclude specific files or folders from the documentation generation process, use the `--exclude` flag. This flag allows you to specify files and folders that should be ignored during the documentation generation process. The `--exclude` flag is relative to `--source-dir` (i.e. files to exclude are expected inside `--source-dir`). Using wildcards as part of the path or filename is not supported (link:https://github.com/sommerfeld-io/source2adoc/issues/109[supporting this is planned for a future release]).
 [source, bash]
 ....
 docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" \
@@ -95,13 +97,13 @@ IMPORTANT: `source2adoc` is distributed as a Docker image only, so remember to a
 == How to write inline documentation
 To generate documentation using `source2adoc`, it is important to follow a specific syntax for relevant comments. In this syntax, all comments that are considered part of the documentation should be marked with `##` at the beginning of each line. These comments will be parsed and included in the generated documentation.
 
-The test data for the `source2adoc` project (which is used for our unit tests) is a good example of how to write inline documentation. See https://github.com/sommerfeld-io/source2adoc/tree/main/testdata/common/good for complete examples for all supported languages.
-
 * *Rules for the header documentation*
 ** Files can start with any content they like (allowing e.g. to start bash scripts with a shebang line or yaml files with `---`).
 ** As soon as a line is found that does start with `##`, all following lines that start with `##` are considered to be part of the header documentation.
 ** All lines that do not start with `##` are omitted.
 ** As soon as an empty line is found, the header documentation is considered to be finished and the parsing stops.
+
+The test data for the `source2adoc` project (which is used for our unit tests and acceptance tests) provides good examples of how to write inline documentation. See https://github.com/sommerfeld-io/source2adoc/tree/main/testdata/common/good for complete examples for all supported languages.
 
 == Risks and Technical Debts
 link:{url-project}/issues?q=is%3Aissue+label%3Asecurity%2Crisk+is%3Aopen[All issues labeled as risk (= some sort of risk or a technical debt) or security (= related to security issues)] are tracked as GitHub issue and carry the respective label.
