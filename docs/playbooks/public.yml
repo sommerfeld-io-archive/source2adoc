@@ -14,7 +14,7 @@ content:
       start_path: docs
     - url: https://github.com/sommerfeld-io/source2adoc.git
       branches: ~
-      tags: ['v*', '!v0.1.*', '!v0.2.*']
+      tags: ['v*', '!v0.1.*', '!v0.2.*', '!v0.3.*']
       start_path: docs
 
 asciidoc:
