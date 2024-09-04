@@ -23,10 +23,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: main
-      # TODO copy files out of the container (the website, avoid building the website again)
-      # TODO upload via FTP to webspace
+      - name: Antora build
+        run: docker compose up docs-build --exit-code-from docs-build
+        shell: bash
+      - name: Deploy via FTP
+        run: |
+          (
+            cd target/docs/public || exit
+            ls -alF
+            docker run -i --rm \
+              --volume "$(pwd):$(pwd)" \
+              --workdir "$(pwd)" \
+              sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / ./*
+          )
+        shell: bash
 
   publish-release:
     runs-on: ubuntu-latest
