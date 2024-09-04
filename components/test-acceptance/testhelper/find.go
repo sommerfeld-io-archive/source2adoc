@@ -28,12 +28,7 @@ func FindSourceCodeFiles(sourceDir string, excludes []string) ([]string, error) 
 		}
 
 		fileName := info.Name()
-		if strings.HasPrefix(fileName, "Dockerfile") ||
-			strings.HasSuffix(fileName, ".yml") ||
-			strings.HasSuffix(fileName, ".yaml") ||
-			strings.HasPrefix(fileName, "Makefile") ||
-			strings.HasPrefix(fileName, "Vagrantfile") ||
-			strings.HasSuffix(fileName, ".sh") {
+		if matchesFilenamePattern(fileName) {
 			codeFiles = append(codeFiles, path)
 		}
 
@@ -45,6 +40,15 @@ func FindSourceCodeFiles(sourceDir string, excludes []string) ([]string, error) 
 	}
 
 	return codeFiles, nil
+}
+
+func matchesFilenamePattern(filename string) bool {
+	return strings.HasPrefix(filename, "Dockerfile") ||
+		strings.HasSuffix(filename, ".yml") ||
+		strings.HasSuffix(filename, ".yaml") ||
+		strings.HasPrefix(filename, "Makefile") ||
+		strings.HasPrefix(filename, "Vagrantfile") ||
+		strings.HasSuffix(filename, ".sh")
 }
 
 // TranslateFilename translates the given filename to a valid AsciiDoc filename.
