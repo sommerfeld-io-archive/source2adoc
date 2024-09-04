@@ -105,8 +105,8 @@ jobs:
       - name: Pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_LATEST }}
         run: docker pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_LATEST }}
         shell: bash
-      - name: Pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:$TAG
-        run: docker pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:TAG
+      - name: Pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }} with version tag
+        run: docker pull "${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:$TAG"
         shell: bash
       - name: Compare digests
         run: |
