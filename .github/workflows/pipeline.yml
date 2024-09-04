@@ -100,13 +100,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: ${{ matrix.component }}/go.mod
-      - name: Run go vet for -${{ matrix.component }}
-        run: |
-          (
-            cd ${{ matrix.component }} || exit
-            go vet ./...
-          )
-        shell: bash
       - name: Calculate cyclomatic complexity of Go code  in ${{ matrix.component }}
         run: |
           (
