@@ -107,6 +107,9 @@ jobs:
       - name: Pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_RC }}
         run: docker pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_RC }}
         shell: bash
+      - name: Pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_LATEST }}
+        run: docker pull ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG_LATEST }}
+        shell: bash
       - name: Compare digests
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
