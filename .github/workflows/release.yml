@@ -28,6 +28,18 @@ jobs:
       - name: Antora build
         run: docker compose up docs-build --exit-code-from docs-build
         shell: bash
+      - name: Debug Info 1
+        run: |
+          pwd
+          ls -alF
+        shell: bash
+      - name: Debug Info target/docs/public
+        run: |
+          (
+            cd target/docs/public || exit
+            ls -alF
+          )
+        shell: bash
       - name: Deploy via FTP
         run: |
           (
