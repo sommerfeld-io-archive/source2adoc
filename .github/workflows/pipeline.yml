@@ -86,14 +86,20 @@ jobs:
         include:
           - linter: go-app
             component: components/app
+            go-module-name: source2adoc
           - linter: go-acceptance-tests
             component: components/test-acceptance
+            go-module-name: source2adoc-acceptance-tests
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run lint-${{ matrix.linter }} from docker-compose.yml
         run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
         shell: bash
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ matrix.component }}/go.mod
       - name: Run go vet for -${{ matrix.component }}
         run: |
           (
@@ -101,27 +107,14 @@ jobs:
             go vet ./...
           )
         shell: bash
-
-  # ----- Commit stage - scan -------------------
-
-  go-licenses:
-    runs-on: ubuntu-latest
-    needs: ['lint-go']
-    name: ${{ matrix.component }}
-    strategy:
-      matrix:
-        include:
-          - component: components/app
-            go-module-name: source2adoc
-          - component: components/test-acceptance
-            go-module-name: source2adoc-acceptance-tests
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: ${{ matrix.component }}/go.mod
+      - name: Calculate cyclomatic complexity of Go code  in ${{ matrix.component }}
+        run: |
+          (
+            cd ${{ matrix.component }} || exit
+            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+            gocyclo -over 10 .
+          )
+        shell: bash
       - name: Scan licenses of Go dependencies for ${{ matrix.go-module-name }} in ${{ matrix.component }}
         run: |
           (
@@ -132,28 +125,7 @@ jobs:
           )
         shell: bash
 
-  go-complexity:
-    runs-on: ubuntu-latest
-    needs: ['lint-go']
-    name: ${{ matrix.component }}
-    strategy:
-      matrix:
-        component: ['components/app', 'components/test-acceptance']
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: ${{ matrix.component }}/go.mod
-      - name: Calculate cyclomatic complexity of Go code  in ${{ matrix.component }}
-        run: |
-          (
-            cd ${{ matrix.component }} || exit
-            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-            gocyclo -over 10 .
-          )
-        shell: bash
+  # ----- Commit stage - scan -------------------
 
   sonarcloud:
     runs-on: ubuntu-latest
