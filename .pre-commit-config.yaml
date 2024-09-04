@@ -68,6 +68,18 @@ repos:
         entry: /bin/bash -c 'docker compose up lint-go-acceptance-tests --exit-code-from lint-go-acceptance-tests'
   - repo: local
     hooks:
+      - id: complexity-go-app
+        name: complexity-go-app
+        language: script
+        entry: /bin/bash -c 'docker compose up complexity-go-app --exit-code-from complexity-go-app'
+  - repo: local
+    hooks:
+      - id: complexity-go-acceptance-tests
+        name: complexity-go-acceptance-tests
+        language: script
+        entry: /bin/bash -c 'docker compose up complexity-go-acceptance-tests --exit-code-from complexity-go-acceptance-tests'
+  - repo: local
+    hooks:
       - id: lint-dockerfile
         name: lint-dockerfile
         language: script

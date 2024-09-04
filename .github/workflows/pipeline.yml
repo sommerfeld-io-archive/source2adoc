@@ -83,39 +83,18 @@ jobs:
     name: ${{ matrix.linter }}
     strategy:
       matrix:
-        include:
-          - linter: go-app
-            component: components/app
-            go-module-name: source2adoc
-          - linter: go-acceptance-tests
-            component: components/test-acceptance
-            go-module-name: source2adoc-acceptance-tests
+        linter: ['go-app', 'go-acceptance-tests']
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run lint-${{ matrix.linter }} from docker-compose.yml
         run: docker compose up lint-${{ matrix.linter }} --exit-code-from lint-${{ matrix.linter }}
         shell: bash
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: ${{ matrix.component }}/go.mod
-      - name: Calculate cyclomatic complexity of Go code  in ${{ matrix.component }}
-        run: |
-          (
-            cd ${{ matrix.component }} || exit
-            go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-            gocyclo -over 10 .
-          )
+      - name: Run complexity-${{ matrix.linter }} from docker-compose.yml
+        run: docker compose up complexity-${{ matrix.linter }} --exit-code-from complexity-${{ matrix.linter }}
         shell: bash
-      - name: Scan licenses of Go dependencies for ${{ matrix.go-module-name }} in ${{ matrix.component }}
-        run: |
-          (
-            cd ${{ matrix.component }} || exit
-            go install github.com/google/go-licenses@latest
-            go-licenses check --include_tests github.com/sommerfeld-io/${{ matrix.go-module-name }}
-            go-licenses report --include_tests github.com/sommerfeld-io/${{ matrix.go-module-name }}
-          )
+      - name: Run licenses-${{ matrix.linter }} from docker-compose.yml
+        run: docker compose up licenses-${{ matrix.linter }} --exit-code-from licenses-${{ matrix.linter }}
         shell: bash
 
   # ----- Commit stage - scan -------------------

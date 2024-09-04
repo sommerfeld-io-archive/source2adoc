@@ -60,21 +60,33 @@ docker run sommerfeldio/source2adoc:latest --help
 To generate documentation based on the inline comments in a source code file, execute the following command. The `--source-dir` and `--output-dir` flags are relative to `--workdir` (i.e. inside `--workdir`).
 [source, bash]
 ....
-docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest --source-dir src --output-dir docs
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" \
+    sommerfeldio/source2adoc:latest \
+        --source-dir src --output-dir docs
 ....
 
 To exclude specific files or folders from the documentation generation process, use the `--exclude` flag. This flag allows you to specify files and folders that should be ignored during the documentation generation process. The `--exclude` flag is relative to `--source-dir` (i.e. files to exclude are expected inside `--source-dir`). Using wildcards as part of the path or filename is not supported (link:https://github.com/sommerfeld-io/source2adoc/issues/109[supporting this is planned for some future release]).
 [source, bash]
 ....
-docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest --source-dir src --output-dir docs --exclude path/inside/src/dir --exclude path/inside/src/dir/script.sh
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" \
+    sommerfeldio/source2adoc:latest \
+        --source-dir src --output-dir docs \
+        --exclude path/inside/src/dir --exclude path/inside/src/dir/script.sh
 ....
 
 To generate documentation into an Antora module, execute the following commands.
 [source, bash]
 ....
 mkdir -p docs/modules/source2adoc/pages
-docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest --source-dir src --output-dir docs/modules/source2adoc/pages
-docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" sommerfeldio/source2adoc:latest antora --module docs/modules/source2adoc
+
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" \
+    sommerfeldio/source2adoc:latest \
+        --source-dir src --output-dir docs/modules/source2adoc/pages
+
+docker run --volume "$(pwd):$(pwd)" --workdir "$(pwd)" \
+    sommerfeldio/source2adoc:latest antora \
+        --module docs/modules/source2adoc \
+
 echo "  - modules/source2adoc/nav.adoc" >> docs/antora.yml
 ....
 

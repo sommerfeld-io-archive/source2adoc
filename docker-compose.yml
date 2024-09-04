@@ -97,7 +97,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-go-app
     image: &lint-go-image docker/golangci-lint:1.60.3-go1.23.0
     volumes: *volumes
-    working_dir: /workspaces/source2adoc/components/app
+    working_dir: &app-workdir /workspaces/source2adoc/components/app
     command: &lint-go-cmd golangci-lint run -v
     tty: *tty
 
@@ -105,9 +105,55 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-go-acceptance-tests
     image: *lint-go-image
     volumes: *volumes
-    working_dir: /workspaces/source2adoc/components/test-acceptance
+    working_dir: &acceptance-test-workdir /workspaces/source2adoc/components/test-acceptance
     command: *lint-go-cmd
     tty: *tty
+
+  complexity-go-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-complexity-go-app
+    image: &golang-image golang:1.22.6-alpine3.19
+    volumes: *volumes
+    working_dir: *app-workdir
+    command: &go-complexity-cmd
+      - /bin/ash
+      - -c
+      - |
+        go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+        gocyclo -over $${LIMIT} .
+    environment: &go-complexity-env
+      - LIMIT=10
+
+  complexity-go-acceptance-tests:
+    container_name: ${COMPOSE_PROJECT_NAME}-complexity-go-acceptance-tests
+    image: &golang-image golang:1.22.6-alpine3.19
+    volumes: *volumes
+    working_dir: *acceptance-test-workdir
+    command: *go-complexity-cmd
+    environment: *go-complexity-env
+
+  licenses-go-app:
+    container_name: ${COMPOSE_PROJECT_NAME}-licenses-go-app
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *app-workdir
+    command: &go-licenses-cmd
+      - /bin/ash
+      - -c
+      - |
+        go install github.com/google/go-licenses@latest
+        go-licenses check --include_tests github.com/sommerfeld-io/$${MODULE}
+        go-licenses report --include_tests github.com/sommerfeld-io/$${MODULE}
+    environment:
+      - MODULE=source2adoc
+
+  licenses-go-acceptance-tests:
+    container_name: ${COMPOSE_PROJECT_NAME}-licenses-go-acceptance-tests
+    image: *golang-image
+    volumes: *volumes
+    working_dir: *acceptance-test-workdir
+    command: *go-licenses-cmd
+    environment:
+      - MODULE=source2adoc-acceptance-tests
 
   lint-dockerfile:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-dockerfile
@@ -118,9 +164,9 @@ services:
 
   test:
     container_name: ${COMPOSE_PROJECT_NAME}-test
-    image: &golang-image golang:1.22.6-alpine3.19
+    image: *golang-image
     volumes: *volumes
-    working_dir: /workspaces/source2adoc/components/app
+    working_dir: *app-workdir
     command:
       - /bin/ash
       - -c
@@ -147,7 +193,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-binary
     image: *golang-image
     volumes: *volumes
-    working_dir: /workspaces/source2adoc/components/app
+    working_dir: *app-workdir
     command:
       - /bin/ash
       - -c
@@ -163,7 +209,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-acceptance-test
     image: *golang-image
     volumes: *volumes
-    working_dir: /workspaces/source2adoc/components/test-acceptance
+    working_dir: *acceptance-test-workdir
     command:
       - /bin/ash
       - -c
@@ -201,7 +247,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: node:22.6.0-alpine3.20
     volumes: *volumes
-    working_dir: /workspaces/source2adoc/docs
+    working_dir: &docs-workdir /workspaces/source2adoc/docs
     command:
       - /bin/ash
       - -c
