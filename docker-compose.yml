@@ -292,6 +292,7 @@ services:
   vhs4docker-pull:
     image: sommerfeldio/source2adoc:latest
     container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker-pull
+    command: --help
 
   vhs4docker:
     container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker
