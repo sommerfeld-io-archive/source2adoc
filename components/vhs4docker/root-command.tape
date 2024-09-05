@@ -2,6 +2,9 @@
 ## link:https://hub.docker.com/r/sommerfeldio/vhs4docker[sommerfeldio/vhs4docker] command recording
 ## tool. The tool is based on link:https://github.com/charmbracelet/vhs[VHS].
 ##
+## The GIF image is overwritten regularly because the deployment pipeline invokes this tape with
+## every workflow run.
+##
 ## * Best Width for Antora Default UI is 792px
 ## * Best Width for GitHub README is 830px
 
@@ -21,10 +24,20 @@ Set WindowBar Rings
 # Enter
 # Sleep 6s
 
+Type `pwd`
+Sleep 500ms
+Enter
+Sleep 2s
+
+Type `ls`
+Sleep 500ms
+Enter
+Sleep 2s
+
 Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" alpine:latest pwd`
 Sleep 500ms
 Enter
-Sleep 6s
+Sleep 2s
 
 Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" alpine:latest ls`
 Sleep 500ms
