@@ -14,8 +14,12 @@ Set LineHeight 1.0
 Set Padding 14
 Set Margin 2
 Set MarginFill "#2E343D"
-
 Set WindowBar Rings
+
+Type `pwd`
+Sleep 500ms
+Enter
+Sleep 2s
 
 Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s testdata -o target/docs`
 Sleep 500ms
