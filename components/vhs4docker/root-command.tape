@@ -16,12 +16,17 @@ Set Margin 2
 Set MarginFill "#2E343D"
 Set WindowBar Rings
 
-Type `pwd`
+# Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s testdata/common -o target/docs`
+# Sleep 500ms
+# Enter
+# Sleep 6s
+
+Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" alpine:latest pwd`
 Sleep 500ms
 Enter
-Sleep 2s
+Sleep 6s
 
-Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s testdata -o target/docs`
+Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" alpine:latest ls`
 Sleep 500ms
 Enter
 Sleep 6s

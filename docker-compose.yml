@@ -294,9 +294,10 @@ services:
         condition: service_completed_successfully
 
   vhs4docker-pull:
-    image: sommerfeldio/source2adoc:latest
+    # image: sommerfeldio/source2adoc:latest
+    image: alpine:latest
     container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker-pull
-    command: --help
+    # command: --help
 
   vhs4docker:
     container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker
