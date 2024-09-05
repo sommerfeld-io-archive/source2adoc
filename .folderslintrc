@@ -19,11 +19,12 @@
 
     "components/configs/**",
 
-    "components/test/",
     "components/test-acceptance",
     "components/test-acceptance/specs",
     "components/test-acceptance/testhelper",
     "components/test-compliance/**",
+
+    "components/vhs4docker/",
 
     "docs",
     "docs/playbooks",

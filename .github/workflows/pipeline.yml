@@ -178,6 +178,9 @@ jobs:
             echo "$content" > "$file"
           done
         shell: bash
+      - name: Run vhs4docker from docker compose
+        run: docker compose up vhs4docker --exit-code-from vhs4docker
+        shell: bash
       # TODO ... source2adoc
       # TODO ... source2adoc antora
       - name: Commit and push

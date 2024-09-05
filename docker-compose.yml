@@ -45,7 +45,19 @@
 ## executed independently.
 
 
+volumes:
+  project-root-volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: .
+      o: bind
+
+
 services:
+
+  # ---------- lint + validate --------------------------------------------------------------------
+
   lint-yaml:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
     image: cytopia/yamllint:latest
@@ -162,6 +174,8 @@ services:
     working_dir: *default-workdir
     entrypoint: hadolint Dockerfile
 
+  # ---------- test + biuld -----------------------------------------------------------------------
+
   test:
     container_name: ${COMPOSE_PROJECT_NAME}-test
     image: *golang-image
@@ -243,6 +257,8 @@ services:
       test:
         condition: service_completed_successfully
 
+  # ---------- docs -------------------------------------------------------------------------------
+
   docs-build:
     container_name: ${COMPOSE_PROJECT_NAME}-docs-build
     image: node:22.6.0-alpine3.20
@@ -273,10 +289,18 @@ services:
       docs-build:
         condition: service_completed_successfully
 
-volumes:
-  project-root-volume:
-    driver: local
-    driver_opts:
-      type: none
-      device: .
-      o: bind
+  vhs4docker-pull:
+    image: alpine:latest
+    container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker-pull
+
+  vhs4docker:
+    container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker
+    image: sommerfeldio/vhs4docker:rc
+    volumes: &vhs4docker-volumes
+      - /var/run/docker.sock:/var/run/docker.sock
+      - project-root-volume:/workspaces/source2adoc
+    working_dir: *default-workdir
+    command: components/vhs4docker/root-command.tape
+    depends_on:
+      vhs4docker-pull:
+        condition: service_completed_successfully
