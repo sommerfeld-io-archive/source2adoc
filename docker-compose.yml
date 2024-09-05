@@ -290,7 +290,7 @@ services:
         condition: service_completed_successfully
 
   vhs4docker-pull:
-    image: alpine:latest
+    image: sommerfeldio/source2adoc:latest
     container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker-pull
 
   vhs4docker:
