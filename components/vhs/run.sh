@@ -42,7 +42,7 @@ function prepare() {
     cp -a ../../testdata/common/good/Vagrantfile "$SRC_DIR"
 }
 
-## Cleanupafter the screen recording.
+## Cleanup after the screen recording.
 function cleanup() {
     echo "[INFO] Cleanup"
     rm -rf "$SRC_DIR"
