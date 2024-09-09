@@ -28,21 +28,6 @@ jobs:
       - name: Antora build
         run: docker compose up docs-build --exit-code-from docs-build
         shell: bash
-      - name: Generate .htaccess file
-        run: |
-          TAG="${GITHUB_REF#refs/tags/}"
-          TAG="${TAG#v}"
-
-          echo "${GITHUB_REF#refs/tags/}"
-          echo "$TAG"
-
-          {
-            echo "RewriteEngine On"
-            echo "RewriteRule ^$ /public/$TAG [R=301,L]"
-          } > target/docs/public/.htaccess
-
-          cat .htaccess
-        shell: bash
       - name: Deploy via FTP
         run: |
           (
@@ -54,6 +39,23 @@ jobs:
               --workdir "$(pwd)" \
               sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / ./*
           )
+        shell: bash
+      - name: Generate .htaccess file and upload via FTP
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          TAG="${TAG#v}"
+
+          {
+            echo "RewriteEngine On"
+            echo "RewriteRule ^$ /public/$TAG [R=301,L]"
+          } > target/docs/public/.htaccess
+
+          cat .htaccess
+
+          docker run -i --rm \
+              --volume "$(pwd):$(pwd)" \
+              --workdir "$(pwd)" \
+              sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / .htaccess
         shell: bash
 
   publish-release:
