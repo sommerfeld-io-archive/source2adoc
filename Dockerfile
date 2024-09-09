@@ -78,7 +78,7 @@ RUN go test
 
 ## The run stage is used to run the application in a minimal runtime environment. The binary does
 ## not expect a dedicated runtime environment. A simple Linux environment is sufficient.
-FROM alpine:3.20.2 AS run
+FROM alpine:3.20.3 AS run
 LABEL maintainer="sebastian@sommerfeld.io"
 LABEL org.opencontainers.image.title=source2adoc \
       org.opencontainers.image.description="Streamline the process of generating documentation from inline comments within source code files." \
