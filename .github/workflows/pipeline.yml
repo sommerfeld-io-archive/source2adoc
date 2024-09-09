@@ -248,7 +248,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Scout CVEs for ${{ env.IMAGE_NAME }}:${{ github.sha }}
-        uses: docker/scout-action@v1.13.0
+        uses: docker/scout-action@v1.14.0
         with:
           command: cves
           image: ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -268,7 +268,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_RC }}"
-        uses: docker/scout-action@v1.13.0
+        uses: docker/scout-action@v1.14.0
         with:
           command: compare
           image: ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -289,7 +289,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Docker Scout Compare :${{ github.sha }} to :${{ env.IMAGE_TAG_LATEST }}"
-        uses: docker/scout-action@v1.13.0
+        uses: docker/scout-action@v1.14.0
         with:
           command: compare
           image: ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
