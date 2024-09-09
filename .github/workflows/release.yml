@@ -48,7 +48,7 @@ jobs:
           {
             echo "RewriteEngine On"
             echo "RewriteRule ^$ /public/$TAG [R=301,L]"
-          } > target/docs/public/.htaccess
+          } > .htaccess
 
           cat .htaccess
 
