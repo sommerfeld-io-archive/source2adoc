@@ -39,7 +39,7 @@ jobs:
           {
             echo "RewriteEngine On"
             echo "RewriteRule ^$ /public/$TAG [R=301,L]"
-          } > .htaccess
+          } > target/docs/public/.htaccess
 
           cat .htaccess
         shell: bash
@@ -53,11 +53,6 @@ jobs:
               --volume "$(pwd):$(pwd)" \
               --workdir "$(pwd)" \
               sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / ./*
-
-            docker run -i --rm \
-              --volume "$(pwd):$(pwd)" \
-              --workdir "$(pwd)" \
-              sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / .htaccess
           )
         shell: bash
 
