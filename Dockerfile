@@ -5,7 +5,7 @@
 ## [ditaa, target="dockerfile-app"]
 ## ....
 ## +-----------------------+
-## | Dockerfile        |
+## | Dockerfile            |
 ## |                       |
 ## | +-------------------+ |
 ## | | unit test + build | |
