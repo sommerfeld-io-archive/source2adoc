@@ -40,16 +40,24 @@ jobs:
             echo "RewriteEngine On"
             echo "RewriteRule ^$ /public/$TAG [R=301,L]"
           } > .htaccess
+
+          cat .htaccess
         shell: bash
       - name: Deploy via FTP
         run: |
           (
             cd target/docs/public || exit
             ls -alF
+
             docker run -i --rm \
               --volume "$(pwd):$(pwd)" \
               --workdir "$(pwd)" \
               sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / ./*
+
+            docker run -i --rm \
+              --volume "$(pwd):$(pwd)" \
+              --workdir "$(pwd)" \
+              sommerfeldio/ftp-client:latest ncftpput -R -v -u "${{ secrets.FTP_USER }}" -p "${{ secrets.FTP_PASS }}" "${{ secrets.FTP_HOST }}" / .htaccess
           )
         shell: bash
 
