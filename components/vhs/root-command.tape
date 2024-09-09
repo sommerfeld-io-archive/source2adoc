@@ -18,7 +18,7 @@ Set Margin 2
 Set MarginFill "#2E343D"
 Set WindowBar Rings
 
-Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest -s src -o docs`
+Type `docker run -v "$(pwd):$(pwd)" -w "$(pwd)" sommerfeldio/source2adoc:latest --source-dir src --output-dir docs`
 Sleep 500ms
 Enter
 Sleep 6s
