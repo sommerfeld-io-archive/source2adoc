@@ -33,6 +33,9 @@ jobs:
           TAG="${GITHUB_REF#refs/tags/}"
           TAG="${TAG#v}"
 
+          echo "${GITHUB_REF#refs/tags/}"
+          echo "$TAG"
+
           {
             echo "RewriteEngine On"
             echo "RewriteRule ^$ /public/$TAG [R=301,L]"
