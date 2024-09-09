@@ -24,7 +24,7 @@
     "components/test-acceptance/testhelper",
     "components/test-compliance/**",
 
-    "components/vhs4docker/",
+    "components/vhs/",
 
     "docs",
     "docs/playbooks",

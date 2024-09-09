@@ -34,10 +34,6 @@
 ## +-----------------+    +-----------------+
 ## | docs-build      +--->| docs            |
 ## +-----------------+    +-----------------+
-##
-## +-----------------+    +-----------------+
-## | vhs4docker-pull +--->| vhs4docker      |
-## +-----------------+    +-----------------+
 ## ....
 ##
 ## == Integrations
@@ -291,22 +287,4 @@ services:
       - 3080:80
     depends_on:
       docs-build:
-        condition: service_completed_successfully
-
-  vhs4docker-pull:
-    # image: sommerfeldio/source2adoc:latest
-    image: alpine:latest
-    container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker-pull
-    # command: --help
-
-  vhs4docker:
-    container_name: ${COMPOSE_PROJECT_NAME}-vhs4docker
-    image: sommerfeldio/vhs4docker:rc
-    volumes: &vhs4docker-volumes
-      - /var/run/docker.sock:/var/run/docker.sock
-      - project-root-volume:/workspaces/source2adoc
-    working_dir: *default-workdir
-    command: components/vhs4docker/root-command.tape
-    depends_on:
-      vhs4docker-pull:
         condition: service_completed_successfully

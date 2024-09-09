@@ -178,11 +178,14 @@ jobs:
             echo "$content" > "$file"
           done
         shell: bash
-      - name: Run vhs4docker from docker compose
+      - name: Install and run vhs
         run: |
-          pwd
-          ls -alF
-          docker compose up vhs4docker --exit-code-from vhs4docker
+          (
+            cd components/vhs || exit
+            pwd
+            ls -alF
+            ./run.sh
+          )
         shell: bash
       # TODO ... source2adoc
       # TODO ... source2adoc antora
