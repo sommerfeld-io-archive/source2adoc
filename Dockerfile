@@ -41,7 +41,7 @@
 
 ## The build stage is used to compile the application and run the unit tests. The unit tests are
 ## executed with the `go test` command as part of the build process.
-FROM golang:1.23.0-alpine3.19 AS build
+FROM golang:1.23.1-alpine3.19 AS build
 LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY testdata /workspaces/source2adoc/testdata
@@ -57,7 +57,7 @@ RUN go mod download \
 
 ## The acceptance-test stage is used to run the acceptance tests against the binary created in the
 ## build stage.
-FROM golang:1.23.0-alpine3.19 AS acceptance-test
+FROM golang:1.23.1-alpine3.19 AS acceptance-test
 LABEL maintainer="sebastian@sommerfeld.io"
 
 COPY --from=build /workspaces/source2adoc/components/app/source2adoc /workspaces/source2adoc/components/app/source2adoc
