@@ -13,10 +13,10 @@ readonly OUTPUT_DIR="docs"
 function install() {
     echo "[INFO] Install dependencies"
     sudo apt-get update
-    sudo apt-get install -y --no-install-recommends ffmpeg=7:4.3.7-0+deb11u1 \
-    sudo apt-get install -y --no-install-recommends chromium-sandbox=120.0.6099.224-1~deb11u1 \
-    sudo apt-get clean \
-    sudo rm -f /var/lib/apt/lists/*
+    sudo apt-get install -y --no-install-recommends ffmpeg=7:4.3.7-0+deb11u1
+    sudo apt-get install -y --no-install-recommends chromium-sandbox=120.0.6099.224-1~deb11u1
+    sudo apt-get clean
+    sudo rm -rf /var/lib/apt/lists/*
 
     if [ ! -f /usr/bin/ttyd ]; then
         echo "[INFO] Install ttyd"

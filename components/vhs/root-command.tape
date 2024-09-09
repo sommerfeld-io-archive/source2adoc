@@ -9,9 +9,9 @@
 
 Output root-command.gif
 
-Set FontSize 14
-Set Width 830
-Set Height 240
+Set FontSize 16
+Set Width 820
+Set Height 260
 Set LineHeight 1.0
 Set Padding 14
 Set Margin 2
