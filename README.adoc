@@ -53,7 +53,7 @@ The following section outlines the basic requirements and features of the `sourc
 
 NOTE: Translating JavaDoc-style metadata is not yet supported, but link:https://github.com/sommerfeld-io/source2adoc/issues/118[planned for a future release].
 
-For a detailed overview of the requirements and features of the `source2adoc` project, refer to the link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test-acceptance/specs[executable specification] used for out automated acceptance tests.
+For a detailed overview of the requirements and features of the `source2adoc` project, refer to the link:https://github.com/sommerfeld-io/source2adoc/tree/main/components/test-acceptance/specs[executable specification] used for our automated acceptance tests.
 
 == Usage
 For detailed information on how to use the `source2adoc` application, take a look at the application's help output.
