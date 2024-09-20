@@ -37,6 +37,7 @@ on:
       - '**.md'
       - 'docs/**'
       - '.devcontainer/**'
+      - '.github/workflows/dev-env.yml'
       - '.vscode/**'
       - '.gitkeep'
   schedule:
