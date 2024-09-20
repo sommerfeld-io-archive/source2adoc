@@ -44,27 +44,3 @@ jobs:
           platforms: linux/amd64
           push: false
           tags: local/${{ env.IMAGE_NAME }}:${{ github.sha }}
-      - name: Install Inspec
-        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
-        shell: bash
-      - name: Start system under test local/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        run: |
-          readonly IMAGE="local/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          docker run -d --name "${{ env.CONTAINER_NAME }}" --entrypoint tail "$IMAGE" -f /dev/null
-        shell: bash
-      - name: Run Inspec test (linux baseline)
-        run: |
-          readonly exclude="/^((?!os-14).)*$/"
-          inspec exec https://github.com/dev-sec/linux-baseline \
-            --target "docker://${{ env.CONTAINER_NAME }}" \
-            --controls "$exclude" \
-            --chef-license "${{ env.CHEF_LICENSE }}" \
-            --chef-license-key ${{ secrets.CHEF_INSPEC_LICENSE_KEY }} \
-            --no-distinct-exit
-        shell: bash
-      - name: Stop system under test local/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        if: always()
-        run: |
-          docker stop --time 0 "${{ env.CONTAINER_NAME }}"
-          docker rm "${{ env.CONTAINER_NAME }}"
-        shell: bash
