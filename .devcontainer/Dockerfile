@@ -17,6 +17,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir pre-commit==3.3.3
 
+COPY configs/etc/login.defs /etc/login.defs
+RUN chmod og-r /etc/shadow \
+    && chmod 0444 /etc/login.defs
+
 USER $USER
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]

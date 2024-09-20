@@ -57,18 +57,37 @@ volumes:
 
 services:
 
-  # ---------- lint + validate --------------------------------------------------------------------
-
-  lint-yaml:
-    container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
-    image: cytopia/yamllint:latest
+  copy-files:
+    container_name: ${COMPOSE_PROJECT_NAME}-copy-files
+    user: 1000:1000
+    image: alpine:3.20.3
     volumes: &volumes
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - project-root-volume:/workspaces/source2adoc
     working_dir: &default-workdir /workspaces/source2adoc
-    command: .
+    command:
+      - /bin/ash
+      - -c
+      - |
+        rm -rf .devcontainer/configs
+        cp -a components/configs .devcontainer/configs
+        {
+          echo "= README"
+          echo
+          echo "Folder is copied from \`components/configs\` (docker compose took care of it)."
+        } > .devcontainer/configs/README.adoc
     tty: &tty true
+
+  # ---------- lint + validate --------------------------------------------------------------------
+
+  lint-yaml:
+    container_name: ${COMPOSE_PROJECT_NAME}-lint-yaml
+    image: cytopia/yamllint:latest
+    volumes: *volumes
+    working_dir: *default-workdir
+    command: .
+    tty: *tty
 
   lint-workflows:
     container_name: ${COMPOSE_PROJECT_NAME}-lint-workflows
