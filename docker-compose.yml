@@ -28,9 +28,9 @@
 ## +--------+--------+    +-----------------+    +-----------------+
 ##          |
 ##          v
-## +-----------------+
-## | app             |
-## +-----------------+
+## +-----------------+    +-----------------+    +-----------------+
+## | app             +--->| inspec-sut(...) +--->| inspec          |
+## +-----------------+    +-----------------+    +-----------------+
 ##
 ## +-----------------+    +-----------------+
 ## | docs-build      +--->| docs            |
@@ -276,6 +276,29 @@ services:
     depends_on:
       test:
         condition: service_completed_successfully
+
+  # ---------- inspec -----------------------------------------------------------------------------
+
+  inspec-system-under-test:
+    container_name: ${COMPOSE_PROJECT_NAME}-inspec-system-under-test
+    image: local/${COMPOSE_PROJECT_NAME}:${DEV_TAG}
+    entrypoint: tail
+    command: -f /dev/null
+    depends_on:
+      app:
+        condition: service_completed_successfully
+
+  inspec:
+    container_name: ${COMPOSE_PROJECT_NAME}-inspec
+    image: chef/inspec:5.22.55
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - project-root-volume:/workspaces/source2adoc
+    working_dir: *default-workdir
+    command: exec components/test-compliance/source2adoc --target "docker://${COMPOSE_PROJECT_NAME}-inspec-system-under-test" --chef-license=accept
+    depends_on:
+      inspec-system-under-test:
+        condition: service_started
 
   # ---------- docs -------------------------------------------------------------------------------
 
